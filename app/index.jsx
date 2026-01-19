@@ -1,4 +1,13 @@
-import {View,Text,TextInput,TouchableOpacity,StyleSheet,Image} from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { setLoggedIn } from "../utils/AsyncStorage";
@@ -24,63 +33,72 @@ export default function Authentication() {
   };
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.logo}source={require('../assets/mziuri-logo.png')} />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 5}
+    >
+      <View style={styles.container}>
+        <Image
+          style={styles.logo}
+          source={require("../assets/mziuri-logo.png")}
+        />
 
-      <Formik
-        initialValues={{ email: "", password: "" }}
-        validationSchema={AuthSchema}
-        onSubmit={handleLogin}
-      >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
-          <>
-            <TextInput
-              placeholder="Email"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              value={values.email}
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              style={[
-                styles.input,
-                touched.email && errors.email && styles.inputError,
-              ]}
-            />
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={AuthSchema}
+          onSubmit={handleLogin}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
+            <>
+              <TextInput
+                placeholder="Email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                style={[
+                  styles.input,
+                  touched.email && errors.email && styles.inputError,
+                ]}
+              />
 
-            {touched.email && errors.email && (
-              <Text style={styles.error}>{errors.email}</Text>
-            )}
+              {touched.email && errors.email && (
+                <Text style={styles.error}>{errors.email}</Text>
+              )}
 
-            <TextInput
-              placeholder="Password"
-              secureTextEntry
-              value={values.password}
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              style={[
-                styles.input,
-                touched.password && errors.password && styles.inputError,
-              ]}
-            />
+              <TextInput
+                placeholder="Password"
+                secureTextEntry
+                value={values.password}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                style={[
+                  styles.input,
+                  touched.password && errors.password && styles.inputError,
+                ]}
+              />
 
-            {touched.password && errors.password && (
-              <Text style={styles.error}>{errors.password}</Text>
-            )}
+              {touched.password && errors.password && (
+                <Text style={styles.error}>{errors.password}</Text>
+              )}
 
-            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-              <Text style={styles.buttonText}>Sign In</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </Formik>
-    </View>
+              <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+                <Text style={styles.buttonText}>Sign In</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </Formik>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -94,8 +112,8 @@ const styles = StyleSheet.create({
   logo: {
     width: 220,
     height: 120,
-    resizeMode: 'contain',
-    alignSelf: 'center',
+    resizeMode: "contain",
+    alignSelf: "center",
     marginBottom: 24,
   },
   input: {
