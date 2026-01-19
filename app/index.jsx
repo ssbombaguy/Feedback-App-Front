@@ -1,13 +1,7 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import {View,Text,TextInput,TouchableOpacity,StyleSheet,Image} from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { setLoggedIn } from "../utils/storage";
+import { setLoggedIn } from "../utils/AsyncStorage";
 import { phoneWidth } from "../constants/Dimensions";
 
 const AuthSchema = Yup.object().shape({
@@ -31,8 +25,7 @@ export default function Authentication() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
-      <Text style={styles.subtitle}>Sign in to continue</Text>
+      <Image style={styles.logo}source={require('../assets/mziuri-logo.png')} />
 
       <Formik
         initialValues={{ email: "", password: "" }}
@@ -98,14 +91,12 @@ const styles = StyleSheet.create({
     padding: 24,
     width: phoneWidth,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  subtitle: {
-    color: "#666",
-    marginBottom: 32,
+  logo: {
+    width: 220,
+    height: 120,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginBottom: 24,
   },
   input: {
     borderWidth: 1,
@@ -122,7 +113,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   button: {
-    backgroundColor: "#000",
+    backgroundColor: "#243d4d",
     padding: 16,
     borderRadius: 8,
     alignItems: "center",
