@@ -3,6 +3,7 @@
     "name": "Feedback-Front",
     "slug": "Feedback-Front",
     "version": "1.0.0",
+    "scheme": "com.anonymous.feedbackfront",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

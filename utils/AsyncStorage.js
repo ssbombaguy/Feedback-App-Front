@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 export const setLoggedIn = async (email) => {
   await AsyncStorage.setItem("isLoggedIn", "true");
@@ -12,4 +13,5 @@ export const logout = async () => {
 
 export const isLoggedIn = async () => {
   return await AsyncStorage.getItem("isLoggedIn");
+ 
 };

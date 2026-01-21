@@ -1,0 +1,81 @@
+[
+  {
+    "courseName": "React Native",
+    "duration": "1 year",
+    "difficulty": "Moderate",
+    "focusArea": "Mobile App Development",
+    "activity": true
+  },
+  {
+    "courseName": "Python",
+    "duration": "6 months",
+    "difficulty": "Low",
+    "focusArea": "Data Science & AI"
+  },
+  {
+    "courseName": "JavaScript",
+    "duration": "8 months",
+    "difficulty": "Moderate",
+    "focusArea": "Full-Stack Web"
+  },
+  {
+    "courseName": "TypeScript",
+    "duration": "4 months",
+    "difficulty": "Moderate",
+    "focusArea": "Large-scale Web Apps"
+  },
+  {
+    "courseName": "Java",
+    "duration": "1 year",
+    "difficulty": "High",
+    "focusArea": "Enterprise Backend"
+  },
+  {
+    "courseName": "Rust",
+    "duration": "1.5 years",
+    "difficulty": "Very High",
+    "focusArea": "Systems Programming"
+  },
+  {
+    "courseName": "Go",
+    "duration": "6 months",
+    "difficulty": "Moderate",
+    "focusArea": "Cloud & Microservices"
+  },
+  {
+    "courseName": "Swift",
+    "duration": "8 months",
+    "difficulty": "Moderate",
+    "focusArea": "iOS Development"
+  },
+  {
+    "courseName": "Kotlin",
+    "duration": "8 months",
+    "difficulty": "Moderate",
+    "focusArea": "Android Development"
+  },
+  {
+    "courseName": "C#",
+    "duration": "1 year",
+    "difficulty": "High",
+    "focusArea": "Game Dev (Unity)"
+  },
+  {
+    "courseName": "C++",
+    "duration": "2 years",
+    "difficulty": "Very High",
+    "focusArea": "Graphics & Performance"
+  },
+  {
+    "courseName": "PHP",
+    "duration": "6 months",
+    "difficulty": "Low",
+    "focusArea": "Web Development (WordPress)"
+  },
+  {
+    "courseName": "SQL",
+    "duration": "3 months",
+    "difficulty": "Low",
+    "focusArea": "Database Management"
+  }
+]
