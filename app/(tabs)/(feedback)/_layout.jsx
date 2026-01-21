@@ -6,7 +6,7 @@ const feedbackLayout = () => {
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         headerTitle: '',
         headerShadowVisible: false,
         headerStyle: {
