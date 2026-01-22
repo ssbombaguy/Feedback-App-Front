@@ -1,17 +1,21 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
 
-export const setLoggedIn = async (email) => {
+export const setLoggedIn = async (user) => {
   await AsyncStorage.setItem("isLoggedIn", "true");
-  await AsyncStorage.setItem("userEmail", email);
+  await AsyncStorage.setItem("user", JSON.stringify(user));
 };
 
 export const logout = async () => {
   await AsyncStorage.removeItem("isLoggedIn");
-  await AsyncStorage.removeItem("userEmail");
+  await AsyncStorage.removeItem("user");
+};
+
+export const getUser = async () => {
+  const user = await AsyncStorage.getItem("user");
+  return user ? JSON.parse(user) : null;
 };
 
 export const isLoggedIn = async () => {
   return await AsyncStorage.getItem("isLoggedIn");
- 
 };
+

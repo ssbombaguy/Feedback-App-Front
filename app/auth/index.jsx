@@ -4,6 +4,8 @@ import * as Yup from "yup";
 import { router } from "expo-router";
 import { setLoggedIn } from "../../utils/AsyncStorage";
 import { phoneWidth } from "../../constants/Dimensions";
+import users from "../../users.json";
+
 
 const AuthSchema = Yup.object().shape({
   email: Yup.string()
@@ -19,11 +21,20 @@ const AuthSchema = Yup.object().shape({
 });
 
 export default function Authentication() {
-  const handleLogin = async (values) => {
-    await setLoggedIn(values.email);
-    alert("Signed in successfully!");
-    router.replace('/(tabs)/feedback')
-  };
+ const handleLogin = async (values) => {
+   const foundUser = users.find(
+     (user) => user.email.toLowerCase() === values.email.toLowerCase()
+   );
+
+   if (!foundUser) {
+     alert("User not found");
+     return;
+   }
+
+   await setLoggedIn(foundUser);
+   router.replace("/(tabs)/feedback");
+ };
+
 
   return (
     <KeyboardAvoidingView
