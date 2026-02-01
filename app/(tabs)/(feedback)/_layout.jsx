@@ -14,7 +14,7 @@ const feedbackLayout = () => {
         },
       }}
     >
-      <Stack.Screen name="feedback" />
+      <Stack.Screen name="index" />
     </Stack>
   )
 }

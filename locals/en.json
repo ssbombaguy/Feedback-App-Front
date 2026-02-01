@@ -1,0 +1,63 @@
+{
+  "auth": {
+    "signIn": "Sign In",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "invalidEmail": "Enter a valid email",
+    "loginFailed": "Login Failed"
+  },
+  "feedback": {
+    "title": "Your Courses",
+    "subtitle": "Write feedback for your courses",
+    "writeFeedback": "Write a Feedback",
+    "feedbackSubmitted": "✓ Feedback Submitted",
+    "alreadySubmitted": "Feedback Already Submitted",
+    "alreadySubmittedMessage": "You have already submitted feedback for {{courseName}}. You can only submit feedback once per course.",
+    "teacherEvaluation": "Teacher Evaluation",
+    "teacherEvaluationHint": "Share your thoughts about the teacher...",
+    "courseEvaluation": "Course Evaluation",
+    "courseEvaluationHint": "What the course provided, what would you add?",
+    "practicalUse": "Practical Use",
+    "practicalUseHint": "How it helped with job/career",
+    "studentRequests": "Student Requests",
+    "studentRequestsHint": "What new subjects would you like added to Mziuri?",
+    "returnAsTeacher": "Would you like to return as a teacher?",
+    "submitFeedback": "Submit Feedback",
+    "clear": "Clear",
+    "thankYou": "Thank you for your feedback!",
+    "feedbackFor": "Feedback for {{courseName}}"
+  },
+  "profile": {
+    "title": "Profile",
+    "personalInfo": "Personal Information",
+    "phone": "Phone",
+    "privateNumber": "Private Number",
+    "town": "Town",
+    "grade": "Grade",
+    "activeCourse": "Active Course",
+    "completedCourses": "Completed Courses",
+    "focusArea": "Focus Area",
+    "teacher": "Teacher",
+    "logout": "Logout",
+    "loading": "Loading profile..."
+  },
+  "course": {
+    "focusArea": "Focus Area",
+    "teacher": "Teacher",
+    "duration": "Duration",
+    "active": "Active"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "en": "EN",
+    "ka": "KA"
+  }
+}
