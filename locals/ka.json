@@ -1,0 +1,63 @@
+{
+  "auth": {
+    "signIn": "შესვლა",
+    "email": "ელ-ფოსტა",
+    "password": "პაროლი",
+    "forgotPassword": "დაგავიწყდა პაროლი?",
+    "emailRequired": "ელ-ფოსტა აუცილებელია",
+    "passwordRequired": "პაროლი აუცილებელია",
+    "invalidEmail": "შეიყვანეთ სწორი ელ-ფოსტა",
+    "loginFailed": "შესვლა ვერ მოხერხდა"
+  },
+  "feedback": {
+    "title": "თქვენი კურსები",
+    "subtitle": "დაწერეთ შეფასება თქვენს კურსებზე",
+    "writeFeedback": "შეფასების დაწერა",
+    "feedbackSubmitted": "✓ შეფასება გაგზავნილია",
+    "alreadySubmitted": "შეფასება უკვე გაგზავნილია",
+    "alreadySubmittedMessage": "თქვენ უკვე გაგზავნილი გაქვთ შეფასება {{courseName}}-ზე. შეგიძლიათ მხოლოდ ერთხელ გააგზავნოთ შეფასება კურსზე.",
+    "teacherEvaluation": "მასწავლებლის შეფასება",
+    "teacherEvaluationHint": "გააზიარეთ თქვენი აზრი მასწავლებლის შესახებ...",
+    "courseEvaluation": "კურსის შეფასება",
+    "courseEvaluationHint": "რა მოგცათ კურსმა, რას დაამატებდით?",
+    "practicalUse": "პრაქტიკული გამოყენება",
+    "practicalUseHint": "როგორ დაგეხმარათ სამსახურში/კარიერაში",
+    "studentRequests": "სტუდენტის მოთხოვნები",
+    "studentRequestsHint": "რა ახალი საგნები გსურთ დაემატოს მზიურს?",
+    "returnAsTeacher": "გსურთ დაბრუნება როგორც მასწავლებელი?",
+    "submitFeedback": "შეფასების გაგზავნა",
+    "clear": "გასუფთავება",
+    "thankYou": "გმადლობთ თქვენი შეფასებისთვის!",
+    "feedbackFor": "შეფასება {{courseName}}-ისთვის"
+  },
+  "profile": {
+    "title": "პროფილი",
+    "personalInfo": "პირადი ინფორმაცია",
+    "phone": "ტელეფონი",
+    "privateNumber": "პირადი ნომერი",
+    "town": "ქალაქი",
+    "grade": "კლასი",
+    "activeCourse": "აქტიური კურსი",
+    "completedCourses": "დასრულებული კურსები",
+    "focusArea": "ფოკუსის სფერო",
+    "teacher": "მასწავლებელი",
+    "logout": "გასვლა",
+    "loading": "იტვირთება პროფილი..."
+  },
+  "course": {
+    "focusArea": "ფოკუსის სფერო",
+    "teacher": "მასწავლებელი",
+    "duration": "ხანგრძლივობა",
+    "active": "აქტიური"
+  },
+  "common": {
+    "loading": "იტვირთება...",
+    "error": "შეცდომა",
+    "success": "წარმატება",
+    "cancel": "გაუქმება",
+    "save": "შენახვა",
+    "close": "დახურვა",
+    "en": "EN",
+    "ka": "ქა"
+  }
+}

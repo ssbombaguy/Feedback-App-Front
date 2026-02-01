@@ -1,29 +1,33 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import React from 'react'
 import { CourseCard } from './courseCard'
+import { useTranslation } from 'react-i18next'
 
-const CourseLister = ({ data }) => {
+const CourseLister = ({ data, onFeedbackPress }) => {
+  const { t } = useTranslation()
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Available Courses</Text>
-        <Text style={styles.subtitle}>Choose a course to get started</Text>
+        <Text style={styles.title}>{t('feedback.title')}</Text>
+        <Text style={styles.subtitle}>{t('feedback.subtitle')}</Text>
       </View>
       <FlatList
         data={data}
-        keyExtractor={(item) => item.courseName}
+        keyExtractor={(item, index) => `${item.courseName}-${index}`}
         renderItem={({ item }) => (
           <CourseCard
-            name={item.courseName}
-            duration={item.duration}
-            difficulty={item.difficulty}
+            courseName={item.courseName}
             focusArea={item.focusArea}
+            teacher={item.teacher}
+            isActive={item.isActive}
+            onFeedbackPress={onFeedbackPress}
           />
         )}
         scrollEnabled={true}
         contentContainerStyle={styles.listContent}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -32,9 +36,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F8F9FA',
   },
-  header: {
+  header: { 
     paddingHorizontal: 16,
-    paddingTop: 20,
+    paddingTop: 40,
     paddingBottom: 16,
     backgroundColor: '#fff',
     borderBottomWidth: 1,

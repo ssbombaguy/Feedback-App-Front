@@ -1,46 +1,70 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Switch } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, Switch } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { saveFeedback } from '../utils/FeedbackStorage'
+import { useFeedback } from '../api/useFeedback'
+import { getUser } from '../utils/AsyncStorage'
+import { useTranslation } from 'react-i18next'
 
 const FeedbackValidationSchema = Yup.object().shape({
   teacherEvaluation: Yup.string()
-    .required('This field is required'),
+    .required('Teacher evaluation is required')
+    .min(10, 'Please provide at least 10 characters'),
   courseEvaluation: Yup.string()
-    .required('This field is required'),
+    .required('Course evaluation is required')
+    .min(10, 'Please provide at least 10 characters'),
   practicalUse: Yup.string()
-    .required('This field is required'),
+    .required('Practical use feedback is required')
+    .min(10, 'Please provide at least 10 characters'),
   studentRequests: Yup.string()
-    .required('This field is required'),
-  teacherRole: Yup.boolean(),
+    .required('Student requests is required')
+    .min(10, 'Please provide at least 10 characters'),
 })
 
 export const FeedbackForm = ({ courseName, onClose }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [user, setUser] = useState(null)
+  const { submitFeedback, isSubmitting, submitError } = useFeedback()
+  const { t } = useTranslation()
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const userData = await getUser()
+      setUser(userData)
+    }
+    loadUser()
+  }, [])
 
   const handleSubmit = async (values) => {
-    try {
-      setIsSubmitting(true)
-      const success = await saveFeedback(courseName, values)
-      
-      if (success) {
-        alert('Thank you for your feedback!')
-        onClose()
-      } else {
-        alert('Error saving feedback. Please try again.')
-      }
-    } catch (error) {
-      alert('Error: ' + error.message)
-    } finally {
-      setIsSubmitting(false)
+    if (!user) {
+      alert('User data not found. Please log in again.')
+      return
     }
+
+    const feedbackData = {
+      userId: user.id,
+      courseName: courseName,
+      teacherEvaluation: values.teacherEvaluation,
+      courseEvaluation: values.courseEvaluation,
+      practicalUse: values.practicalUse,
+      studentRequests: values.studentRequests,
+      returnAsTeacher: values.returnAsTeacher,
+    }
+
+    submitFeedback(feedbackData, {
+      onSuccess: () => {
+        alert(t('feedback.thankYou'))
+        onClose()
+      },
+      onError: (error) => {
+        alert('Error: ' + (error?.response?.data?.error || error.message))
+      },
+    })
   }
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Feedback for {courseName}</Text>
+        <Text style={styles.title}>{t('feedback.feedbackFor', { courseName })}</Text>
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeText}>✕</Text>
         </TouchableOpacity>
@@ -52,7 +76,7 @@ export const FeedbackForm = ({ courseName, onClose }) => {
           courseEvaluation: '',
           practicalUse: '',
           studentRequests: '',
-          teacherRole: false,
+          returnAsTeacher: false,
         }}
         validationSchema={FeedbackValidationSchema}
         onSubmit={handleSubmit}
@@ -68,19 +92,21 @@ export const FeedbackForm = ({ courseName, onClose }) => {
         }) => (
           <View style={styles.formContainer}>
             <View style={styles.fieldContainer}>
-              <Text style={styles.label}>Teacher Evaluation *</Text>
+              <Text style={styles.label}>{t('feedback.teacherEvaluation')} *</Text>
+              <Text style={styles.hint}>{t('feedback.teacherEvaluationHint')}</Text>
               <TextInput
                 style={[
                   styles.textarea,
                   touched.teacherEvaluation && errors.teacherEvaluation && styles.inputError,
                 ]}
-                placeholder="Share your thoughts about the teacher..."
+                placeholder="What did you think about the teacher?"
                 multiline
                 numberOfLines={4}
                 value={values.teacherEvaluation}
                 onChangeText={handleChange('teacherEvaluation')}
                 onBlur={handleBlur('teacherEvaluation')}
                 textAlignVertical="top"
+                editable={!isSubmitting}
               />
               {touched.teacherEvaluation && errors.teacherEvaluation && (
                 <Text style={styles.errorText}>{errors.teacherEvaluation}</Text>
@@ -88,8 +114,8 @@ export const FeedbackForm = ({ courseName, onClose }) => {
             </View>
 
             <View style={styles.fieldContainer}>
-              <Text style={styles.label}>Course Evaluation *</Text>
-              <Text style={styles.sublabel}>What the course provided, what would you add?</Text>
+              <Text style={styles.label}>{t('feedback.courseEvaluation')} *</Text>
+              <Text style={styles.hint}>{t('feedback.courseEvaluationHint')}</Text>
               <TextInput
                 style={[
                   styles.textarea,
@@ -102,6 +128,7 @@ export const FeedbackForm = ({ courseName, onClose }) => {
                 onChangeText={handleChange('courseEvaluation')}
                 onBlur={handleBlur('courseEvaluation')}
                 textAlignVertical="top"
+                editable={!isSubmitting}
               />
               {touched.courseEvaluation && errors.courseEvaluation && (
                 <Text style={styles.errorText}>{errors.courseEvaluation}</Text>
@@ -109,8 +136,8 @@ export const FeedbackForm = ({ courseName, onClose }) => {
             </View>
 
             <View style={styles.fieldContainer}>
-              <Text style={styles.label}>Practical Use *</Text>
-              <Text style={styles.sublabel}>How it helped with job/career</Text>
+              <Text style={styles.label}>{t('feedback.practicalUse')} *</Text>
+              <Text style={styles.hint}>{t('feedback.practicalUseHint')}</Text>
               <TextInput
                 style={[
                   styles.textarea,
@@ -123,6 +150,7 @@ export const FeedbackForm = ({ courseName, onClose }) => {
                 onChangeText={handleChange('practicalUse')}
                 onBlur={handleBlur('practicalUse')}
                 textAlignVertical="top"
+                editable={!isSubmitting}
               />
               {touched.practicalUse && errors.practicalUse && (
                 <Text style={styles.errorText}>{errors.practicalUse}</Text>
@@ -130,8 +158,8 @@ export const FeedbackForm = ({ courseName, onClose }) => {
             </View>
 
             <View style={styles.fieldContainer}>
-              <Text style={styles.label}>Student Requests *</Text>
-              <Text style={styles.sublabel}>What new subjects would you like added to Mziuri?</Text>
+              <Text style={styles.label}>{t('feedback.studentRequests')} *</Text>
+              <Text style={styles.hint}>{t('feedback.studentRequestsHint')}</Text>
               <TextInput
                 style={[
                   styles.textarea,
@@ -144,45 +172,43 @@ export const FeedbackForm = ({ courseName, onClose }) => {
                 onChangeText={handleChange('studentRequests')}
                 onBlur={handleBlur('studentRequests')}
                 textAlignVertical="top"
+                editable={!isSubmitting}
               />
               {touched.studentRequests && errors.studentRequests && (
                 <Text style={styles.errorText}>{errors.studentRequests}</Text>
               )}
             </View>
 
-            <View style={styles.checkboxContainer}>
-              <View style={styles.switchContainer}>
-                <Switch
-                  value={values.teacherRole}
-                  onValueChange={(value) => setFieldValue('teacherRole', value)}
-                  trackColor={{ false: '#ccc', true: '#F9C94D' }}
-                  thumbColor={values.teacherRole ? '#2C3E50' : '#999'}
-                />
-              </View>
-              <Text style={styles.checkboxLabel}>
-                Would you like to return as a teacher?
-              </Text>
+            <View style={styles.switchContainer}>
+              <Text style={styles.switchLabel}>{t('feedback.returnAsTeacher')}</Text>
+              <Switch
+                value={values.returnAsTeacher}
+                onValueChange={(value) => setFieldValue('returnAsTeacher', value)}
+                trackColor={{ false: '#E0E0E0', true: '#F9C94D' }}
+                thumbColor={values.returnAsTeacher ? '#243d4d' : '#f4f3f4'}
+                disabled={isSubmitting}
+              />
             </View>
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                style={styles.submitButton}
+                style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
                 onPress={handleFormSubmit}
+                disabled={isSubmitting}
               >
-                <Text style={styles.submitButtonText}>Submit Feedback</Text>
+                {isSubmitting ? (
+                  <ActivityIndicator color="#2C3E50" size="small" />
+                ) : (
+                  <Text style={styles.submitButtonText}>{t('feedback.submitFeedback')}</Text>
+                )}
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.clearButton}
-                onPress={() => {
-                  setFieldValue('teacherEvaluation', '')
-                  setFieldValue('courseEvaluation', '')
-                  setFieldValue('practicalUse', '')
-                  setFieldValue('studentRequests', '')
-                  setFieldValue('teacherRole', false)
-                }}
+                onPress={onClose}
+                disabled={isSubmitting}
               >
-                <Text style={styles.clearButtonText}>Clear</Text>
+                <Text style={styles.clearButtonText}>{t('common.cancel')}</Text>
               </TouchableOpacity>
             </View>
 
@@ -214,6 +240,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: '#2C3E50',
+    flex: 1,
   },
   closeButton: {
     padding: 8,
@@ -227,19 +254,19 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   fieldContainer: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   label: {
     fontSize: 14,
     fontWeight: '700',
     color: '#2C3E50',
-    marginBottom: 6,
+    marginBottom: 4,
   },
-  sublabel: {
+  hint: {
     fontSize: 12,
-    color: '#546E7A',
-    marginBottom: 8,
     fontStyle: 'italic',
+    color: '#666',
+    marginBottom: 8,
   },
   textarea: {
     borderWidth: 1,
@@ -261,25 +288,23 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontWeight: '600',
   },
-  checkboxContainer: {
+  switchContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
     backgroundColor: '#fff',
+    padding: 16,
     borderRadius: 8,
+    marginBottom: 20,
     borderWidth: 1,
     borderColor: '#E0E0E0',
   },
-  switchContainer: {
-    marginRight: 12,
-  },
-  checkboxLabel: {
+  switchLabel: {
     fontSize: 14,
     color: '#2C3E50',
-    fontWeight: '500',
+    fontWeight: '600',
     flex: 1,
+    marginRight: 12,
   },
   buttonContainer: {
     gap: 12,
@@ -291,6 +316,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 8,
+  },
+  submitButtonDisabled: {
+    opacity: 0.6,
   },
   submitButtonText: {
     color: '#2C3E50',

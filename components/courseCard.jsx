@@ -1,99 +1,60 @@
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { FeedbackForm } from './FeedbackForm'
-import { hasFeedback } from '../utils/FeedbackStorage'
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native'
+import React from 'react'
+import { useFeedback } from '../api/useFeedback'
+import { useTranslation } from 'react-i18next'
 
-export const CourseCard = ({ name, duration, difficulty, focusArea }) => {
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false)
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
-
-  useEffect(() => {
-    checkFeedbackStatus()
-  }, [])
-
-  const checkFeedbackStatus = async () => {
-    const hasSubmitted = await hasFeedback(name)
-    setFeedbackSubmitted(hasSubmitted)
-  }
+export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbackPress }) => {
+  const { feedback } = useFeedback()
+  const { t } = useTranslation()
+  
+  const feedbackSubmitted = feedback.some(f => f.courseName === courseName)
 
   const handleFeedbackButtonPress = () => {
     if (feedbackSubmitted) {
       Alert.alert(
-        'Feedback Already Submitted',
-        `You have already submitted feedback for ${name}. You can only submit feedback once per course.`
+        t('feedback.alreadySubmitted'),
+        t('feedback.alreadySubmittedMessage', { courseName })
       )
     } else {
-      setShowFeedbackForm(true)
-    }
-  }
-
-  const handleFormClose = () => {
-    setShowFeedbackForm(false)
-    checkFeedbackStatus()
-  }
-
-  const getDifficultyColor = (difficulty) => {
-    switch(difficulty?.toLowerCase()) {
-      case 'low':
-      case 'beginner':
-        return '#4CAF50'
-      case 'moderate':
-      case 'intermediate':
-        return '#FF9800'
-      case 'high':
-      case 'very high':
-        return '#F44336'
-      default:
-        return '#546E7A'
+      onFeedbackPress(courseName)
     }
   }
 
   return (
-    <>
-      <TouchableOpacity activeOpacity={0.7} style={styles.card}>
-        <View style={styles.header}>
-          <Text style={styles.courseName}>{name}</Text>
-          <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(difficulty) }]}>
-            <Text style={styles.difficultyText}>{difficulty}</Text>
+    <TouchableOpacity activeOpacity={0.7} style={styles.card}>
+      <View style={styles.header}>
+        <Text style={styles.courseName}>{courseName}</Text>
+        {isActive && (
+          <View style={styles.activeBadge}>
+            <Text style={styles.activeBadgeText}>{t('course.active')}</Text>
           </View>
+        )}
+      </View>
+
+      <View style={styles.content}>
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>{t('course.focusArea')}:</Text>
+          <Text style={styles.value}>{focusArea}</Text>
         </View>
-
-        <View style={styles.content}>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Duration:</Text>
-            <Text style={styles.value}>{duration}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Focus Area:</Text>
-            <Text style={styles.value}>{focusArea}</Text>
-          </View>
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>{t('course.teacher')}:</Text>
+          <Text style={styles.value}>{teacher}</Text>
         </View>
+      </View>
 
-        <TouchableOpacity 
-          style={[
-            styles.exploreButton,
-            feedbackSubmitted && styles.exploreButtonDisabled,
-          ]}
-          onPress={handleFeedbackButtonPress}
-          disabled={feedbackSubmitted}
-        >
-          <Text style={styles.exploreButtonText}>
-            {feedbackSubmitted ? '✓ Feedback Submitted' : 'Write a Feedback'}
-          </Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
-
-      <Modal
-        visible={showFeedbackForm}
-        animationType="slide"
-        onRequestClose={handleFormClose}
+      <TouchableOpacity 
+        style={[
+          styles.exploreButton,
+          feedbackSubmitted && styles.exploreButtonDisabled,
+        ]}
+        onPress={handleFeedbackButtonPress}
+        disabled={feedbackSubmitted}
       >
-        <FeedbackForm 
-          courseName={name} 
-          onClose={handleFormClose} 
-        />
-      </Modal>
-    </>
+        <Text style={styles.exploreButtonText}>
+          {feedbackSubmitted ? t('feedback.feedbackSubmitted') : t('feedback.writeFeedback')}
+        </Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
   )
 }
 
@@ -127,16 +88,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 8,
   },
-  difficultyBadge: {
+  activeBadge: {
+    backgroundColor: '#4CAF50',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 20,
   },
-  difficultyText: {
+  activeBadgeText: {
     color: '#fff',
     fontSize: 11,
     fontWeight: '600',
-    textTransform: 'capitalize',
   },
   content: {
     marginBottom: 12,
@@ -157,6 +118,7 @@ const styles = StyleSheet.create({
     color: '#2C3E50',
     fontWeight: '500',
     textAlign: 'right',
+    flex: 1,
   },
   exploreButton: {
     backgroundColor: '#F9C94D',
