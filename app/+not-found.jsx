@@ -1,46 +1,49 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function NotFoundScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      
-      <View style={styles.header}>
-        <Image 
-          source={require('../assets/mziuri-logo.png')} 
-          style={styles.logoSmall}
-          resizeMode="contain"
-        />
-      </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" />
 
-      <View style={styles.content}>
-        <Text style={styles.title}>404</Text>
-        <Text style={styles.subtitle}>PAGE NOT FOUND</Text>
-        
-        <Text style={styles.message}>
-          Oops! We can’t seem to find the page you’re looking for.
-        </Text>
+        <View style={styles.header}>
+          <Image
+            source={require("../assets/mziuri-logo.png")}
+            style={styles.logoSmall}
+            resizeMode="contain"
+          />
+        </View>
 
-        <TouchableOpacity 
-          activeOpacity={0.7}
-          onPress={() => router.push('/(tabs)/(feedback)')} 
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>GO TO HOME</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          onPress={() => router.push('')}
-          style={styles.secondaryButton}
-        >
-          <Text style={styles.secondaryButtonText}>Report a problem</Text>
-        </TouchableOpacity>
+        <View style={styles.content}>
+          <Text style={styles.title}>404</Text>
+          <Text style={styles.subtitle}>PAGE NOT FOUND</Text>
+
+          <Text style={styles.message}>
+            Oops! We can’t seem to find the page you’re looking for.
+          </Text>
+
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => router.push("/(tabs)/(feedback)")}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>GO TO HOME</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => router.push("")}
+            style={styles.secondaryButton}
+          >
+            <Text style={styles.secondaryButtonText}>Report a problem</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

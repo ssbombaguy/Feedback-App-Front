@@ -5,6 +5,9 @@ import { router } from "expo-router";
 import { phoneWidth } from "../../constants/Dimensions";
 import { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
+
 
 const EmailSchema = Yup.object().shape({
   email: Yup.string()
@@ -31,6 +34,7 @@ const PasswordSchema = Yup.object().shape({
 });
 
 export default function PasswordRecovery() {
+  const { t } = useTranslation();
   const [step, setStep] = useState("email"); 
   const [userEmail, setUserEmail] = useState("");
   const [generatedCode] = useState("123456"); 
@@ -74,193 +78,224 @@ export default function PasswordRecovery() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 5}
-    >
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => {
-            if (step === "email") {
-              router.back();
-            } else {
-              setStep("email");
-              setUserEmail("");
-            }
-          }}
-        >
-          <Ionicons name="arrow-back" size={24} color="#243d4d" />
-        </TouchableOpacity>
-
-        <Image
-          style={styles.logo}
-          source={require("../../assets/mziuri-logo.png")}
-        />
-
-        {step === "email" && (
-          <Formik
-            initialValues={{ email: "" }}
-            validationSchema={EmailSchema}
-            onSubmit={handleEmailSubmit}
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 5}
+      >
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => {
+              if (step === "email") {
+                router.back();
+              } else {
+                setStep("email");
+                setUserEmail("");
+              }
+            }}
           >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              touched,
-            }) => (
-              <>
-                <Text style={styles.title}>Password Recovery</Text>
-                <Text style={styles.subtitle}>
-                  Enter your email to reset your password
-                </Text>
+            <Ionicons name="arrow-back" size={24} color="#243d4d" />
+          </TouchableOpacity>
 
-                <TextInput
-                  placeholder="Enter your email"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  value={values.email}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                  style={[
-                    styles.input,
-                    touched.email && errors.email && styles.inputError,
-                  ]}
-                />
+          <Image
+            style={styles.logo}
+            source={require("../../assets/mziuri-logo.png")}
+          />
 
-                {touched.email && errors.email && (
-                  <Text style={styles.error}>{errors.email}</Text>
-                )}
+          {step === "email" && (
+            <Formik
+              initialValues={{ email: "" }}
+              validationSchema={EmailSchema}
+              onSubmit={handleEmailSubmit}
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => (
+                <>
+                  <Image
+                    source={require("../../assets/group-26.png")}
+                    style={styles.roundedImage}
+                  />
+                  <Text style={styles.title}>
+                    {t("recovery.forgotPassword")}
+                  </Text>
+                  <Text style={styles.subtitle}>
+                    {t("recovery.resetPasswordInstruction")}
+                  </Text>
 
-                <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-                  <Text style={styles.buttonText}>Send Code</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </Formik>
-        )}
+                  <TextInput
+                    placeholder={t("recovery.enterEmail")}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    value={values.email}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                    style={[
+                      styles.input,
+                      touched.email && errors.email && styles.inputError,
+                    ]}
+                  />
 
-        {step === "code" && (
-          <Formik
-            initialValues={{ code: "" }}
-            validationSchema={CodeSchema}
-            onSubmit={handleCodeSubmit}
-          >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              touched,
-            }) => (
-              <>
-                <Text style={styles.title}>Verify Code</Text>
-                <Text style={styles.subtitle}>
-                  Enter the 6-digit code sent to {userEmail}
-                </Text>
+                  {touched.email && errors.email && (
+                    <Text style={styles.error}>{errors.email}</Text>
+                  )}
 
-                <TextInput
-                  placeholder="000000"
-                  keyboardType="number-pad"
-                  maxLength={6}
-                  value={values.code}
-                  onChangeText={handleChange("code")}
-                  onBlur={handleBlur("code")}
-                  style={[
-                    styles.input,
-                    styles.codeInput,
-                    touched.code && errors.code && styles.inputError,
-                  ]}
-                />
+                  <TouchableOpacity
+                    onPress={handleSubmit}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>
+                      {t("recovery.confirm")}
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </Formik>
+          )}
 
-                {touched.code && errors.code && (
-                  <Text style={styles.error}>{errors.code}</Text>
-                )}
+          {step === "code" && (
+            <Formik
+              initialValues={{ code: "" }}
+              validationSchema={CodeSchema}
+              onSubmit={handleCodeSubmit}
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => (
+                <>
+                  <Text style={styles.title}>{t("recovery.verifyCode")}</Text>
+                  <Text style={styles.subtitle}>
+                    {t("recovery.codeSent", { email: userEmail })}
+                  </Text>
 
-                <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-                  <Text style={styles.buttonText}>Verify Code</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </Formik>
-        )}
+                  <TextInput
+                    placeholder="000000"
+                    keyboardType="number-pad"
+                    maxLength={6}
+                    value={values.code}
+                    onChangeText={handleChange("code")}
+                    onBlur={handleBlur("code")}
+                    style={[
+                      styles.input,
+                      styles.codeInput,
+                      touched.code && errors.code && styles.inputError,
+                    ]}
+                  />
 
-        {step === "password" && (
-          <Formik
-            initialValues={{ password: "", confirmPassword: "" }}
-            validationSchema={PasswordSchema}
-            onSubmit={handlePasswordSubmit}
-          >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              touched,
-            }) => (
-              <>
-                <Text style={styles.title}>Set New Password</Text>
-                <Text style={styles.subtitle}>
-                  Create a strong password for your account
-                </Text>
+                  {touched.code && errors.code && (
+                    <Text style={styles.error}>{errors.code}</Text>
+                  )}
 
-                <TextInput
-                  placeholder="New Password"
-                  secureTextEntry
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  style={[
-                    styles.input,
-                    touched.password && errors.password && styles.inputError,
-                  ]}
-                />
+                  <TouchableOpacity
+                    onPress={handleSubmit}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>
+                      {t("recovery.verifyCode")}
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </Formik>
+          )}
 
-                {touched.password && errors.password && (
-                  <Text style={styles.error}>{errors.password}</Text>
-                )}
+          {step === "password" && (
+            <Formik
+              initialValues={{ password: "", confirmPassword: "" }}
+              validationSchema={PasswordSchema}
+              onSubmit={handlePasswordSubmit}
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => (
+                <>
+                  <Text style={styles.title}>
+                    {t("recovery.setNewPassword")}
+                  </Text>
+                  <Text style={styles.subtitle}>
+                    {t("recovery.createPasswordInstruction")}
+                  </Text>
 
-                <TextInput
-                  placeholder="Confirm Password"
-                  secureTextEntry
-                  value={values.confirmPassword}
-                  onChangeText={handleChange("confirmPassword")}
-                  onBlur={handleBlur("confirmPassword")}
-                  style={[
-                    styles.input,
-                    touched.confirmPassword &&
-                      errors.confirmPassword &&
-                      styles.inputError,
-                  ]}
-                />
+                  <TextInput
+                    placeholder="New Password"
+                    secureTextEntry
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                    style={[
+                      styles.input,
+                      touched.password && errors.password && styles.inputError,
+                    ]}
+                  />
 
-                {touched.confirmPassword && errors.confirmPassword && (
-                  <Text style={styles.error}>{errors.confirmPassword}</Text>
-                )}
+                  {touched.password && errors.password && (
+                    <Text style={styles.error}>{errors.password}</Text>
+                  )}
 
-                <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-                  <Text style={styles.buttonText}>Reset Password</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </Formik>
-        )}
-      </View>
-    </KeyboardAvoidingView>
+                  <TextInput
+                    placeholder="Confirm Password"
+                    secureTextEntry
+                    value={values.confirmPassword}
+                    onChangeText={handleChange("confirmPassword")}
+                    onBlur={handleBlur("confirmPassword")}
+                    style={[
+                      styles.input,
+                      touched.confirmPassword &&
+                        errors.confirmPassword &&
+                        styles.inputError,
+                    ]}
+                  />
+
+                  {touched.confirmPassword && errors.confirmPassword && (
+                    <Text style={styles.error}>{errors.confirmPassword}</Text>
+                  )}
+
+                  <TouchableOpacity
+                    onPress={handleSubmit}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>
+                      {t("recovery.resetPassword")}
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </Formik>
+          )}
+        </View>
+      </KeyboardAvoidingView>
+      <Image
+        source={require("../../assets/vector-2.png")}
+        style={styles.background}
+        resizeMode="contain"
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 24,
+    paddingHorizontal: 50,
     width: phoneWidth,
   },
   backButton: {
@@ -277,7 +312,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: "700",
     color: "#243d4d",
     marginBottom: 8,
@@ -292,7 +327,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 8,
+    borderRadius: 15,
     padding: 14,
     marginBottom: 6,
     fontSize: 16,
@@ -311,15 +346,26 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   button: {
-    backgroundColor: "#243d4d",
+    backgroundColor: "#FBC944",
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 15,
     alignItems: "center",
     marginTop: 16,
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#243d4d",
+    fontSize: 17,
     fontWeight: "600",
+  },
+  roundedImage: {
+    marginBottom: 15,
+    alignSelf: "center",
+    marginTop: 80,
+  },
+  background: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    zIndex: -50,
   },
 });

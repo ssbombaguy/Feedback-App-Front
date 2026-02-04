@@ -61,7 +61,7 @@ export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbac
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
-    borderRadius: 12,
+    borderRadius: 15,
     padding: 16,
     marginHorizontal: 16,
     marginVertical: 8,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9C94D',
     paddingVertical: 12,
     paddingHorizontal: 12,
-    borderRadius: 8,
+    borderRadius: 15,
     alignItems: 'center',
     marginTop: 12,
   },
