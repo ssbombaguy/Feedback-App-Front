@@ -8,10 +8,13 @@ import { useEffect, useState } from "react";
 import { getUser } from "../../../utils/AsyncStorage";
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../../../components/LanguageSwitcher';
+import { ConfirmationModal } from '../../../components/ConfirmationModal';
 
 const profile = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -23,8 +26,23 @@ const profile = () => {
     loadUser();
   }, []);
 
+  const handleLogoutConfirm = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+      router.replace("/auth");
+    } catch (error) {
+      console.error('Logout error:', error);
+      alert(t('common.error'));
+    } finally {
+      setIsLoggingOut(false);
+      setShowLogoutConfirm(false);
+    }
+  };
+
   return (
-    <ScrollView style={styles.scrollContainer}>
+    <>
+      <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
         <Image
           style={styles.logo}
@@ -202,7 +220,7 @@ const profile = () => {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.logoutButton}
-                onPress={() => logout().then(() => router.replace("/auth"))}
+                onPress={() => setShowLogoutConfirm(true)}
               >
                 <Ionicons name="log-out-outline" size={20} color="#243d4d" />
                 <Text style={styles.logoutText}>{t('profile.logout')}</Text>
@@ -216,9 +234,21 @@ const profile = () => {
         )}
       </View>
     </ScrollView>
-  );
-};
 
+    <ConfirmationModal
+      visible={showLogoutConfirm}
+      title={t('profile.confirmLogout')}
+      message={t('profile.confirmLogoutMessage')}
+      confirmText={t('profile.yesLogout')}
+      cancelText={t('common.cancel')}
+      onConfirm={handleLogoutConfirm}
+      onCancel={() => setShowLogoutConfirm(false)}
+      isLoading={isLoggingOut}
+      isDangerous={true}
+    />
+    </>
+  );
+}
 export default profile;
 
 const styles = StyleSheet.create({
