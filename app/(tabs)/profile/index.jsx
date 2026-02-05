@@ -9,6 +9,7 @@ import { getUser } from "../../../utils/AsyncStorage";
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../../../components/LanguageSwitcher';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const profile = () => {
   const router = useRouter();
@@ -77,111 +78,94 @@ const profile = () => {
                   color="#243d4d"
                   style={styles.icon}
                 />
-                <View style={styles.infoTextContainer}>
-                  <Text style={styles.infoLabel}>{t('profile.phone')}</Text>
-                  <Text style={styles.infoValue}>{user?.phone || "N/A"}</Text>
+                <View style={styles.userBasicInfo}>
+                  <Text style={styles.name}>{user?.name || ""}</Text>
+                  <Text style={styles.lastname}>{user?.lastname || ""}</Text>
+                  <Text style={styles.email}>{user?.email || ""}</Text>
                 </View>
               </View>
 
-              <View style={styles.infoRow}>
-                <MaterialCommunityIcons
-                  name="phone"
-                  size={20}
-                  color="#243d4d"
-                  style={styles.icon}
-                />
-                <View style={styles.infoTextContainer}>
-                  <Text style={styles.infoLabel}>{t('profile.privateNumber')}</Text>
-                  <Text style={styles.infoValue}>
-                    {user?.privateNumber || "N/A"}
-                  </Text>
-                </View>
-              </View>
-
-              <View style={styles.infoRow}>
-                <MaterialCommunityIcons
-                  name="map-marker"
-                  size={20}
-                  color="#243d4d"
-                  style={styles.icon}
-                />
-                <View style={styles.infoTextContainer}>
-                  <Text style={styles.infoLabel}>{t('profile.town')}</Text>
-                  <Text style={styles.infoValue}>{user?.town || "N/A"}</Text>
-                </View>
-              </View>
-
-              <View style={styles.infoRow}>
-                <MaterialCommunityIcons
-                  name="school"
-                  size={20}
-                  color="#243d4d"
-                  style={styles.icon}
-                />
-                <View style={styles.infoTextContainer}>
-                  <Text style={styles.infoLabel}>{t('profile.grade')}</Text>
-                  <Text style={styles.infoValue}>{user?.grade || "N/A"}</Text>
-                </View>
-              </View>
-            </View>
-
-            {user?.courses?.active && (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>{t('profile.activeCourse')}</Text>
-                <View style={styles.courseCard}>
-                  <View style={styles.courseHeader}>
-                    <Text style={styles.courseName}>
-                      {user.courses.active.courseName}
-                    </Text>
-                    <View style={styles.activeBadge}>
-                      <Ionicons name="checkmark-circle" size={16} color="#fff" />
-                      <Text style={styles.activeBadgeText}>Active</Text>
-                    </View>
-                  </View>
-                  <View style={styles.courseContent}>
-                    <View style={styles.courseInfo}>
-                      <MaterialCommunityIcons
-                        name="target"
-                        size={16}
-                        color="#243d4d"
-                        style={styles.courseIcon}
-                      />
-                      <View>
-                        <Text style={styles.courseLabel}>{t('course.focusArea')}</Text>
-                        <Text style={styles.courseValue}>
-                          {user.courses.active.focusArea}
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={styles.courseInfo}>
-                      <MaterialCommunityIcons
-                        name="human-greeting"
-                        size={16}
-                        color="#243d4d"
-                        style={styles.courseIcon}
-                      />
-                      <View>
-                        <Text style={styles.courseLabel}>{t('course.teacher')}</Text>
-                        <Text style={styles.courseValue}>
-                          {user.courses.active.teacher}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            )}
-
-            {user?.courses?.passed && user.courses.passed.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>
-                  {t('profile.completedCourses')} ({user.courses.passed.length})
+                  {t("profile.personalInfo")}
                 </Text>
-                {user.courses.passed.map((course, index) => (
-                  <View key={index} style={styles.courseCard}>
-                    <Text style={styles.courseName}>
-                      {course.courseName}
+
+                <View style={styles.infoRow}>
+                  <MaterialCommunityIcons
+                    name="phone"
+                    size={20}
+                    color="#243d4d"
+                    style={styles.icon}
+                  />
+                  <View style={styles.infoTextContainer}>
+                    <Text style={styles.infoLabel}>{t("profile.phone")}</Text>
+                    <Text style={styles.infoValue}>{user?.phone || "N/A"}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.infoRow}>
+                  <MaterialCommunityIcons
+                    name="phone"
+                    size={20}
+                    color="#243d4d"
+                    style={styles.icon}
+                  />
+                  <View style={styles.infoTextContainer}>
+                    <Text style={styles.infoLabel}>
+                      {t("profile.privateNumber")}
                     </Text>
+                    <Text style={styles.infoValue}>
+                      {user?.privateNumber || "N/A"}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.infoRow}>
+                  <MaterialCommunityIcons
+                    name="map-marker"
+                    size={20}
+                    color="#243d4d"
+                    style={styles.icon}
+                  />
+                  <View style={styles.infoTextContainer}>
+                    <Text style={styles.infoLabel}>{t("profile.town")}</Text>
+                    <Text style={styles.infoValue}>{user?.town || "N/A"}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.infoRow}>
+                  <MaterialCommunityIcons
+                    name="school"
+                    size={20}
+                    color="#243d4d"
+                    style={styles.icon}
+                  />
+                  <View style={styles.infoTextContainer}>
+                    <Text style={styles.infoLabel}>{t("profile.grade")}</Text>
+                    <Text style={styles.infoValue}>{user?.grade || "N/A"}</Text>
+                  </View>
+                </View>
+              </View>
+
+              {user?.courses?.active && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>
+                    {t("profile.activeCourse")}
+                  </Text>
+                  <View style={styles.courseCard}>
+                    <View style={styles.courseHeader}>
+                      <Text style={styles.courseName}>
+                        {user.courses.active.courseName}
+                      </Text>
+                      <View style={styles.activeBadge}>
+                        <Ionicons
+                          name="checkmark-circle"
+                          size={16}
+                          color="#fff"
+                        />
+                        <Text style={styles.activeBadgeText}>Active</Text>
+                      </View>
+                    </View>
                     <View style={styles.courseContent}>
                       <View style={styles.courseInfo}>
                         <MaterialCommunityIcons
@@ -191,9 +175,11 @@ const profile = () => {
                           style={styles.courseIcon}
                         />
                         <View>
-                          <Text style={styles.courseLabel}>{t('course.focusArea')}</Text>
+                          <Text style={styles.courseLabel}>
+                            {t("course.focusArea")}
+                          </Text>
                           <Text style={styles.courseValue}>
-                            {course.focusArea}
+                            {user.courses.active.focusArea}
                           </Text>
                         </View>
                       </View>
@@ -205,17 +191,66 @@ const profile = () => {
                           style={styles.courseIcon}
                         />
                         <View>
-                          <Text style={styles.courseLabel}>{t('course.teacher')}</Text>
+                          <Text style={styles.courseLabel}>
+                            {t("course.teacher")}
+                          </Text>
                           <Text style={styles.courseValue}>
-                            {course.teacher}
+                            {user.courses.active.teacher}
                           </Text>
                         </View>
                       </View>
                     </View>
                   </View>
-                ))}
-              </View>
-            )}
+                </View>
+              )}
+
+              {user?.courses?.passed && user.courses.passed.length > 0 && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>
+                    {t("profile.completedCourses")} (
+                    {user.courses.passed.length})
+                  </Text>
+                  {user.courses.passed.map((course, index) => (
+                    <View key={index} style={styles.courseCard}>
+                      <Text style={styles.courseName}>{course.courseName}</Text>
+                      <View style={styles.courseContent}>
+                        <View style={styles.courseInfo}>
+                          <MaterialCommunityIcons
+                            name="target"
+                            size={16}
+                            color="#243d4d"
+                            style={styles.courseIcon}
+                          />
+                          <View>
+                            <Text style={styles.courseLabel}>
+                              {t("course.focusArea")}
+                            </Text>
+                            <Text style={styles.courseValue}>
+                              {course.focusArea}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={styles.courseInfo}>
+                          <MaterialCommunityIcons
+                            name="human-greeting"
+                            size={16}
+                            color="#243d4d"
+                            style={styles.courseIcon}
+                          />
+                          <View>
+                            <Text style={styles.courseLabel}>
+                              {t("course.teacher")}
+                            </Text>
+                            <Text style={styles.courseValue}>
+                              {course.teacher}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              )}
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -258,7 +293,7 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    padding: 20,
+    paddingHorizontal: 20,
     width: phoneWidth,
     paddingBottom: 40,
   },
@@ -429,6 +464,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    marginBottom: 30,
   },
   logoutText: {
     fontSize: 16,

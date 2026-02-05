@@ -7,7 +7,9 @@
     "emailRequired": "ელ-ფოსტა აუცილებელია",
     "passwordRequired": "პაროლი აუცილებელია",
     "invalidEmail": "შეიყვანეთ სწორი ელ-ფოსტა",
-    "loginFailed": "შესვლა ვერ მოხერხდა"
+    "loginFailed": "შესვლა ვერ მოხერხდა",
+    "welcomeBack": "კეთილი იყოს თქვენი დაბრუნება",
+    "rememberMe": "დამიმახსოვრე"
   },
   "feedback": {
     "title": "თქვენი კურსები",
@@ -78,5 +80,16 @@
     "close": "დახურვა",
     "en": "EN",
     "ka": "ქა"
+  },
+  "recovery": {
+    "forgotPassword": "დაგავიწყდა პაროლი?",
+    "enterEmail": "შეიყვანეთ თქვენი ელ-ფოსტა",
+    "resetPasswordInstruction": "შეიყვანეთ თქვენი ელ-ფოსტა პაროლის აღსადგენად",
+    "confirm": "დადასტურება",
+    "verifyCode": "კოდის დადასტურება",
+    "codeSent": "შეიყვანეთ 6-ნიშნა კოდი, რომელიც გაიგზავნა ელ-ფოსტაზე {{email}}",
+    "setNewPassword": "შეადგინეთ ახალი პაროლი",
+    "createPasswordInstruction": "შექმენით ძლიერი პაროლი თქვენი ანგარიშისთვის",
+    "resetPassword": "პაროლის აღდგენა"
   }
 }

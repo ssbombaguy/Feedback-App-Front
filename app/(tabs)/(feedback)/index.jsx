@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, Modal } from 'react-native'
+import { View, Text, StyleSheet, Modal, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CourseLister from '../../../components/courseLister'
 import { FeedbackForm } from '../../../components/FeedbackForm'
 import { getUser } from '../../../utils/AsyncStorage'
 import { useTranslation } from 'react-i18next'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const feedback = () => {
   const [courses, setCourses] = useState([])
@@ -64,60 +65,78 @@ const feedback = () => {
 
   if (loading) {
     return (
-      <View style={styles.centerContainer}>
-        <Text>{t('common.loading')}</Text>
-      </View>
-    )
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.centerContainer}>
+          <Text>{t("common.loading")}</Text>
+        </View>
+      </SafeAreaView>
+    );
   }
 
   if (courses.length === 0) {
     return (
-      <View style={styles.centerContainer}>
-        <Text style={styles.emptyText}>{t('common.error')}</Text>
-        <Text style={styles.emptySubtext}>
-          {t('feedback.subtitle')}
-        </Text>
-      </View>
-    )
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.centerContainer}>
+          <Image
+            style={styles.logo}
+            source={require("../../../assets/mziuri-logo.png")}
+          />
+          <Text style={styles.emptyText}>{t("common.error")}</Text>
+          <Text style={styles.emptySubtext}>{t("feedback.subtitle")}</Text>
+        </View>
+      </SafeAreaView>
+    );
   }
 
   return (
     <>
-      <CourseLister data={courses} onFeedbackPress={handleFeedbackPress} />
-      <Modal
-        visible={showFeedbackForm}
-        animationType="slide"
-        onRequestClose={handleCloseFeedbackForm}
-      >
-        <FeedbackForm 
-          courseName={selectedCourseName} 
-          onClose={handleCloseFeedbackForm} 
+      <SafeAreaView style={{ flex: 1 }}>
+        <Image
+          style={styles.logo}
+          source={require("../../../assets/mziuri-logo.png")}
         />
-      </Modal>
+        <CourseLister data={courses} onFeedbackPress={handleFeedbackPress} />
+        <Modal
+          visible={showFeedbackForm}
+          animationType="slide"
+          onRequestClose={handleCloseFeedbackForm}
+        >
+          <FeedbackForm
+            courseName={selectedCourseName}
+            onClose={handleCloseFeedbackForm}
+          />
+        </Modal>
+      </SafeAreaView>
     </>
-  )
+  );
 }   
 
 
 const styles = StyleSheet.create({
   centerContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#F8F9FA',
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 50,
+    backgroundColor: "#F8F9FA",
   },
   emptyText: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#2C3E50',
+    fontWeight: "600",
+    color: "#2C3E50",
     marginBottom: 8,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#546E7A',
-    textAlign: 'center',
+    color: "#546E7A",
+    textAlign: "center",
   },
-})
+  logo: {
+    width: 180,
+    height: 80,
+    resizeMode: "contain",
+    alignSelf: "center",
+  },
+});
 
 export default feedback

@@ -7,7 +7,9 @@
     "emailRequired": "Email is required",
     "passwordRequired": "Password is required",
     "invalidEmail": "Enter a valid email",
-    "loginFailed": "Login Failed"
+    "loginFailed": "Login Failed",
+    "welcomeBack": "Welcome Back",
+    "rememberMe": "Remember me"
   },
   "feedback": {
     "title": "Your Courses",
@@ -78,5 +80,17 @@
     "close": "Close",
     "en": "EN",
     "ka": "KA"
+  },
+  "recovery": {
+    "forgotPassword": "Forgot Password?",
+    "enterEmail": "Enter your email",
+    "resetPasswordInstruction": "Enter your email to reset your password",
+    "confirm": "Confirm",
+    "verifyCode": "Verify Code",
+    "codeSent": "Enter the 6-digit code sent to {{email}}",
+    "setNewPassword": "Set New Password",
+    "createPasswordInstruction": "Create a strong password for your account",
+    "resetPassword": "Reset Password"
   }
+
 }
