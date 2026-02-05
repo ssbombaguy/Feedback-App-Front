@@ -8,11 +8,14 @@ import { useEffect, useState } from "react";
 import { getUser } from "../../../utils/AsyncStorage";
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../../../components/LanguageSwitcher';
+import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const profile = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -24,28 +27,56 @@ const profile = () => {
     loadUser();
   }, []);
 
+  const handleLogoutConfirm = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+      router.replace("/auth");
+    } catch (error) {
+      console.error('Logout error:', error);
+      alert(t('common.error'));
+    } finally {
+      setIsLoggingOut(false);
+      setShowLogoutConfirm(false);
+    }
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <>
       <ScrollView style={styles.scrollContainer}>
-        <View style={styles.container}>
-          <Image
-            style={styles.logo}
-            source={require("../../../assets/mziuri-logo.png")}
-          />
-          <View style={{ marginTop: 16, marginBottom: 16 }}>
-            <LanguageSwitcher />
-          </View>
-          {user ? (
-            <View
-              style={{ alignItems: "flex-start", width: "100%", marginTop: 30 }}
-            >
-              <View style={styles.profileHeader}>
-                <Image
-                  style={styles.profilePicture}
-                  source={{
-                    uri:
-                      user?.profilePicture || "https://via.placeholder.com/150",
-                  }}
+      <View style={styles.container}>
+        <Image
+          style={styles.logo}
+          source={require("../../../assets/mziuri-logo.png")}
+        />
+        <View style={{ marginTop: 16, marginBottom: 16 }}>
+          <LanguageSwitcher />
+        </View>
+        {user ? (
+          <View style={{ alignItems: "flex-start", width: "100%", marginTop: 30 }}>
+            <View style={styles.profileHeader}>
+              <Image
+                style={styles.profilePicture}
+                source={{
+                  uri: user?.profilePicture || "https://via.placeholder.com/150",
+                }}
+              />
+              <View style={styles.userBasicInfo}>
+                <Text style={styles.name}>{user?.name || ""}</Text>
+                <Text style={styles.lastname}>{user?.lastname || ""}</Text>
+                <Text style={styles.email}>{user?.email || ""}</Text>
+              </View>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t('profile.personalInfo')}</Text>
+
+              <View style={styles.infoRow}>
+                <MaterialCommunityIcons
+                  name="phone"
+                  size={20}
+                  color="#243d4d"
+                  style={styles.icon}
                 />
                 <View style={styles.userBasicInfo}>
                   <Text style={styles.name}>{user?.name || ""}</Text>
@@ -221,27 +252,38 @@ const profile = () => {
                 </View>
               )}
 
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.logoutButton}
-                  onPress={() => logout().then(() => router.replace("/auth"))}
-                >
-                  <Ionicons name="log-out-outline" size={20} color="#243d4d" />
-                  <Text style={styles.logoutText}>{t("profile.logout")}</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.logoutButton}
+                onPress={() => setShowLogoutConfirm(true)}
+              >
+                <Ionicons name="log-out-outline" size={20} color="#243d4d" />
+                <Text style={styles.logoutText}>{t('profile.logout')}</Text>
+              </TouchableOpacity>
             </View>
-          ) : (
-            <View style={styles.container}>
-              <Text style={styles.emptyText}>{t("profile.loading")}</Text>
-            </View>
-          )}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <Text style={styles.emptyText}>{t('profile.loading')}</Text>
+          </View>
+        )}
+      </View>
+    </ScrollView>
 
+    <ConfirmationModal
+      visible={showLogoutConfirm}
+      title={t('profile.confirmLogout')}
+      message={t('profile.confirmLogoutMessage')}
+      confirmText={t('profile.yesLogout')}
+      cancelText={t('common.cancel')}
+      onConfirm={handleLogoutConfirm}
+      onCancel={() => setShowLogoutConfirm(false)}
+      isLoading={isLoggingOut}
+      isDangerous={true}
+    />
+    </>
+  );
+}
 export default profile;
 
 const styles = StyleSheet.create({
