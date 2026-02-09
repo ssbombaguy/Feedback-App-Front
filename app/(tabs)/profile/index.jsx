@@ -43,6 +43,7 @@ const profile = () => {
 
   return (
     <>
+
       <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
         <Image
@@ -163,7 +164,7 @@ const profile = () => {
                           size={16}
                           color="#fff"
                         />
-                        <Text style={styles.activeBadgeText}>Active</Text>
+                        <Text style={styles.activeBadgeText}>{t("profile.active")}</Text>
                       </View>
                     </View>
                     <View style={styles.courseContent}>
@@ -261,6 +262,7 @@ const profile = () => {
                 <Text style={styles.logoutText}>{t('profile.logout')}</Text>
               </TouchableOpacity>
             </View>
+          </View>
           </View>
         ) : (
           <View style={styles.container}>
@@ -464,7 +466,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    marginBottom: 30,
+    marginBottom: 50,
   },
   logoutText: {
     fontSize: 16,

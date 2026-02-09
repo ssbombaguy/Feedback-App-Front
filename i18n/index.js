@@ -1,8 +1,8 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import en from '../locals/en.json';
-import ka from '../locals/ka.json';
+import ka from '../locales/ka/ka.json';
+import en from '../locales/en/en.json'
 
 const LANGUAGE_KEY = 'app_language';
 

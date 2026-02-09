@@ -14,11 +14,17 @@ import { LanguageSwitcher } from "../../components/LanguageSwitcher"
 
 const AuthSchema = Yup.object().shape({
   email: Yup.string()
-    .required("Email is required")
-    .email("Enter a valid email"),
+    .required("auth.emailRequired")
+    .email("auth.invalidEmail"),
+    
 
   password: Yup.string()
-    .required("Password is required"),
+    .required("auth.passwordRequired")
+    .min(8, "auth.passwordMin8")
+    .matches(/[A-Z]/, "auth.passwordMustContainCapital")
+    .matches(/[0-9]/, "auth.passwordMustContainNumber")
+    .matches(/[^A-Za-z0-9]/, "auth.passwordMustContainSymbol"),
+    
 })
 
 export default function Authentication() {
@@ -89,7 +95,7 @@ export default function Authentication() {
                 />
 
                 {touched.email && errors.email && (
-                  <Text style={styles.error}>{errors.email}</Text>
+                  <Text style={styles.error}>{t(errors.email)}</Text>
                 )}
 
                 <TextInput
@@ -105,7 +111,7 @@ export default function Authentication() {
                 />
 
                 {touched.password && errors.password && (
-                  <Text style={styles.error}>{errors.password}</Text>
+                  <Text style={styles.error}>{t(errors.password)}</Text>
                 )}
                 <View style={styles.optionsRow}>
                   <View>

@@ -9,7 +9,13 @@
     "invalidEmail": "შეიყვანეთ სწორი ელ-ფოსტა",
     "loginFailed": "შესვლა ვერ მოხერხდა",
     "welcomeBack": "კეთილი იყოს თქვენი დაბრუნება",
-    "rememberMe": "დამიმახსოვრე"
+    "rememberMe": "დამიმახსოვრე",
+    "passwordMin8":"პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს ",
+    "passwordMustContainCapital":"პაროლი უნდა შეიცავდეს მინიმუმ ერთ დიდ ასოს ",
+    "passwordMustContainSymbol":"პაროლი უნდა შეიცავდეს მინიმუმ ერთ სიმბოლოს",
+    "passwordMustContainNumber": "პაროლი უნდა შეიცავდეს მინიმუმ ერთ ციფრს",
+    "confirmPassword":"Confirm password is required",
+    "matchPassword":"პაროლები უნდა ემთხვეოდეს ერთმანეთს"
   },
   "feedback": {
     "title": "თქვენი კურსები",
@@ -63,7 +69,8 @@
     "loading": "იტვირთება პროფილი...",
     "confirmLogout": "დააკვირვდით?",
     "confirmLogoutMessage": "დარწმუნებული ხართ, რომ გსურთ გასვლა?",
-    "yesLogout": "დიახ, გასვლა"
+    "yesLogout": "დიახ, გასვლა",
+    "active":"აქტიური"
   },
   "course": {
     "focusArea": "ფოკუსის სფერო",
