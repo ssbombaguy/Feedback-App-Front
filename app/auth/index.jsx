@@ -1,22 +1,28 @@
-import {View,Text,TextInput,TouchableOpacity,StyleSheet, Image,KeyboardAvoidingView,Platform, ActivityIndicator} from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
-import { Formik } from "formik"
-import * as Yup from "yup"
-import { router } from "expo-router"
-import { setLoggedIn } from "../../utils/AsyncStorage"
-import { authAPI } from "../../api/apiClient"
-import { phoneWidth } from "../../constants/Dimensions"
-import { useMutation } from "@tanstack/react-query"
-import { useTranslation } from "react-i18next"
-import { LanguageSwitcher } from "../../components/LanguageSwitcher"
-
-
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ActivityIndicator,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import { router } from "expo-router";
+import { setLoggedIn } from "../../utils/AsyncStorage";
+import { authAPI } from "../../api/apiClient";
+import { phoneWidth } from "../../constants/Dimensions";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "../../components/LanguageSwitcher";
+import { useState } from "react";
 
 const AuthSchema = Yup.object().shape({
-  email: Yup.string()
-    .required("auth.emailRequired")
-    .email("auth.invalidEmail"),
-    
+  email: Yup.string().required("auth.emailRequired").email("auth.invalidEmail"),
 
   password: Yup.string()
     .required("auth.passwordRequired")
@@ -24,30 +30,30 @@ const AuthSchema = Yup.object().shape({
     .matches(/[A-Z]/, "auth.passwordMustContainCapital")
     .matches(/[0-9]/, "auth.passwordMustContainNumber")
     .matches(/[^A-Za-z0-9]/, "auth.passwordMustContainSymbol"),
-    
-})
+});
 
 export default function Authentication() {
-  const { t } = useTranslation()
- const loginMutation = useMutation({
-  mutationFn: (values) => authAPI.login(values.email, values.password),
-  onSuccess: async (response) => {
-    if (response.user) {
-      await setLoggedIn(response.user)
-      router.replace("/(tabs)/(feedback)")
-    }
-  },
-  onError: (error) => {
-    console.error("Login error:", error)
-    console.log("Response:", error.response?.data)
-    console.log("Status:", error.response?.status)
-  },
-})
+  const [rememberMe, setRememberMe] = useState(false);
+  const { t } = useTranslation();
+  const loginMutation = useMutation({
+    mutationFn: (values) =>
+      authAPI.login(values.email, values.password, values.rememberMe),
+    onSuccess: async (response) => {
+      if (response.user) {
+        await setLoggedIn(response.user);
+        router.replace("/(tabs)/(feedback)");
+      }
+    },
+    onError: (error) => {
+      console.error("Login error:", error);
+      console.log("Response:", error.response?.data);
+      console.log("Status:", error.response?.status);
+    },
+  });
 
   const handleLogin = (values) => {
-    loginMutation.mutate(values)
-  }
-
+    loginMutation.mutate({ ...values, rememberMe });
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -116,7 +122,16 @@ export default function Authentication() {
                 <View style={styles.optionsRow}>
                   <View>
                     <View style={styles.rememberRow}>
-                      <View style={styles.checkbox} />
+                      <TouchableOpacity
+                        onPress={() => setRememberMe(!rememberMe)}
+                        style={[
+                          styles.checkbox,
+                          rememberMe && styles.checkboxChecked,
+                        ]}
+                      >
+                        {rememberMe && <Text style={styles.checkmark}>✓</Text>}
+                      </TouchableOpacity>
+
                       <Text style={styles.rememberText}>
                         {t("auth.rememberMe")}
                       </Text>
@@ -273,6 +288,15 @@ const styles = StyleSheet.create({
     borderColor: "#243d4d",
     borderRadius: 4,
     marginRight: 8,
+  },
+  checkboxChecked: {
+    backgroundColor: "#243d4d",
+  },
+  checkmark: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 12,
+    textAlign: "center",
   },
   rememberText: {
     color: "#243d4d",

@@ -1,22 +1,29 @@
-import { useRouter } from 'expo-router';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from "react-native";
-import { logout } from '../../../utils/AsyncStorage';
-import { phoneWidth } from '../../../constants/Dimensions';
+import { useRouter } from "expo-router";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
+import { logout } from "../../../utils/AsyncStorage";
+import { phoneWidth } from "../../../constants/Dimensions";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useEffect, useState } from "react";
 import { getUser } from "../../../utils/AsyncStorage";
-import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from '../../../components/LanguageSwitcher';
-import { ConfirmationModal } from '../../../components/ConfirmationModal';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "../../../components/LanguageSwitcher";
+import { ConfirmationModal } from "../../../components/ConfirmationModal";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const profile = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -33,8 +40,8 @@ const profile = () => {
       await logout();
       router.replace("/auth");
     } catch (error) {
-      console.error('Logout error:', error);
-      alert(t('common.error'));
+      console.error("Logout error:", error);
+      alert(t("common.error"));
     } finally {
       setIsLoggingOut(false);
       setShowLogoutConfirm(false);
@@ -42,42 +49,27 @@ const profile = () => {
   };
 
   return (
-    <>
-
+    <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Image
-          style={styles.logo}
-          source={require("../../../assets/mziuri-logo.png")}
-        />
-        <View style={{ marginTop: 16, marginBottom: 16 }}>
-          <LanguageSwitcher />
-        </View>
-        {user ? (
-          <View style={{ alignItems: "flex-start", width: "100%", marginTop: 30 }}>
-            <View style={styles.profileHeader}>
-              <Image
-                style={styles.profilePicture}
-                source={{
-                  uri: user?.profilePicture || "https://via.placeholder.com/150",
-                }}
-              />
-              <View style={styles.userBasicInfo}>
-                <Text style={styles.name}>{user?.name || ""}</Text>
-                <Text style={styles.lastname}>{user?.lastname || ""}</Text>
-                <Text style={styles.email}>{user?.email || ""}</Text>
-              </View>
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>{t('profile.personalInfo')}</Text>
-
-              <View style={styles.infoRow}>
-                <MaterialCommunityIcons
-                  name="phone"
-                  size={20}
-                  color="#243d4d"
-                  style={styles.icon}
+        <View style={styles.container}>
+          <Image
+            style={styles.logo}
+            source={require("../../../assets/mziuri-logo.png")}
+          />
+          <View style={{ marginTop: 16, marginBottom: 16 }}>
+            <LanguageSwitcher />
+          </View>
+          {user ? (
+            <View
+              style={{ alignItems: "flex-start", width: "100%", marginTop: 30 }}
+            >
+              <View style={styles.profileHeader}>
+                <Image
+                  style={styles.profilePicture}
+                  source={{
+                    uri:
+                      user?.profilePicture || "https://via.placeholder.com/150",
+                  }}
                 />
                 <View style={styles.userBasicInfo}>
                   <Text style={styles.name}>{user?.name || ""}</Text>
@@ -98,194 +90,232 @@ const profile = () => {
                     color="#243d4d"
                     style={styles.icon}
                   />
-                  <View style={styles.infoTextContainer}>
-                    <Text style={styles.infoLabel}>{t("profile.phone")}</Text>
-                    <Text style={styles.infoValue}>{user?.phone || "N/A"}</Text>
+                  <View style={styles.userBasicInfo}>
+                    <Text style={styles.name}>{user?.name || ""}</Text>
+                    <Text style={styles.lastname}>{user?.lastname || ""}</Text>
+                    <Text style={styles.email}>{user?.email || ""}</Text>
                   </View>
                 </View>
 
-                <View style={styles.infoRow}>
-                  <MaterialCommunityIcons
-                    name="phone"
-                    size={20}
-                    color="#243d4d"
-                    style={styles.icon}
-                  />
-                  <View style={styles.infoTextContainer}>
-                    <Text style={styles.infoLabel}>
-                      {t("profile.privateNumber")}
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>
+                    {t("profile.personalInfo")}
+                  </Text>
+
+                  <View style={styles.infoRow}>
+                    <MaterialCommunityIcons
+                      name="phone"
+                      size={20}
+                      color="#243d4d"
+                      style={styles.icon}
+                    />
+                    <View style={styles.infoTextContainer}>
+                      <Text style={styles.infoLabel}>{t("profile.phone")}</Text>
+                      <Text style={styles.infoValue}>
+                        {user?.phone || "N/A"}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.infoRow}>
+                    <MaterialCommunityIcons
+                      name="phone"
+                      size={20}
+                      color="#243d4d"
+                      style={styles.icon}
+                    />
+                    <View style={styles.infoTextContainer}>
+                      <Text style={styles.infoLabel}>
+                        {t("profile.privateNumber")}
+                      </Text>
+                      <Text style={styles.infoValue}>
+                        {user?.privateNumber || "N/A"}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.infoRow}>
+                    <MaterialCommunityIcons
+                      name="map-marker"
+                      size={20}
+                      color="#243d4d"
+                      style={styles.icon}
+                    />
+                    <View style={styles.infoTextContainer}>
+                      <Text style={styles.infoLabel}>{t("profile.town")}</Text>
+                      <Text style={styles.infoValue}>
+                        {user?.town || "N/A"}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.infoRow}>
+                    <MaterialCommunityIcons
+                      name="school"
+                      size={20}
+                      color="#243d4d"
+                      style={styles.icon}
+                    />
+                    <View style={styles.infoTextContainer}>
+                      <Text style={styles.infoLabel}>{t("profile.grade")}</Text>
+                      <Text style={styles.infoValue}>
+                        {user?.grade || "N/A"}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+
+                {user?.courses?.active && (
+                  <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>
+                      {t("profile.activeCourse")}
                     </Text>
-                    <Text style={styles.infoValue}>
-                      {user?.privateNumber || "N/A"}
+
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                      <View style={styles.courseCard}>
+                        <View style={styles.courseHeader}>
+                          <Text style={styles.courseName}>
+                            {user.courses.active.courseName}
+                          </Text>
+                          <View style={styles.activeBadge}>
+                            <Ionicons
+                              name="checkmark-circle"
+                              size={16}
+                              color="#fff"
+                            />
+                            <Text style={styles.activeBadgeText}>
+                              {t("profile.active")}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={styles.courseContent}>
+                          <View style={styles.courseInfo}>
+                            <MaterialCommunityIcons
+                              name="target"
+                              size={16}
+                              color="#243d4d"
+                              style={styles.courseIcon}
+                            />
+                            <View>
+                              <Text style={styles.courseLabel}>
+                                {t("course.focusArea")}
+                              </Text>
+                              <Text style={styles.courseValue}>
+                                {user.courses.active.focusArea}
+                              </Text>
+                            </View>
+                          </View>
+                          <View style={styles.courseInfo}>
+                            <MaterialCommunityIcons
+                              name="human-greeting"
+                              size={16}
+                              color="#243d4d"
+                              style={styles.courseIcon}
+                            />
+                            <View>
+                              <Text style={styles.courseLabel}>
+                                {t("course.teacher")}
+                              </Text>
+                              <Text style={styles.courseValue}>
+                                {user.courses.active.teacher}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                    </ScrollView>
+                  </View>
+                )}
+
+                {user?.courses?.passed && user.courses.passed.length > 0 && (
+                  <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>
+                      {t("profile.completedCourses")} (
+                      {user.courses.passed.length})
                     </Text>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                      {user.courses.passed.map((course, index) => (
+                        <View key={index} style={styles.courseCard}>
+                          <Text style={styles.courseName}>
+                            {course.courseName}
+                          </Text>
+                          <View style={styles.courseContent}>
+                            <View style={styles.courseInfo}>
+                              <MaterialCommunityIcons
+                                name="target"
+                                size={16}
+                                color="#243d4d"
+                                style={styles.courseIcon}
+                              />
+                              <View>
+                                <Text style={styles.courseLabel}>
+                                  {t("course.focusArea")}
+                                </Text>
+                                <Text style={styles.courseValue}>
+                                  {course.focusArea}
+                                </Text>
+                              </View>
+                            </View>
+                            <View style={styles.courseInfo}>
+                              <MaterialCommunityIcons
+                                name="human-greeting"
+                                size={16}
+                                color="#243d4d"
+                                style={styles.courseIcon}
+                              />
+                              <View>
+                                <Text style={styles.courseLabel}>
+                                  {t("course.teacher")}
+                                </Text>
+                                <Text style={styles.courseValue}>
+                                  {course.teacher}
+                                </Text>
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                      ))}
+                    </ScrollView>
                   </View>
-                </View>
+                )}
 
-                <View style={styles.infoRow}>
-                  <MaterialCommunityIcons
-                    name="map-marker"
-                    size={20}
-                    color="#243d4d"
-                    style={styles.icon}
-                  />
-                  <View style={styles.infoTextContainer}>
-                    <Text style={styles.infoLabel}>{t("profile.town")}</Text>
-                    <Text style={styles.infoValue}>{user?.town || "N/A"}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.infoRow}>
-                  <MaterialCommunityIcons
-                    name="school"
-                    size={20}
-                    color="#243d4d"
-                    style={styles.icon}
-                  />
-                  <View style={styles.infoTextContainer}>
-                    <Text style={styles.infoLabel}>{t("profile.grade")}</Text>
-                    <Text style={styles.infoValue}>{user?.grade || "N/A"}</Text>
-                  </View>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.logoutButton}
+                    onPress={() => setShowLogoutConfirm(true)}
+                  >
+                    <Ionicons
+                      name="log-out-outline"
+                      size={20}
+                      color="#243d4d"
+                    />
+                    <Text style={styles.logoutText}>{t("profile.logout")}</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-
-              {user?.courses?.active && (
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>
-                    {t("profile.activeCourse")}
-                  </Text>
-                  <View style={styles.courseCard}>
-                    <View style={styles.courseHeader}>
-                      <Text style={styles.courseName}>
-                        {user.courses.active.courseName}
-                      </Text>
-                      <View style={styles.activeBadge}>
-                        <Ionicons
-                          name="checkmark-circle"
-                          size={16}
-                          color="#fff"
-                        />
-                        <Text style={styles.activeBadgeText}>{t("profile.active")}</Text>
-                      </View>
-                    </View>
-                    <View style={styles.courseContent}>
-                      <View style={styles.courseInfo}>
-                        <MaterialCommunityIcons
-                          name="target"
-                          size={16}
-                          color="#243d4d"
-                          style={styles.courseIcon}
-                        />
-                        <View>
-                          <Text style={styles.courseLabel}>
-                            {t("course.focusArea")}
-                          </Text>
-                          <Text style={styles.courseValue}>
-                            {user.courses.active.focusArea}
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={styles.courseInfo}>
-                        <MaterialCommunityIcons
-                          name="human-greeting"
-                          size={16}
-                          color="#243d4d"
-                          style={styles.courseIcon}
-                        />
-                        <View>
-                          <Text style={styles.courseLabel}>
-                            {t("course.teacher")}
-                          </Text>
-                          <Text style={styles.courseValue}>
-                            {user.courses.active.teacher}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              )}
-
-              {user?.courses?.passed && user.courses.passed.length > 0 && (
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>
-                    {t("profile.completedCourses")} (
-                    {user.courses.passed.length})
-                  </Text>
-                  {user.courses.passed.map((course, index) => (
-                    <View key={index} style={styles.courseCard}>
-                      <Text style={styles.courseName}>{course.courseName}</Text>
-                      <View style={styles.courseContent}>
-                        <View style={styles.courseInfo}>
-                          <MaterialCommunityIcons
-                            name="target"
-                            size={16}
-                            color="#243d4d"
-                            style={styles.courseIcon}
-                          />
-                          <View>
-                            <Text style={styles.courseLabel}>
-                              {t("course.focusArea")}
-                            </Text>
-                            <Text style={styles.courseValue}>
-                              {course.focusArea}
-                            </Text>
-                          </View>
-                        </View>
-                        <View style={styles.courseInfo}>
-                          <MaterialCommunityIcons
-                            name="human-greeting"
-                            size={16}
-                            color="#243d4d"
-                            style={styles.courseIcon}
-                          />
-                          <View>
-                            <Text style={styles.courseLabel}>
-                              {t("course.teacher")}
-                            </Text>
-                            <Text style={styles.courseValue}>
-                              {course.teacher}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  ))}
-                </View>
-              )}
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.logoutButton}
-                onPress={() => setShowLogoutConfirm(true)}
-              >
-                <Ionicons name="log-out-outline" size={20} color="#243d4d" />
-                <Text style={styles.logoutText}>{t('profile.logout')}</Text>
-              </TouchableOpacity>
             </View>
-          </View>
-          </View>
-        ) : (
-          <View style={styles.container}>
-            <Text style={styles.emptyText}>{t('profile.loading')}</Text>
-          </View>
-        )}
-      </View>
-    </ScrollView>
+          ) : (
+            <View style={styles.container}>
+              <Text style={styles.emptyText}>{t("profile.loading")}</Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
 
-    <ConfirmationModal
-      visible={showLogoutConfirm}
-      title={t('profile.confirmLogout')}
-      message={t('profile.confirmLogoutMessage')}
-      confirmText={t('profile.yesLogout')}
-      cancelText={t('common.cancel')}
-      onConfirm={handleLogoutConfirm}
-      onCancel={() => setShowLogoutConfirm(false)}
-      isLoading={isLoggingOut}
-      isDangerous={true}
-    />
-    </>
+      <ConfirmationModal
+        visible={showLogoutConfirm}
+        title={t("profile.confirmLogout")}
+        message={t("profile.confirmLogoutMessage")}
+        confirmText={t("profile.yesLogout")}
+        cancelText={t("common.cancel")}
+        onConfirm={handleLogoutConfirm}
+        onCancel={() => setShowLogoutConfirm(false)}
+        isLoading={isLoggingOut}
+        isDangerous={true}
+      />
+    </SafeAreaView>
   );
-}
+};
 export default profile;
 
 const styles = StyleSheet.create({

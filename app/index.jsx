@@ -7,8 +7,9 @@ export default function Index() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const value = await isLoggedIn();
-      setLoggedIn(value === "true");
+      const loggedIn = await isLoggedIn();
+      console.log(loggedIn);
+      setLoggedIn(loggedIn);
     };
 
     checkAuth();

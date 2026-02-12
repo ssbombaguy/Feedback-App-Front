@@ -89,7 +89,6 @@ const feedback = () => {
   }
 
   return (
-    <>
       <SafeAreaView style={{ flex: 1 }}>
         <Image
           style={styles.logo}
@@ -107,7 +106,6 @@ const feedback = () => {
           />
         </Modal>
       </SafeAreaView>
-    </>
   );
 }   
 
