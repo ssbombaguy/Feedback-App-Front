@@ -1,37 +1,49 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import en from '../locals/en.json';
-import ka from '../locals/ka.json';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const LANGUAGE_KEY = 'app_language';
+import * as Localization from "expo-localization";
+
+import ka from "../locales/ka/ka.json";
+import en from "../locales/en/en.json";
+
+const LANGUAGE_KEY = "app_language";
 
 export const getStoredLanguage = async () => {
   try {
     const savedLanguage = await AsyncStorage.getItem(LANGUAGE_KEY);
-    return savedLanguage || 'en'; 
+
+    if (savedLanguage) return savedLanguage;
+
+    const deviceLang = Localization.getLocales()[0].languageCode;
+
+    return ["en", "ka"].includes(deviceLang) ? deviceLang : "en";
   } catch (error) {
-    console.error('Error getting language:', error);
-    return 'en';
+    console.error("Error getting language:", error);
+    return "en";
   }
 };
 
 export const saveLanguage = async (language) => {
   try {
     await AsyncStorage.setItem(LANGUAGE_KEY, language);
+    i18n.changeLanguage(language);
   } catch (error) {
-    console.error('Error saving language:', error);
+    console.error("Error saving language:", error);
   }
 };
 
-i18n.use(initReactI18next).init({
-    compatibilityJSON: 'v3',
+const initI18n = async () => {
+  const language = await getStoredLanguage();
+
+  i18n.use(initReactI18next).init({
+    compatibilityJSON: "v3",
     resources: {
       en: { translation: en },
       ka: { translation: ka },
     },
-    lng: 'en', 
-    fallbackLng: 'en',
+    lng: language,
+    fallbackLng: "en",
     interpolation: {
       escapeValue: false,
     },
@@ -39,5 +51,8 @@ i18n.use(initReactI18next).init({
       useSuspense: false,
     },
   });
+};
+
+initI18n();
 
 export default i18n;

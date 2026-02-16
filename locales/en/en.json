@@ -9,7 +9,13 @@
     "invalidEmail": "Enter a valid email",
     "loginFailed": "Login Failed",
     "welcomeBack": "Welcome Back",
-    "rememberMe": "Remember me"
+    "rememberMe": "Remember me",
+    "passwordMin8":"Password must be at least 8 characters long ",
+    "passwordMustContainCapital":"Password must contain at least one capital letter",
+    "passwordMustContainNumber": "Password must contain at least one number",
+    "passwordMustContainSymbol":"Password must contain at least one symbol",
+    "confirmPassword":"Confirm password is required",
+    "matchPassword":"Passwords must match"
   },
   "feedback": {
     "title": "Your Courses",
@@ -63,7 +69,8 @@
     "loading": "Loading profile...",
     "confirmLogout": "Are You Sure?",
     "confirmLogoutMessage": "Are you sure you want to log out?",
-    "yesLogout": "Yes, Log Out"
+    "yesLogout": "Yes, Log Out",
+    "active":"Active"
   },
   "course": {
     "focusArea": "Focus Area",

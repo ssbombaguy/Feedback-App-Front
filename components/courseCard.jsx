@@ -21,7 +21,7 @@ export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbac
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.7} style={styles.card}>
+    <View activeOpacity={0.7} style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.courseName}>{courseName}</Text>
         {isActive && (
@@ -54,7 +54,7 @@ export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbac
           {feedbackSubmitted ? t('feedback.feedbackSubmitted') : t('feedback.writeFeedback')}
         </Text>
       </TouchableOpacity>
-    </TouchableOpacity>
+    </View>
   )
 }
 
