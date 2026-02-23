@@ -76,7 +76,8 @@
     "focusArea": "Focus Area",
     "teacher": "Teacher",
     "duration": "Duration",
-    "active": "Active"
+    "active": "Active",
+    "learningType": "Learning Type"
   },
   "common": {
     "loading": "Loading...",

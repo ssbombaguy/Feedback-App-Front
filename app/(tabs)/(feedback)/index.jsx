@@ -1,46 +1,55 @@
-import { View, Text, StyleSheet, Modal, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import CourseLister from '../../../components/courseLister'
-import { FeedbackForm } from '../../../components/FeedbackForm'
-import { getUser } from '../../../utils/AsyncStorage'
+import { View, Text, StyleSheet, Modal, Image, ActivityIndicator, ScrollView, RefreshControl } from 'react-native'
+import React, { useEffect, useState, useCallback } from 'react'
+import CourseLister from '../../../components/feedback/courseLister'
+import { FeedbackForm } from '../../../components/feedback/FeedbackForm'
+import { userAPI } from '../../../api/apiClient'
 import { useTranslation } from 'react-i18next'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const feedback = () => {
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [showFeedbackForm, setShowFeedbackForm] = useState(false)
   const [selectedCourseName, setSelectedCourseName] = useState(null)
   const { t } = useTranslation()
 
-  useEffect(() => {
-    loadUserCourses()
-  }, [])
-
-  const loadUserCourses = async () => {
+  const loadUserCourses = useCallback(async () => {
     try {
-      const user = await getUser()
-      
+      const response = await userAPI.getCurrentUserProfile()
+      const user = response.user
+
       if (!user || !user.courses) {
         setCourses([])
         return
       }
 
       const allCourses = []
-      
-      if (user.courses.active) {
+
+      if (user.courses.active && user.courses.active.name) {
+        const active = user.courses.active
         allCourses.push({
-          ...user.courses.active,
+          courseName: active.name,
+          focusArea: active.duration,
+          teacher: Array.isArray(active.teachersName)
+            ? active.teachersName.join(', ')
+            : active.teachersName || '',
           isActive: true,
         })
       }
-      
+
       if (user.courses.passed && user.courses.passed.length > 0) {
         user.courses.passed.forEach(course => {
-          allCourses.push({
-            ...course,
-            isActive: false,
-          })
+          if (course && course.name) {
+            allCourses.push({
+              courseName: course.name,
+              focusArea: course.duration,
+              teacher: Array.isArray(course.teachersName)
+                ? course.teachersName.join(', ')
+                : course.teachersName || '',
+              isActive: false,
+            })
+          }
         })
       }
 
@@ -50,8 +59,18 @@ const feedback = () => {
       setCourses([])
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    loadUserCourses()
+  }, [loadUserCourses])
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    loadUserCourses()
+  }, [loadUserCourses])
 
   const handleFeedbackPress = (courseName) => {
     setSelectedCourseName(courseName)
@@ -65,76 +84,94 @@ const feedback = () => {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.centerContainer}>
-          <Text>{t("common.loading")}</Text>
-        </View>
+      <SafeAreaView style={styles.centerContainer}>
+        <ActivityIndicator size="large" color="#243d4d" />
       </SafeAreaView>
-    );
+    )
   }
 
   if (courses.length === 0) {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.centerContainer}>
-          <Image
-            style={styles.logo}
-            source={require("../../../assets/mziuri-logo.png")}
-          />
-          <Text style={styles.emptyText}>{t("common.error")}</Text>
-          <Text style={styles.emptySubtext}>{t("feedback.subtitle")}</Text>
-        </View>
+      <SafeAreaView style={styles.centerContainer}>
+        <ScrollView
+          contentContainerStyle={styles.centerContent}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
+          <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
+          <Text style={styles.emptyText}>{t('common.error')}</Text>
+          <Text style={styles.emptySubtext}>{t('feedback.subtitle')}</Text>
+        </ScrollView>
       </SafeAreaView>
-    );
+    )
   }
 
   return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <Image
-          style={styles.logo}
-          source={require("../../../assets/mziuri-logo.png")}
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
+        <CourseLister
+          data={courses}
+          onFeedbackPress={handleFeedbackPress}
         />
-        <CourseLister data={courses} onFeedbackPress={handleFeedbackPress} />
-        <Modal
-          visible={showFeedbackForm}
-          animationType="slide"
-          onRequestClose={handleCloseFeedbackForm}
-        >
-          <FeedbackForm
-            courseName={selectedCourseName}
-            onClose={handleCloseFeedbackForm}
-          />
-        </Modal>
-      </SafeAreaView>
-  );
-}   
+      </ScrollView>
 
+      <Modal
+        visible={showFeedbackForm}
+        animationType="slide"
+        onRequestClose={handleCloseFeedbackForm}
+      >
+        <FeedbackForm
+          courseName={selectedCourseName}
+          onClose={handleCloseFeedbackForm}
+        />
+      </Modal>
+    </SafeAreaView>
+  )
+}
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F8F9FA',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 100,
+  },
   centerContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#F8F9FA',
+  },
+  centerContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 50,
-    backgroundColor: "#F8F9FA",
   },
   emptyText: {
     fontSize: 18,
-    fontWeight: "600",
-    color: "#2C3E50",
+    fontWeight: '600',
+    color: '#2C3E50',
     marginBottom: 8,
   },
   emptySubtext: {
     fontSize: 14,
-    color: "#546E7A",
-    textAlign: "center",
+    color: '#546E7A',
+    textAlign: 'center',
   },
   logo: {
     width: 180,
     height: 80,
-    resizeMode: "contain",
-    alignSelf: "center",
+    marginTop: 16,
+    resizeMode: 'contain',
+    alignSelf: 'center',
   },
-});
+})
 
 export default feedback
