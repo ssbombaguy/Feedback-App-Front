@@ -76,7 +76,8 @@
     "focusArea": "ფოკუსის სფერო",
     "teacher": "მასწავლებელი",
     "duration": "ხანგრძლივობა",
-    "active": "აქტიური"
+    "active": "აქტიური",
+    "learningType": "სწავლების ტიპი"
   },
   "common": {
     "loading": "იტვირთება...",

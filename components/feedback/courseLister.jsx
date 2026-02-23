@@ -1,5 +1,4 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { CourseCard } from './courseCard'
 import { useTranslation } from 'react-i18next'
@@ -7,27 +6,22 @@ import { useTranslation } from 'react-i18next'
 const CourseLister = ({ data, onFeedbackPress }) => {
   const { t } = useTranslation()
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{t('feedback.title')}</Text>
         <Text style={styles.subtitle}>{t('feedback.subtitle')}</Text>
       </View>
-      <FlatList
-        data={data}
-        keyExtractor={(item, index) => `${item.courseName}-${index}`}
-        renderItem={({ item }) => (
-          <CourseCard
-            courseName={item.courseName}
-            focusArea={item.focusArea}
-            teacher={item.teacher}
-            isActive={item.isActive}
-            onFeedbackPress={onFeedbackPress}
-          />
-        )}
-        scrollEnabled={true}
-        contentContainerStyle={styles.listContent}
-      />
-    </SafeAreaView>
+      {data.map((item, index) => (
+        <CourseCard
+          key={`${item.courseName}-${index}`}
+          courseName={item.courseName}
+          focusArea={item.focusArea}
+          teacher={item.teacher}
+          isActive={item.isActive}
+          onFeedbackPress={onFeedbackPress}
+        />
+      ))}
+    </View>
   )
 }
 
@@ -36,10 +30,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F8F9FA',
   },
-  header: { 
-    paddingBottom: 16,
+  header: {
+    paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
+    marginBottom: 8,
   },
   title: {
     fontSize: 24,
@@ -52,10 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#546E7A',
     marginTop: 4,
-    alignSelf: 'center'
-  },
-  listContent: {
-    paddingVertical: 8,
+    alignSelf: 'center',
   },
 })
 

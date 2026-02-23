@@ -3,11 +3,11 @@ import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { useFeedback } from '../api/useFeedback'
-import { getUser } from '../utils/AsyncStorage'
+import { useFeedback } from '../../api/useFeedback'
+import { getUser } from '../../utils/AsyncStorage'
 import { useTranslation } from 'react-i18next'
 import { FeedbackField } from './FeedbackField'
-import { ConfirmationModal } from './ConfirmationModal'
+import { ConfirmationModal } from '../ConfirmationModal'
 
 const FEEDBACK_FIELDS_CONFIG = [
   {
