@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import Logo from "../assets/MziuriLogo.svg"
 export default function NotFoundScreen() {
   const router = useRouter();
 
@@ -12,10 +12,8 @@ export default function NotFoundScreen() {
         <StatusBar barStyle="dark-content" />
 
         <View style={styles.header}>
-          <Image
-            source={require("../assets/mziuri-logo.png")}
+          <Logo
             style={styles.logoSmall}
-            resizeMode="contain"
           />
         </View>
 
