@@ -12,7 +12,7 @@ import { userAPI } from '../../../api/apiClient'
 import { PersonalInfo } from '../../../components/profile/PersonalInfo'
 import { CoursesSection } from '../../../components/profile/CourseSection'
 import { ProfileHeader } from '../../../components/profile/ProfileHeader'
-
+import { useTheme } from '../../../context/ThemeContext'
 
 const profile = () => {
   const router = useRouter()
@@ -21,6 +21,8 @@ const profile = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const { t } = useTranslation()
+  const { theme } = useTheme()
+  const styles = makeStyles(theme)
 
   const loadUser = useCallback(async () => {
     try {
@@ -57,37 +59,34 @@ const profile = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView
         style={styles.scrollContainer}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View style={styles.container}>
           <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
-          <View style={{ marginTop: 16, marginBottom: 16 }}>
+          <View style={styles.languageSwitcher}>
             <LanguageSwitcher />
           </View>
 
           {user ? (
-            <View style={{ alignItems: 'flex-start', width: '100%', marginTop: 30 }}>
+            <View style={styles.content}>
               <ProfileHeader user={user} />
               <PersonalInfo user={user} />
               <CoursesSection courses={user.courses} />
-
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.logoutButton}
                   onPress={() => setShowLogoutConfirm(true)}
                 >
-                  <Ionicons name="log-out-outline" size={20} color="#243d4d" />
+                  <Ionicons name="log-out-outline" size={20} color={theme.textSecondary} />
                   <Text style={styles.logoutText}>{t('profile.logout')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
           ) : (
-            <View style={styles.container}>
-              <Text style={styles.emptyText}>{t('profile.loading')}</Text>
-            </View>
+            <Text style={styles.emptyText}>{t('profile.loading')}</Text>
           )}
         </View>
       </ScrollView>
@@ -109,19 +108,22 @@ const profile = () => {
 
 export default profile
 
-const styles = StyleSheet.create({
-  scrollContainer: { flex: 1, backgroundColor: '#f5f5f5' },
+const makeStyles = (theme) => StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: theme.background },
+  scrollContainer: { flex: 1, backgroundColor: theme.background },
   container: {
     alignItems: 'center',
     paddingHorizontal: 20,
     width: phoneWidth,
-    paddingBottom: 40,
+    paddingBottom: 100,
   },
   logo: { width: 180, height: 80, resizeMode: 'contain', alignSelf: 'center' },
-  emptyText: { fontSize: 16, color: '#999', marginTop: 40 },
+  languageSwitcher: { marginTop: 16, marginBottom: 16 },
+  content: { alignItems: 'flex-start', width: '100%', marginTop: 30 },
+  emptyText: { fontSize: 16, color: theme.label, marginTop: 40 },
   buttonContainer: { width: '100%', marginTop: 12 },
   logoutButton: {
-    backgroundColor: '#F9C94D',
+    backgroundColor: theme.accent,
     borderRadius: 10,
     padding: 14,
     justifyContent: 'center',
@@ -135,5 +137,5 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginBottom: 50,
   },
-  logoutText: { fontSize: 16, color: '#243d4d', fontWeight: '700' },
+  logoutText: { fontSize: 16, color: theme.textSecondary, fontWeight: '700' },
 })

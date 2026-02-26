@@ -5,6 +5,7 @@ import { FeedbackForm } from '../../../components/feedback/FeedbackForm'
 import { userAPI } from '../../../api/apiClient'
 import { useTranslation } from 'react-i18next'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTheme } from '../../../context/ThemeContext'
 
 const feedback = () => {
   const [courses, setCourses] = useState([])
@@ -13,16 +14,15 @@ const feedback = () => {
   const [showFeedbackForm, setShowFeedbackForm] = useState(false)
   const [selectedCourseName, setSelectedCourseName] = useState(null)
   const { t } = useTranslation()
+  const { theme } = useTheme()
+  const styles = makeStyles(theme)
 
   const loadUserCourses = useCallback(async () => {
     try {
       const response = await userAPI.getCurrentUserProfile()
       const user = response.user
 
-      if (!user || !user.courses) {
-        setCourses([])
-        return
-      }
+      if (!user || !user.courses) { setCourses([]); return }
 
       const allCourses = []
 
@@ -31,9 +31,7 @@ const feedback = () => {
         allCourses.push({
           courseName: active.name,
           focusArea: active.duration,
-          teacher: Array.isArray(active.teachersName)
-            ? active.teachersName.join(', ')
-            : active.teachersName || '',
+          teacher: Array.isArray(active.teachersName) ? active.teachersName.join(', ') : active.teachersName || '',
           isActive: true,
         })
       }
@@ -44,9 +42,7 @@ const feedback = () => {
             allCourses.push({
               courseName: course.name,
               focusArea: course.duration,
-              teacher: Array.isArray(course.teachersName)
-                ? course.teachersName.join(', ')
-                : course.teachersName || '',
+              teacher: Array.isArray(course.teachersName) ? course.teachersName.join(', ') : course.teachersName || '',
               isActive: false,
             })
           }
@@ -63,29 +59,17 @@ const feedback = () => {
     }
   }, [])
 
-  useEffect(() => {
-    loadUserCourses()
-  }, [loadUserCourses])
+  useEffect(() => { loadUserCourses() }, [loadUserCourses])
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    loadUserCourses()
-  }, [loadUserCourses])
+  const onRefresh = useCallback(() => { setRefreshing(true); loadUserCourses() }, [loadUserCourses])
 
-  const handleFeedbackPress = (courseName) => {
-    setSelectedCourseName(courseName)
-    setShowFeedbackForm(true)
-  }
-
-  const handleCloseFeedbackForm = () => {
-    setShowFeedbackForm(false)
-    setSelectedCourseName(null)
-  }
+  const handleFeedbackPress = (courseName) => { setSelectedCourseName(courseName); setShowFeedbackForm(true) }
+  const handleCloseFeedbackForm = () => { setShowFeedbackForm(false); setSelectedCourseName(null) }
 
   if (loading) {
     return (
       <SafeAreaView style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#243d4d" />
+        <ActivityIndicator size="large" color={theme.primary} />
       </SafeAreaView>
     )
   }
@@ -113,65 +97,25 @@ const feedback = () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
-        <CourseLister
-          data={courses}
-          onFeedbackPress={handleFeedbackPress}
-        />
+        <CourseLister data={courses} onFeedbackPress={handleFeedbackPress} />
       </ScrollView>
 
-      <Modal
-        visible={showFeedbackForm}
-        animationType="slide"
-        onRequestClose={handleCloseFeedbackForm}
-      >
-        <FeedbackForm
-          courseName={selectedCourseName}
-          onClose={handleCloseFeedbackForm}
-        />
+      <Modal visible={showFeedbackForm} animationType="slide" onRequestClose={handleCloseFeedbackForm}>
+        <FeedbackForm courseName={selectedCourseName} onClose={handleCloseFeedbackForm} />
       </Modal>
     </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 100,
-  },
-  centerContainer: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
-  centerContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 50,
-  },
-  emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#2C3E50',
-    marginBottom: 8,
-  },
-  emptySubtext: {
-    fontSize: 14,
-    color: '#546E7A',
-    textAlign: 'center',
-  },
-  logo: {
-    width: 180,
-    height: 80,
-    marginTop: 16,
-    resizeMode: 'contain',
-    alignSelf: 'center',
-  },
+const makeStyles = (theme) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: theme.background },
+  scrollView: { flex: 1 },
+  scrollContent: { paddingBottom: 100 },
+  centerContainer: { flex: 1, backgroundColor: theme.background },
+  centerContent: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 50 },
+  emptyText: { fontSize: 18, fontWeight: '600', color: theme.text, marginBottom: 8 },
+  emptySubtext: { fontSize: 14, color: theme.subtext, textAlign: 'center' },
+  logo: { width: 180, height: 80, marginTop: 16, resizeMode: 'contain', alignSelf: 'center' },
 })
 
 export default feedback

@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from "../context/AuthContext"
 import { QueryProvider } from "../context/QueryProvider"
 import { I18nextProvider } from 'react-i18next'
 import i18n, { getStoredLanguage } from '../i18n/index'
+import { ThemeProvider } from '../context/ThemeContext'
 import '../i18n/index'
 
 function RootLayoutContent() {
@@ -50,6 +51,7 @@ export default function RootLayout() {
   }
 
   return (
+  <ThemeProvider>
     <I18nextProvider i18n={i18n}>
       <QueryProvider>
         <AuthProvider>
@@ -57,5 +59,6 @@ export default function RootLayout() {
         </AuthProvider>
       </QueryProvider>
     </I18nextProvider>
+  </ThemeProvider>  
   )
 }

@@ -2,9 +2,12 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { saveLanguage } from '../i18n'
 import { useCallback } from 'react'
+import { useTheme } from '../context/ThemeContext'
 
 export const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation()
+  const { theme } = useTheme()
+  const styles = makeStyles(theme)
 
   const changeLanguage = useCallback(async (lang) => {
     try {
@@ -25,7 +28,6 @@ export const LanguageSwitcher = () => {
           {t('common.en')}
         </Text>
       </TouchableOpacity>
-      
       <TouchableOpacity
         style={[styles.button, i18n.language === 'ka' && styles.activeButton]}
         onPress={() => changeLanguage('ka')}
@@ -38,28 +40,16 @@ export const LanguageSwitcher = () => {
   )
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (theme) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     gap: 8,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: theme.disabled,
     borderRadius: 8,
     padding: 4,
   },
-  button: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-  },
-  activeButton: {
-    backgroundColor: '#243d4d',
-  },
-  buttonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-  },
-  activeText: {
-    color: '#fff',
-  },
+  button: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 6 },
+  activeButton: { backgroundColor: theme.primary },
+  buttonText: { fontSize: 14, fontWeight: '600', color: theme.subtext },
+  activeText: { color: '#fff' },
 })

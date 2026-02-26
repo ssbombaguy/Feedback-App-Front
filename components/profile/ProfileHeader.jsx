@@ -1,25 +1,31 @@
 import { View, Text, Image, StyleSheet } from 'react-native'
 import React from 'react'
+import { useTheme } from '../../context/ThemeContext'
 
-export const ProfileHeader = ({ user }) => (
-  <View style={styles.profileHeader}>
-    <Image
-      style={styles.profilePicture}
-      source={{ uri: user?.profilePicture || 'https://via.placeholder.com/150' }}
-    />
-    <View style={styles.userBasicInfo}>
-      <Text style={styles.name}>{user?.name || ''}</Text>
-      <Text style={styles.lastname}>{user?.lastname || ''}</Text>
-      <Text style={styles.email}>{user?.email || ''}</Text>
+export const ProfileHeader = ({ user }) => {
+  const { theme } = useTheme()
+  const styles = makeStyles(theme)
+
+  return (
+    <View style={styles.profileHeader}>
+      <Image
+        style={styles.profilePicture}
+        source={{ uri: user?.profilePicture || 'https://via.placeholder.com/150' }}
+      />
+      <View style={styles.userBasicInfo}>
+        <Text style={styles.name}>{user?.name || ''}</Text>
+        <Text style={styles.lastname}>{user?.lastname || ''}</Text>
+        <Text style={styles.email}>{user?.email || ''}</Text>
+      </View>
     </View>
-  </View>
-)
+  )
+}
 
-const styles = StyleSheet.create({
+const makeStyles = (theme) => StyleSheet.create({
   profileHeader: {
     flexDirection: 'row',
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
@@ -35,10 +41,10 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 45,
     marginRight: 16,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: theme.disabled,
   },
   userBasicInfo: { flex: 1 },
-  name: { fontSize: 18, fontWeight: '700', color: '#243d4d' },
-  lastname: { fontSize: 16, fontWeight: '600', color: '#555', marginBottom: 4 },
-  email: { fontSize: 12, color: '#999' },
+  name: { fontSize: 18, fontWeight: '700', color: theme.textSecondary },
+  lastname: { fontSize: 16, fontWeight: '600', color: theme.subtext, marginBottom: 4 },
+  email: { fontSize: 12, color: theme.label },
 })

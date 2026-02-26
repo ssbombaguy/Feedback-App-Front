@@ -2,10 +2,13 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import React from 'react'
 import { useFeedback } from '../../api/useFeedback'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '../../context/ThemeContext'
 
 export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbackPress }) => {
   const { feedback } = useFeedback()
   const { t } = useTranslation()
+  const { theme } = useTheme()
+  const styles = makeStyles(theme)
 
   const feedbackSubmitted = feedback.some(f => f.courseName === courseName)
 
@@ -30,7 +33,6 @@ export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbac
           </View>
         )}
       </View>
-
       <View style={styles.content}>
         <View style={styles.infoRow}>
           <Text style={styles.label}>{t('course.duration')}:</Text>
@@ -41,7 +43,6 @@ export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbac
           <Text style={styles.value}>{teacher}</Text>
         </View>
       </View>
-
       <TouchableOpacity
         style={[styles.button, feedbackSubmitted && styles.buttonSubmitted]}
         onPress={handleFeedbackButtonPress}
@@ -55,9 +56,9 @@ export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbac
   )
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (theme) => StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 12,
     padding: 16,
     marginHorizontal: 16,
@@ -74,60 +75,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  courseName: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#2C3E50',
-    flex: 1,
-    marginRight: 8,
-  },
+  courseName: { fontSize: 16, fontWeight: '700', color: theme.text, flex: 1, marginRight: 8 },
   activeBadge: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.success,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 20,
   },
-  activeBadgeText: {
-    color: '#fff',
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  content: {
-    marginBottom: 12,
-    gap: 6,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 2,
-  },
-  label: {
-    fontSize: 13,
-    color: '#546E7A',
-    fontWeight: '600',
-  },
-  value: {
-    fontSize: 13,
-    color: '#2C3E50',
-    fontWeight: '500',
-    textAlign: 'right',
-    flex: 1,
-    marginLeft: 8,
-  },
+  activeBadgeText: { color: '#fff', fontSize: 11, fontWeight: '600' },
+  content: { marginBottom: 12, gap: 6 },
+  infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 2 },
+  label: { fontSize: 13, color: theme.subtext, fontWeight: '600' },
+  value: { fontSize: 13, color: theme.text, fontWeight: '500', textAlign: 'right', flex: 1, marginLeft: 8 },
   button: {
-    backgroundColor: '#F9C94D',
+    backgroundColor: theme.accent,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 4,
   },
-  buttonSubmitted: {
-    backgroundColor: '#4CAF50',
-    opacity: 0.9,
-  },
-  buttonText: {
-    color: '#2C3E50',
-    fontSize: 14,
-    fontWeight: '700',
-  },
+  buttonSubmitted: { backgroundColor: theme.success, opacity: 0.9 },
+  buttonText: { color: theme.text, fontSize: 14, fontWeight: '700' },
 })
