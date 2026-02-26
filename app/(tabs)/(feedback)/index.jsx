@@ -5,6 +5,7 @@ import { FeedbackForm } from '../../../components/feedback/FeedbackForm'
 import { userAPI } from '../../../api/apiClient'
 import { useTranslation } from 'react-i18next'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Logo from "../../../assets/MziuriLogo.svg"
 
 const feedback = () => {
   const [courses, setCourses] = useState([])
@@ -97,7 +98,7 @@ const feedback = () => {
           contentContainerStyle={styles.centerContent}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
-          <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
+          <Logo style={styles.logo} />
           <Text style={styles.emptyText}>{t('common.error')}</Text>
           <Text style={styles.emptySubtext}>{t('feedback.subtitle')}</Text>
         </ScrollView>
@@ -112,7 +113,7 @@ const feedback = () => {
         contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
+        <Logo style={styles.logo} />
         <CourseLister
           data={courses}
           onFeedbackPress={handleFeedbackPress}
@@ -169,7 +170,6 @@ const styles = StyleSheet.create({
     width: 180,
     height: 80,
     marginTop: 16,
-    resizeMode: 'contain',
     alignSelf: 'center',
   },
 })

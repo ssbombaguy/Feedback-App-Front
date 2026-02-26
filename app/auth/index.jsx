@@ -1,3 +1,4 @@
+
 import {
   View,
   Text,
@@ -20,6 +21,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { useState } from "react";
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Logo from "../../assets/MziuriLogo.svg"
+import YellowBg from "../../assets/yellowBg"
 
 const AuthSchema = Yup.object().shape({
   email: Yup.string().required("auth.emailRequired").email("auth.invalidEmail"),
@@ -34,6 +38,7 @@ const AuthSchema = Yup.object().shape({
 
 export default function Authentication() {
   const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
   const loginMutation = useMutation({
     mutationFn: (values) =>
@@ -64,9 +69,8 @@ export default function Authentication() {
       >
         <View style={styles.container}>
           <View style={styles.topPart}>
-            <Image
+            <Logo
               style={styles.logo}
-              source={require("../../assets/mziuri-logo.png")}
             />
 
             <Text style={styles.smallTitle}>{t("auth.welcomeBack")}</Text>
@@ -104,21 +108,32 @@ export default function Authentication() {
                   <Text style={styles.error}>{t(errors.email)}</Text>
                 )}
 
-                <TextInput
-                  placeholder={t("auth.password")}
-                  secureTextEntry
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  style={[
-                    styles.input,
-                    touched.password && errors.password && styles.inputError,
-                  ]}
-                />
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    placeholder={t("auth.password")}
+                    secureTextEntry={!showPassword}
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                    style={[
+                      styles.input,
+                      styles.passwordInput,
+                      touched.password && errors.password && styles.inputError,
+                    ]}
+                  />
 
-                {touched.password && errors.password && (
-                  <Text style={styles.error}>{t(errors.password)}</Text>
-                )}
+                  <TouchableOpacity
+                    style={styles.eyeIcon}
+                    onPress={() => setShowPassword((prev) => !prev)}
+                  >
+                    <AntDesign
+                      name={showPassword ? "eye" : "eye-invisible"}
+                      size={22}
+                      color="#243E4D"
+                    />
+                  </TouchableOpacity>
+                </View>
+
                 <View style={styles.optionsRow}>
                   <View>
                     <View style={styles.rememberRow}>
@@ -178,10 +193,8 @@ export default function Authentication() {
           </Formik>
         </View>
       </KeyboardAvoidingView>
-      <Image
-        source={require("../../assets/vector-1.png")}
+      <YellowBg
         style={styles.background}
-        resizeMode="contain"
       />
     </SafeAreaView>
   );
@@ -243,7 +256,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonText: {
-    color: "white",
+    color: "#fff",
+    fontSize: 16,
     fontWeight: "bold",
   },
   apiError: {
@@ -254,10 +268,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     textAlign: "center",
     fontWeight: "600",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
   },
   recoveryButton: {
     marginTop: 12,
@@ -313,5 +323,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     zIndex: -50,
+    alignSelf:"center"
+  },
+  passwordContainer: {
+    position: "relative",
+    justifyContent: "center",
+  },
+  passwordInput: {
+    paddingRight: 45,
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 15,
   },
 });

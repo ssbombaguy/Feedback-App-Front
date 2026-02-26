@@ -1,8 +1,8 @@
 import { View, StyleSheet } from "react-native";
 import { Tabs, TabSlot, TabList, TabTrigger } from "expo-router/ui";
 import TabButton from "./TabButton";
-import homeIcon from "../../assets/home.png";
-import profileIcon from "../../assets/profile.png";
+import Home from "../../assets/home.svg";
+import Profile from "../../assets/profile.svg";
 
 export default function CustomTabBar() {
   return (
@@ -12,11 +12,11 @@ export default function CustomTabBar() {
       <TabList asChild>
         <View style={styles.container}>
           <TabTrigger name="(feedback)" href="/(tabs)/(feedback)" asChild>
-            <TabButton iconSource={homeIcon} />
+            <TabButton Icon={Home} />
           </TabTrigger>
 
           <TabTrigger name="profile" href="/(tabs)/profile" asChild>
-            <TabButton iconSource={profileIcon} />
+            <TabButton Icon={Profile} />
           </TabTrigger>
         </View>
       </TabList>

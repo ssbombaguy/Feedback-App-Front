@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Image } from "react-native";
 
 export default function TabButton({
-  iconSource,
+  Icon,
   isFocused,
   ...props
 }) {
@@ -13,13 +13,7 @@ export default function TabButton({
         isFocused && styles.activeButton
       ]}
     >
-      <Image
-        source={iconSource}
-        style={[
-          styles.icon,
-        ]}
-        resizeMode="contain"
-      />
+      <Icon width={24} height={24}/>
     </Pressable>
   );
 }
@@ -34,10 +28,6 @@ const styles = StyleSheet.create({
   },
   activeButton: {
     backgroundColor: "#4C6576",
-  },
-  icon: {
-    width: 24,
-    height: 24,
   },
 });
 

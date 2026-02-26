@@ -7,6 +7,9 @@ import { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
+import Question from "../../assets/question.svg"
+import Logo from "../../assets/MziuriLogo.svg"
+import GreyBg from "../../assets/greyBg.svg"
 
 
 const EmailSchema = Yup.object().shape({
@@ -99,9 +102,8 @@ export default function PasswordRecovery() {
             <Ionicons name="arrow-back" size={24} color="#243d4d" />
           </TouchableOpacity>
 
-          <Image
+          <Logo
             style={styles.logo}
-            source={require("../../assets/mziuri-logo.png")}
           />
 
           {step === "email" && (
@@ -119,8 +121,7 @@ export default function PasswordRecovery() {
                 touched,
               }) => (
                 <>
-                  <Image
-                    source={require("../../assets/group-26.png")}
+                  <Question
                     style={styles.roundedImage}
                   />
                   <Text style={styles.title}>
@@ -281,10 +282,8 @@ export default function PasswordRecovery() {
           )}
         </View>
       </KeyboardAvoidingView>
-      <Image
-        source={require("../../assets/vector-2.png")}
+      <GreyBg
         style={styles.background}
-        resizeMode="contain"
       />
     </SafeAreaView>
   );

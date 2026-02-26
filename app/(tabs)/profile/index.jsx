@@ -12,7 +12,7 @@ import { userAPI } from '../../../api/apiClient'
 import { PersonalInfo } from '../../../components/profile/PersonalInfo'
 import { CoursesSection } from '../../../components/profile/CourseSection'
 import { ProfileHeader } from '../../../components/profile/ProfileHeader'
-
+import Logo from "../../../assets/MziuriLogo.svg"
 
 const profile = () => {
   const router = useRouter()
@@ -63,7 +63,7 @@ const profile = () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View style={styles.container}>
-          <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
+          <Logo style={styles.logo}/>
           <View style={{ marginTop: 16, marginBottom: 16 }}>
             <LanguageSwitcher />
           </View>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     width: phoneWidth,
     paddingBottom: 40,
   },
-  logo: { width: 180, height: 80, resizeMode: 'contain', alignSelf: 'center' },
+  logo: { width: 180, height: 80, alignSelf: 'center' },
   emptyText: { fontSize: 16, color: '#999', marginTop: 40 },
   buttonContainer: { width: '100%', marginTop: 12 },
   logoutButton: {
