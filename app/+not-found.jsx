@@ -4,6 +4,8 @@ import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTheme } from '../context/ThemeContext'
 
+
+import Logo from "../assets/MziuriLogo.svg"
 export default function NotFoundScreen() {
   const router = useRouter()
   const { theme } = useTheme()
@@ -14,7 +16,9 @@ export default function NotFoundScreen() {
       <View style={styles.container}>
         <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'} />
         <View style={styles.header}>
-          <Image source={require('../assets/mziuri-logo.png')} style={styles.logoSmall} resizeMode="contain" />
+          <Logo
+            style={styles.logoSmall}
+          />
         </View>
         <View style={styles.content}>
           <Text style={styles.title}>404</Text>

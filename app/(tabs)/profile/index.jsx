@@ -12,7 +12,11 @@ import { userAPI } from '../../../api/apiClient'
 import { PersonalInfo } from '../../../components/profile/PersonalInfo'
 import { CoursesSection } from '../../../components/profile/CourseSection'
 import { ProfileHeader } from '../../../components/profile/ProfileHeader'
+<<<<<<< HEAD
 import { useTheme } from '../../../context/ThemeContext'
+=======
+import Logo from "../../../assets/MziuriLogo.svg"
+>>>>>>> main
 
 const profile = () => {
   const router = useRouter()
@@ -65,8 +69,8 @@ const profile = () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View style={styles.container}>
-          <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
-          <View style={styles.languageSwitcher}>
+          <Logo style={styles.logo}/>
+          <View style={{ marginTop: 16, marginBottom: 16 }}>
             <LanguageSwitcher />
           </View>
 

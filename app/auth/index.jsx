@@ -12,6 +12,11 @@ import { LanguageSwitcher } from '../../components/LanguageSwitcher'
 import { useState } from 'react'
 import { useTheme } from '../../context/ThemeContext'
 
+
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Logo from "../../assets/MziuriLogo.svg"
+import YellowBg from "../../assets/yellowBg"
+
 const AuthSchema = Yup.object().shape({
   email: Yup.string().required('auth.emailRequired').email('auth.invalidEmail'),
   password: Yup.string()
@@ -52,8 +57,11 @@ export default function Authentication() {
       >
         <View style={styles.container}>
           <View style={styles.topPart}>
-            <Image style={styles.logo} source={require('../../assets/mziuri-logo.png')} />
-            <Text style={styles.smallTitle}>{t('auth.welcomeBack')}</Text>
+            <Logo
+              style={styles.logo}
+            />
+
+            <Text style={styles.smallTitle}>{t("auth.welcomeBack")}</Text>
           </View>
 
           <Text style={styles.bigTitle}>{t('auth.signIn')}</Text>
@@ -73,16 +81,31 @@ export default function Authentication() {
                 />
                 {touched.email && errors.email && <Text style={styles.error}>{t(errors.email)}</Text>}
 
-                <TextInput
-                  placeholder={t('auth.password')}
-                  secureTextEntry
-                  value={values.password}
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  style={[styles.input, touched.password && errors.password && styles.inputError]}
-                  placeholderTextColor={theme.label}
-                />
-                {touched.password && errors.password && <Text style={styles.error}>{t(errors.password)}</Text>}
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    placeholder={t("auth.password")}
+                    secureTextEntry={!showPassword}
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                    style={[
+                      styles.input,
+                      styles.passwordInput,
+                      touched.password && errors.password && styles.inputError,
+                    ]}
+                  />
+
+                  <TouchableOpacity
+                    style={styles.eyeIcon}
+                    onPress={() => setShowPassword((prev) => !prev)}
+                  >
+                    <AntDesign
+                      name={showPassword ? "eye" : "eye-invisible"}
+                      size={22}
+                      color="#243E4D"
+                    />
+                  </TouchableOpacity>
+                </View>
 
                 <View style={styles.optionsRow}>
                   <View>
@@ -119,7 +142,9 @@ export default function Authentication() {
           </Formik>
         </View>
       </KeyboardAvoidingView>
-      <Image source={require('../../assets/vector-1.png')} style={styles.background} resizeMode="contain" />
+      <YellowBg
+        style={styles.background}
+      />
     </SafeAreaView>
   )
 }
@@ -150,7 +175,12 @@ const makeStyles = (theme) => StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
     minHeight: 50,
-    justifyContent: 'center',
+    justifyContent: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   apiError: {

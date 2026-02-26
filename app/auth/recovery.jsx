@@ -9,6 +9,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../context/ThemeContext'
 
+import Question from "../../assets/question.svg"
+import Logo from "../../assets/MziuriLogo.svg"
+import GreyBg from "../../assets/greyBg.svg"
+
+
 const EmailSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email('Enter a valid email'),
 })
@@ -59,15 +64,24 @@ export default function PasswordRecovery() {
             <Ionicons name="arrow-back" size={24} color={theme.textSecondary} />
           </TouchableOpacity>
 
-          <Image style={styles.logo} source={require('../../assets/mziuri-logo.png')} />
+          <Logo
+            style={styles.logo}
+          />
 
           {step === 'email' && (
             <Formik initialValues={{ email: '' }} validationSchema={EmailSchema} onSubmit={handleEmailSubmit}>
               {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <>
-                  <Image source={require('../../assets/group-26.png')} style={styles.roundedImage} />
-                  <Text style={styles.title}>{t('recovery.forgotPassword')}</Text>
-                  <Text style={styles.subtitle}>{t('recovery.resetPasswordInstruction')}</Text>
+                  <Question
+                    style={styles.roundedImage}
+                  />
+                  <Text style={styles.title}>
+                    {t("recovery.forgotPassword")}
+                  </Text>
+                  <Text style={styles.subtitle}>
+                    {t("recovery.resetPasswordInstruction")}
+                  </Text>
+
                   <TextInput
                     placeholder={t('recovery.enterEmail')}
                     autoCapitalize="none"
@@ -147,7 +161,9 @@ export default function PasswordRecovery() {
           )}
         </View>
       </KeyboardAvoidingView>
-      <Image source={require('../../assets/vector-2.png')} style={styles.background} resizeMode="contain" />
+      <GreyBg
+        style={styles.background}
+      />
     </SafeAreaView>
   )
 }

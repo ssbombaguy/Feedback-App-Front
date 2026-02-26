@@ -6,6 +6,7 @@ import { userAPI } from '../../../api/apiClient'
 import { useTranslation } from 'react-i18next'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTheme } from '../../../context/ThemeContext'
+import Logo from "../../../assets/MziuriLogo.svg"
 
 const feedback = () => {
   const [courses, setCourses] = useState([])
@@ -81,7 +82,7 @@ const feedback = () => {
           contentContainerStyle={styles.centerContent}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
-          <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
+          <Logo style={styles.logo} />
           <Text style={styles.emptyText}>{t('common.error')}</Text>
           <Text style={styles.emptySubtext}>{t('feedback.subtitle')}</Text>
         </ScrollView>
@@ -98,6 +99,11 @@ const feedback = () => {
       >
         <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
         <CourseLister data={courses} onFeedbackPress={handleFeedbackPress} />
+        <Logo style={styles.logo} />
+        <CourseLister
+          data={courses}
+          onFeedbackPress={handleFeedbackPress}
+        />
       </ScrollView>
 
       <Modal visible={showFeedbackForm} animationType="slide" onRequestClose={handleCloseFeedbackForm}>

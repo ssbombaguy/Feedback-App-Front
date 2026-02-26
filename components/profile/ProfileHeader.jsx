@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import React from 'react'
 import { useTheme } from '../../context/ThemeContext'
 
@@ -17,11 +17,14 @@ export const ProfileHeader = ({ user }) => {
         <Text style={styles.lastname}>{user?.lastname || ''}</Text>
         <Text style={styles.email}>{user?.email || ''}</Text>
       </View>
+
+      <Pressable onPress={() => router.push('/profile/edit')}>
+        <AntDesign name="edit" size={25} color="#243E4D" />
+      </Pressable>
     </View>
   )
 }
-
-const makeStyles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   profileHeader: {
     flexDirection: 'row',
     width: '100%',
