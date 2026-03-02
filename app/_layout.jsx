@@ -6,6 +6,21 @@ import { QueryProvider } from "../context/QueryProvider"
 import { I18nextProvider } from 'react-i18next'
 import i18n, { getStoredLanguage } from '../i18n/index'
 import '../i18n/index'
+import {
+  PaperProvider,
+  MD3LightTheme as DefaultTheme,
+} from "react-native-paper";
+
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 15,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#243E4D",
+    secondary: "#F3B635",
+  },
+};
 
 function RootLayoutContent() {
   const { user, isLoading } = useAuth()
@@ -53,9 +68,11 @@ export default function RootLayout() {
     <I18nextProvider i18n={i18n}>
       <QueryProvider>
         <AuthProvider>
-          <RootLayoutContent />
+          <PaperProvider theme={theme}>
+            <RootLayoutContent />
+          </PaperProvider>
         </AuthProvider>
       </QueryProvider>
     </I18nextProvider>
-  )
+  );
 }
