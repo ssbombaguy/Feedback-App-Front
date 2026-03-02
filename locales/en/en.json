@@ -73,6 +73,18 @@
     "yesLogout": "Yes, Log Out",
     "active":"Active"
   },
+  "edit":{
+   "back": "Back",
+   "editProfile": "Edit Profile",
+   "changePicture": "Change Picture",
+   "update": "Update",
+   "isUpdating": "Updating...",
+   "firstName": "First Name",
+   "lastName": "Last Name",
+   "firstNameRequired": "First name is required",
+   "lastNameRequired": "Last name is required",
+   "min2": "Must be at least 2 characters"
+  },
   "course": {
     "focusArea": "Focus Area",
     "teacher": "Teacher",
