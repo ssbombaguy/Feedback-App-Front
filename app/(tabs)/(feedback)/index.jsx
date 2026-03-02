@@ -97,13 +97,8 @@ const feedback = () => {
         contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <Image style={styles.logo} source={require('../../../assets/mziuri-logo.png')} />
-        <CourseLister data={courses} onFeedbackPress={handleFeedbackPress} />
         <Logo style={styles.logo} />
-        <CourseLister
-          data={courses}
-          onFeedbackPress={handleFeedbackPress}
-        />
+        <CourseLister data={courses} onFeedbackPress={handleFeedbackPress} />
       </ScrollView>
 
       <Modal visible={showFeedbackForm} animationType="slide" onRequestClose={handleCloseFeedbackForm}>

@@ -18,6 +18,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Feather } from "@expo/vector-icons";
+import { useTheme } from "../../../context/ThemeContext";
 import Logo from "../../../assets/MziuriLogo.svg";
 import YellowBg from "../../../assets/yellowBg.svg"
 
@@ -33,9 +34,109 @@ const validationSchema = Yup.object().shape({
     .required("Email is required"),
 });
 
+const makeStyles = (theme) =>
+  StyleSheet.create({
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 25,
+      paddingTop: 15,
+      paddingBottom: 10,
+      backgroundColor: theme.background,
+    },
+    backButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      width: 60,
+    },
+    backText: {
+      color: theme.textSecondary,
+      fontWeight: "600",
+      marginLeft: 3,
+    },
+    headerTitle: {
+      fontSize: 18,
+      fontWeight: "700",
+      color: theme.textSecondary,
+    },
+    container: {
+      paddingHorizontal: 25,
+      paddingTop: 25,
+      paddingBottom: 40,
+      backgroundColor: theme.background,
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      flexGrow: 1,
+    },
+    logo: {
+      width: 160,
+      height: 70,
+      alignSelf: "center",
+      marginBottom: 20,
+    },
+    iconContainer: {
+      alignItems: "center",
+      marginBottom: 30,
+    },
+    changePicture: {
+      marginTop: 6,
+      color: theme.textSecondary,
+      fontWeight: "650",
+      fontSize: 17,
+    },
+    background: {
+      position: "absolute",
+      bottom: 0,
+      width: "100%",
+      alignSelf: "center",
+    },
+    inputGroup: {
+      marginBottom: 20,
+    },
+    label: {
+      marginBottom: 6,
+      color: theme.textSecondary,
+      fontSize: 14,
+      fontWeight: "500",
+    },
+    input: {
+      borderWidth: 2,
+      borderColor: theme.borderInput,
+      borderRadius: 15,
+      paddingVertical: 14,
+      paddingHorizontal: 16,
+      fontSize: 15,
+      color: theme.text,
+      backgroundColor: theme.inputBg,
+    },
+    inputError: {
+      borderColor: theme.error,
+    },
+    errorText: {
+      marginTop: 4,
+      fontSize: 12,
+      color: theme.error,
+    },
+    button: {
+      backgroundColor: theme.accent,
+      paddingVertical: 16,
+      borderRadius: 14,
+      alignItems: "center",
+      marginTop: 10,
+    },
+    buttonText: {
+      color: theme.textSecondary,
+      fontWeight: "700",
+      fontSize: 16,
+    },
+  });
+
 export default function EditProfile() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { theme } = useTheme();
+  const styles = makeStyles(theme);
 
   const { userProfile } = useCurrentUserProfile();
 
@@ -48,13 +149,13 @@ export default function EditProfile() {
   });
 
   return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => router.back()}
             style={styles.backButton}
           >
-            <Feather name="chevron-left" size={20} color="#243E4D" />
+            <Feather name="chevron-left" size={20} color={theme.textSecondary} />
             <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
 
@@ -73,7 +174,7 @@ export default function EditProfile() {
             />
 
             <View style={styles.iconContainer}>
-              <FontAwesome name="user-circle-o" size={100} color="#243E4D" />
+              <FontAwesome name="user-circle-o" size={100} color={theme.textSecondary} />
               <Text style={styles.changePicture}>Change Picture</Text>
             </View>
 
@@ -168,99 +269,3 @@ export default function EditProfile() {
       </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 25,
-    paddingTop: 15,
-    paddingBottom: 10,
-  },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: 60,
-  },
-  backText: {
-    color: "#243E4D",
-    fontWeight: "600",
-    marginLeft: 3,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#243E4D",
-  },
-  container: {
-    paddingHorizontal: 25,
-    paddingTop: 25,
-    paddingBottom: 40,
-    backgroundColor: "white",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    flexGrow: 1,
-  },
-  logo: {
-    width: 160,
-    height: 70,
-    alignSelf: "center",
-    marginBottom: 20,
-  },
-  iconContainer: {
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  changePicture: {
-    marginTop: 6,
-    color: "#243E4D",
-    fontWeight: "650",
-    fontSize:17
-  },
-  background: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    alignSelf: "center"
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    marginBottom: 6,
-    color: "#243E4D",
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  input: {
-    borderWidth: 2,
-    borderColor: "#243E4D",
-    borderRadius: 15,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    fontSize: 15,
-    color: "#243E4D",
-    backgroundColor: "white",
-  },
-  inputError: {
-    borderColor: "#FF4D4F",
-  },
-  errorText: {
-    marginTop: 4,
-    fontSize: 12,
-    color: "#FF4D4F",
-  },
-  button: {
-    backgroundColor: "#243E4D",
-    paddingVertical: 16,
-    borderRadius: 14,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "700",
-    fontSize: 16,
-  },
-});

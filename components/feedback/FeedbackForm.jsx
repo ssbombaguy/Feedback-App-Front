@@ -5,6 +5,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useFeedback } from '../../api/useFeedback'
 import { getUser } from '../../utils/AsyncStorage'
+import { showSuccessToast, showErrorToast } from '../../utils/toastUtils'
 import { useTranslation } from 'react-i18next'
 import { FeedbackField } from './FeedbackField'
 import { ConfirmationModal } from '../ConfirmationModal'
@@ -27,7 +28,7 @@ const createFeedbackValidationSchema = (t) => {
 }
 
 const getInitialValues = () => {
-  const values = { returnAsTeacher: false }
+  const values = { returnAsTeacher: false, anonymous: false }
   FEEDBACK_FIELDS_CONFIG.forEach((field) => { values[field.name] = '' })
   return values
 }
@@ -57,13 +58,19 @@ export const FeedbackForm = ({ courseName, onClose }) => {
   }, [])
 
   const buildFeedbackData = useCallback((values) => {
-    const data = { userId: user.id, courseName, returnAsTeacher: values.returnAsTeacher }
+    const data = { userId: user.id, courseName, returnAsTeacher: values.returnAsTeacher, anonymous: values.anonymous }
     FEEDBACK_FIELDS_CONFIG.forEach((field) => { data[field.name] = values[field.name] })
     return data
   }, [user, courseName])
 
   const handleSubmit = useCallback(async (values) => {
-    if (!user) { alert(t('feedback.userNotFound') || 'User data not found.'); return }
+    if (!user) {
+      showErrorToast(
+        t('common.error') || 'Error',
+        t('feedback.userNotFound') || 'User data not found'
+      )
+      return
+    }
     setPendingValues(values)
     setShowConfirmation(true)
   }, [user, t])
@@ -73,8 +80,17 @@ export const FeedbackForm = ({ courseName, onClose }) => {
     setShowConfirmation(false)
     const feedbackData = buildFeedbackData(pendingValues)
     submitFeedback(feedbackData, {
-      onSuccess: () => { alert(t('feedback.thankYou')); onClose() },
-      onError: (error) => { alert('Error: ' + (error?.response?.data?.error || error.message)) },
+      onSuccess: () => {
+        showSuccessToast(
+          t('feedback.successTitle') || 'Success',
+          t('feedback.thankYou') || 'Thank you for your feedback!'
+        )
+        onClose()
+      },
+      onError: (error) => {
+        const errorMessage = error?.response?.data?.error || error?.message || 'Failed to submit feedback'
+        showErrorToast(t('common.error') || 'Error', errorMessage)
+      },
     })
     setPendingValues(null)
   }, [pendingValues, user, buildFeedbackData, submitFeedback, onClose, t])
@@ -122,10 +138,31 @@ export const FeedbackForm = ({ courseName, onClose }) => {
               />
             </View>
 
+            <View style={styles.switchContainer}>
+              <Text style={styles.switchLabel}>{t('feedback.submitAnonymously') || 'Submit Anonymously'}</Text>
+              <Switch
+                value={values.anonymous}
+                onValueChange={(value) => setFieldValue('anonymous', value)}
+                trackColor={{ false: theme.disabled, true: theme.accent }}
+                thumbColor={values.anonymous ? theme.primary : theme.label}
+                disabled={isSubmitting}
+              />
+            </View>
+
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
-                onPress={handleFormSubmit}
+                onPress={() => {
+                  const validationErrors = Object.keys(errors).filter((key) => errors[key] && touched[key])
+                  if (validationErrors.length > 0) {
+                    showErrorToast(
+                      t('feedback.validationError') || 'Validation Error',
+                      t('feedback.pleaseFixErrors') || 'Please fill all fields with at least 10 characters'
+                    )
+                    return
+                  }
+                  handleFormSubmit()
+                }}
                 disabled={isSubmitting}
               >
                 {isSubmitting

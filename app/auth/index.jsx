@@ -29,6 +29,7 @@ const AuthSchema = Yup.object().shape({
 
 export default function Authentication() {
   const [rememberMe, setRememberMe] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const { t } = useTranslation()
   const { theme } = useTheme()
   const styles = makeStyles(theme)
@@ -156,7 +157,7 @@ const makeStyles = (theme) => StyleSheet.create({
   topPart: { alignSelf: 'center' },
   logo: { width: 220, height: 120, resizeMode: 'contain', alignSelf: 'center' },
   smallTitle: { fontSize: 20, fontWeight: '600', marginBottom: 24, textAlign: 'center', color: theme.textSecondary },
-  bigTitle: { fontSize: 35, fontWeight: '700', marginBottom: 20, color: theme.textSecondary, textAlign: 'center' },
+  bigTitle: { fontSize: 35, fontWeight: '700', marginBottom: 20, marginTop: 100, color: theme.textSecondary, textAlign: 'center' },
   input: {
     borderWidth: 1,
     borderColor: theme.borderInput,
@@ -175,12 +176,7 @@ const makeStyles = (theme) => StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
     minHeight: 50,
-    justifyContent: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    justifyContent: 'center',
   },
   buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   apiError: {
@@ -192,6 +188,9 @@ const makeStyles = (theme) => StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
   },
+  passwordContainer: { position: 'relative', width: '100%', marginBottom: 6 },
+  passwordInput: { paddingRight: 50 },
+  eyeIcon: { position: 'absolute', right: 14, top: 14, zIndex: 10 },
   optionsRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 10, marginBottom: 20 },
   rememberRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   checkbox: { width: 18, height: 18, borderWidth: 2, borderColor: theme.textSecondary, borderRadius: 4, marginRight: 8 },

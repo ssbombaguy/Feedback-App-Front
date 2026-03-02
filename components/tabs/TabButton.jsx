@@ -1,7 +1,7 @@
-import { Pressable, StyleSheet, Image } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 
-export default function TabButton({ iconSource, isFocused, ...props }) {
+export default function TabButton({ Icon, isFocused, ...props }) {
   const { theme } = useTheme();
   const styles = makeStyles(theme);
 

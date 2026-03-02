@@ -1,8 +1,40 @@
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import React from 'react'
+import { useRouter } from 'expo-router'
+import AntDesign from '@expo/vector-icons/AntDesign'
 import { useTheme } from '../../context/ThemeContext'
 
+const makeStyles = (theme) =>
+  StyleSheet.create({
+    profileHeader: {
+      flexDirection: 'row',
+      width: '100%',
+      backgroundColor: theme.card,
+      borderRadius: 12,
+      padding: 16,
+      marginBottom: 20,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    profilePicture: {
+      width: 90,
+      height: 90,
+      borderRadius: 45,
+      marginRight: 16,
+      backgroundColor: theme.disabled,
+    },
+    userBasicInfo: { flex: 1 },
+    name: { fontSize: 18, fontWeight: '700', color: theme.textSecondary },
+    lastname: { fontSize: 16, fontWeight: '600', color: theme.subtext, marginBottom: 4 },
+    email: { fontSize: 12, color: theme.label },
+  })
+
 export const ProfileHeader = ({ user }) => {
+  const router = useRouter()
   const { theme } = useTheme()
   const styles = makeStyles(theme)
 
@@ -24,30 +56,3 @@ export const ProfileHeader = ({ user }) => {
     </View>
   )
 }
-const styles = StyleSheet.create({
-  profileHeader: {
-    flexDirection: 'row',
-    width: '100%',
-    backgroundColor: theme.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  profilePicture: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    marginRight: 16,
-    backgroundColor: theme.disabled,
-  },
-  userBasicInfo: { flex: 1 },
-  name: { fontSize: 18, fontWeight: '700', color: theme.textSecondary },
-  lastname: { fontSize: 16, fontWeight: '600', color: theme.subtext, marginBottom: 4 },
-  email: { fontSize: 12, color: theme.label },
-})

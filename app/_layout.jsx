@@ -1,6 +1,8 @@
 import { Stack, router } from "expo-router"
 import { useEffect, useState } from "react"
 import { SafeAreaProvider } from "react-native-safe-area-context"
+import Toast from 'react-native-toast-message'
+import { CustomToast } from "../components/CustomToast"
 import { AuthProvider, useAuth } from "../context/AuthContext"
 import { QueryProvider } from "../context/QueryProvider"
 import { I18nextProvider } from 'react-i18next'
@@ -59,6 +61,11 @@ export default function RootLayout() {
         </AuthProvider>
       </QueryProvider>
     </I18nextProvider>
+    <Toast config={{
+      success: (props) => <CustomToast {...props} type="success" />,
+      error: (props) => <CustomToast {...props} type="error" />,
+      info: (props) => <CustomToast {...props} type="info" />,
+    }} />
   </ThemeProvider>  
   )
 }

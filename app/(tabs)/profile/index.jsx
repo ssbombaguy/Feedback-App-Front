@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router'
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, RefreshControl } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native'
 import { logout } from '../../../utils/AsyncStorage'
 import { phoneWidth } from '../../../constants/Dimensions'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -12,13 +12,43 @@ import { userAPI } from '../../../api/apiClient'
 import { PersonalInfo } from '../../../components/profile/PersonalInfo'
 import { CoursesSection } from '../../../components/profile/CourseSection'
 import { ProfileHeader } from '../../../components/profile/ProfileHeader'
-<<<<<<< HEAD
 import { useTheme } from '../../../context/ThemeContext'
-=======
-import Logo from "../../../assets/MziuriLogo.svg"
->>>>>>> main
+import Logo from '../../../assets/MziuriLogo.svg'
 
-const profile = () => {
+const makeStyles = (theme) =>
+  StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: theme.background },
+    scrollContainer: { flex: 1, backgroundColor: theme.background },
+    container: {
+      alignItems: 'center',
+      paddingHorizontal: 20,
+      width: phoneWidth,
+      paddingBottom: 100,
+      marginTop: 40,
+    },
+    logo: { width: 180, height: 80, resizeMode: 'contain', alignSelf: 'center' },
+    content: { alignItems: 'flex-start', width: '100%', marginTop: 30 },
+    emptyText: { fontSize: 16, color: theme.label, marginTop: 40 },
+    buttonContainer: { width: '100%', marginTop: 12 },
+    logoutButton: {
+      backgroundColor: theme.accent,
+      borderRadius: 10,
+      padding: 14,
+      justifyContent: 'center',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+      marginBottom: 50,
+    },
+    logoutText: { fontSize: 16, color: theme.textSecondary, fontWeight: '700' },
+  })
+
+const Profile = () => {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
@@ -110,36 +140,4 @@ const profile = () => {
   )
 }
 
-export default profile
-
-const makeStyles = (theme) => StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: theme.background },
-  scrollContainer: { flex: 1, backgroundColor: theme.background },
-  container: {
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    width: phoneWidth,
-    paddingBottom: 100,
-  },
-  logo: { width: 180, height: 80, resizeMode: 'contain', alignSelf: 'center' },
-  languageSwitcher: { marginTop: 16, marginBottom: 16 },
-  content: { alignItems: 'flex-start', width: '100%', marginTop: 30 },
-  emptyText: { fontSize: 16, color: theme.label, marginTop: 40 },
-  buttonContainer: { width: '100%', marginTop: 12 },
-  logoutButton: {
-    backgroundColor: theme.accent,
-    borderRadius: 10,
-    padding: 14,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    marginBottom: 50,
-  },
-  logoutText: { fontSize: 16, color: theme.textSecondary, fontWeight: '700' },
-})
+export default Profile
