@@ -2,13 +2,13 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from "react-native";
+import { TextInput } from "react-native-paper";
 import { useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useCurrentUserProfile } from "../../../api/useUser";
@@ -20,24 +20,28 @@ import * as Yup from "yup";
 import { Feather } from "@expo/vector-icons";
 import Logo from "../../../assets/MziuriLogo.svg";
 import YellowBg from "../../../assets/yellowBg.svg"
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Must be at least 2 characters")
-    .required("First name is required"),
-  lastname: Yup.string()
-    .min(2, "Must be at least 2 characters")
-    .required("Last name is required"),
-  email: Yup.string()
-    .email("Invalid email")
-    .required("Email is required"),
-});
+import { useTranslation } from "react-i18next";
 
 export default function EditProfile() {
+  const { t } = useTranslation();
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const { userProfile } = useCurrentUserProfile();
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(2, t("edit.min2"))
+      .required(t("edit.firstNameRequired")),
+  
+    lastname: Yup.string()
+      .min(2, t("edit.min2"))
+      .required(t("edit.lastNameRequired")),
+  
+    email: Yup.string()
+      .email(t("auth.invalidEmail"))
+      .required(t("auth.emailRequired")),
+  });
 
   const updateMutation = useMutation({
     mutationFn: (data) => userAPI.updateCurrentUser(data),
@@ -55,10 +59,10 @@ export default function EditProfile() {
             style={styles.backButton}
           >
             <Feather name="chevron-left" size={20} color="#243E4D" />
-            <Text style={styles.backText}>Back</Text>
+            <Text style={styles.backText}>{t("edit.back")}</Text>
           </TouchableOpacity>
 
-          <Text style={styles.headerTitle}>Edit Profile</Text>
+          <Text style={styles.headerTitle}>{t("edit.editProfile")}</Text>
           <View style={{ width: 60 }} />
         </View>
 
@@ -74,7 +78,7 @@ export default function EditProfile() {
 
             <View style={styles.iconContainer}>
               <FontAwesome name="user-circle-o" size={100} color="#243E4D" />
-              <Text style={styles.changePicture}>Change Picture</Text>
+              <Text style={styles.changePicture}>{t("edit.changePicture")}</Text>
             </View>
 
             <Formik
@@ -99,13 +103,18 @@ export default function EditProfile() {
               }) => (
                 <>
                   <View style={styles.inputGroup}>
-                    <Text style={styles.label}>First Name</Text>
                     <TextInput
                       style={[
                         styles.input,
                         errors.name && touched.name && styles.inputError,
                       ]}
+                      labelStyle={{ fontSize: 16 }}
+                      outlineStyle={{
+                        borderWidth: 2,
+                      }}
                       value={values.name}
+                      mode="outlined"
+                      label={t("edit.firstName")}
                       onChangeText={handleChange("name")}
                       onBlur={handleBlur("name")}
                     />
@@ -114,7 +123,6 @@ export default function EditProfile() {
                     )}
                   </View>
                   <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Last Name</Text>
                     <TextInput
                       style={[
                         styles.input,
@@ -122,6 +130,12 @@ export default function EditProfile() {
                           touched.lastname &&
                           styles.inputError,
                       ]}
+                      mode="outlined"
+                      label={t("edit.lastName")}
+                      labelStyle={{ fontSize: 16 }}
+                      outlineStyle={{
+                        borderWidth: 2,
+                      }}
                       value={values.lastname}
                       onChangeText={handleChange("lastname")}
                       onBlur={handleBlur("lastname")}
@@ -131,12 +145,17 @@ export default function EditProfile() {
                     )}
                   </View>
                   <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Email</Text>
                     <TextInput
                       style={[
                         styles.input,
                         errors.email && touched.email && styles.inputError,
                       ]}
+                      mode="outlined"
+                      label={t("auth.email")}
+                      labelStyle={{ fontSize: 16 }}
+                      outlineStyle={{
+                        borderWidth: 2,
+                      }}
                       value={values.email}
                       keyboardType="email-address"
                       autoCapitalize="none"
@@ -154,7 +173,7 @@ export default function EditProfile() {
                     disabled={updateMutation.isLoading}
                   >
                     <Text style={styles.buttonText}>
-                      {updateMutation.isLoading ? "Updating..." : "Update"}
+                    {updateMutation.isLoading ? t("edit.isUpdating") : t("edit.update")}
                     </Text>
                   </TouchableOpacity>
                 </>
@@ -226,22 +245,6 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     marginBottom: 20,
-  },
-  label: {
-    marginBottom: 6,
-    color: "#243E4D",
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  input: {
-    borderWidth: 2,
-    borderColor: "#243E4D",
-    borderRadius: 15,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    fontSize: 15,
-    color: "#243E4D",
-    backgroundColor: "white",
   },
   inputError: {
     borderColor: "#FF4D4F",

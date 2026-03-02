@@ -72,6 +72,18 @@
     "yesLogout": "დიახ, გასვლა",
     "active":"აქტიური"
   },
+  "edit":{
+    "back": "უკან",
+    "editProfile": "პროფილის რედაქტირება",
+    "changePicture": "შეცვალე ფოტო",
+    "update": "განახლება",
+    "isUpdating": "ახლდება...",
+    "firstName": "სახელი",
+    "lastName": "გვარი",
+    "firstNameRequired": "სახელი აუცილებელია",
+    "lastNameRequired": "გვარი აუცილებელია",
+    "min2": "უნდა შეიცავდეს სულ ცოტა 2 ასოს"
+   },
   "course": {
     "focusArea": "ფოკუსის სფერო",
     "teacher": "მასწავლებელი",

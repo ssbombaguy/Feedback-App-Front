@@ -203,7 +203,7 @@ export default function Authentication() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
+    justifyContent: "center",
     padding: 24,
     paddingHorizontal: 50,
     width: phoneWidth,
