@@ -5,22 +5,13 @@ import { AuthProvider, useAuth } from "../context/AuthContext"
 import { QueryProvider } from "../context/QueryProvider"
 import { I18nextProvider } from 'react-i18next'
 import i18n, { getStoredLanguage } from '../i18n/index'
-import '../i18n/index'
 import {
   PaperProvider,
-  MD3LightTheme as DefaultTheme,
 } from "react-native-paper";
+import { ThemeProvider } from "../context/ThemeContext"
+import Toast from "react-native-toast-message"
+import { CustomToast } from "../components/CustomToast"
 
-
-const theme = {
-  ...DefaultTheme,
-  roundness: 15,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: "#243E4D",
-    secondary: "#F3B635",
-  },
-};
 
 function RootLayoutContent() {
   const { user, isLoading } = useAuth()
@@ -36,9 +27,7 @@ function RootLayoutContent() {
   }, [user, isLoading])
 
   return (
-    <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-    </SafeAreaProvider>
+    <Stack screenOptions={{ headerShown: false }} />
   )
 }
 
@@ -65,14 +54,23 @@ export default function RootLayout() {
   }
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <QueryProvider>
-        <AuthProvider>
-          <PaperProvider theme={theme}>
-            <RootLayoutContent />
-          </PaperProvider>
-        </AuthProvider>
-      </QueryProvider>
-    </I18nextProvider>
+  <SafeAreaProvider>
+    <ThemeProvider>
+      <I18nextProvider i18n={i18n}>
+        <QueryProvider>
+          <AuthProvider>
+            <PaperProvider>
+              <RootLayoutContent />
+            </PaperProvider>
+          </AuthProvider>
+        </QueryProvider>
+        <Toast config={{
+          success: (props) => <CustomToast {...props} type="success" />,
+          error: (props) => <CustomToast {...props} type="error" />,
+          info: (props) => <CustomToast {...props} type="info" />,
+        }} />
+      </I18nextProvider>
+    </ThemeProvider>
+  </SafeAreaProvider>  
   );
 }

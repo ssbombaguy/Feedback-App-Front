@@ -1,4 +1,4 @@
-import { View,Text, TextInput, TouchableOpacity, StyleSheet,Image,KeyboardAvoidingView,Platform,Alert,} from "react-native";
+import { View,Text, TextInput, TouchableOpacity, StyleSheet,Image,KeyboardAvoidingView,Platform,} from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { router } from "expo-router";
@@ -10,6 +10,9 @@ import { useTranslation } from "react-i18next";
 import Question from "../../assets/question.svg"
 import Logo from "../../assets/MziuriLogo.svg"
 import GreyBg from "../../assets/greyBg.svg"
+import { useTheme } from "../../context/ThemeContext";
+import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
+
 
 
 const EmailSchema = Yup.object().shape({
@@ -38,6 +41,8 @@ const PasswordSchema = Yup.object().shape({
 
 export default function PasswordRecovery() {
   const { t } = useTranslation();
+  const {theme } = useTheme();
+  const styles = makeStyles(theme);
   const [step, setStep] = useState("email"); 
   const [userEmail, setUserEmail] = useState("");
   const [generatedCode] = useState("123456"); 
@@ -48,36 +53,28 @@ export default function PasswordRecovery() {
     );
 
     if (!foundUser) {
-      Alert.alert("Error", "Email not found in our system");
+      showErrorToast(t('common.error'), t('recovery.emailNotFound'));
       return;
     }
 
     setUserEmail(values.email);
-    Alert.alert("Success", "Code sent to your email: 123456");
+    showSuccessToast(t('common.success'), t('recovery.codeSent'));
     setStep("code");
   };
 
   const handleCodeSubmit = (values) => {
     if (values.code !== generatedCode) {
-      Alert.alert("Error", "Invalid code. Please try again");
+      showErrorToast(t('common.error'), t('recovery.invalidCode'));
       return;
     }
 
-    Alert.alert("Success", "Code verified! Now set your new password");
+    showSuccessToast(t('common.success'), t('recovery.verifySuccess'));
     setStep("password");
   };
 
   const handlePasswordSubmit = (values) => {
-    Alert.alert(
-      "Success",
-      "Your password has been reset successfully!",
-      [
-        {
-          text: "OK",
-          onPress: () => router.replace("/auth"),
-        },
-      ]
-    );
+    showSuccessToast(t('common.success'), t('recovery.passwordResetSuccess'));
+    setTimeout(() => router.replace("/auth"), 1500);
   };
 
   return (
@@ -289,82 +286,29 @@ export default function PasswordRecovery() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-start",
-    padding: 24,
-    paddingHorizontal: 50,
-    width: phoneWidth,
-  },
-  backButton: {
-    position: "absolute",
-    top: 40,
-    left: 24,
-    zIndex: 10,
-  },
-  logo: {
-    width: 220,
-    height: 120,
-    resizeMode: "contain",
-    alignSelf: "center",
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "700",
-    color: "#243d4d",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 24,
-    textAlign: "center",
-  },
+const makeStyles = (theme) => StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: theme.background },
+  keyboardView: { flex: 1 },
+  container: { flex: 1, justifyContent: 'flex-start', padding: 24, paddingHorizontal: 50, width: phoneWidth },
+  backButton: { position: 'absolute', top: 40, left: 24, zIndex: 10 },
+  logo: { width: 220, height: 120, resizeMode: 'contain', alignSelf: 'center', marginBottom: 24 },
+  title: { fontSize: 30, fontWeight: '700', color: theme.textSecondary, marginBottom: 8, textAlign: 'center' },
+  subtitle: { fontSize: 14, color: theme.hint, marginBottom: 24, textAlign: 'center' },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: theme.borderInput,
     borderRadius: 15,
     padding: 14,
     marginBottom: 6,
     fontSize: 16,
+    color: theme.text,
+    backgroundColor: theme.inputBg,
   },
-  codeInput: {
-    letterSpacing: 8,
-    fontSize: 24,
-    textAlign: "center",
-  },
-  inputError: {
-    borderColor: "red",
-  },
-  error: {
-    color: "red",
-    marginBottom: 12,
-    fontSize: 12,
-  },
-  button: {
-    backgroundColor: "#FBC944",
-    padding: 16,
-    borderRadius: 15,
-    alignItems: "center",
-    marginTop: 16,
-  },
-  buttonText: {
-    color: "#243d4d",
-    fontSize: 17,
-    fontWeight: "600",
-  },
-  roundedImage: {
-    marginBottom: 15,
-    alignSelf: "center",
-    marginTop: 80,
-  },
-  background: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    zIndex: -50,
-  },
-});
+  codeInput: { letterSpacing: 8, fontSize: 24, textAlign: 'center' },
+  inputError: { borderColor: theme.error },
+  error: { color: theme.error, marginBottom: 12, fontSize: 12 },
+  button: { backgroundColor: theme.accent, padding: 16, borderRadius: 15, alignItems: 'center', marginTop: 16 },
+  buttonText: { color: theme.textSecondary, fontSize: 17, fontWeight: '600' },
+  roundedImage: { marginBottom: 15, alignSelf: 'center', marginTop: 80 },
+  background: { position: 'absolute', bottom: 0, width: '100%', zIndex: -50 },
+})

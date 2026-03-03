@@ -2,9 +2,13 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { CourseCard } from './courseCard'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '../../context/ThemeContext'
 
 const CourseLister = ({ data, onFeedbackPress }) => {
   const { t } = useTranslation()
+  const {theme} = useTheme();
+  const styles = makeStyles(theme);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -25,30 +29,16 @@ const CourseLister = ({ data, onFeedbackPress }) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
+const makeStyles = (theme) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: theme.background },
   header: {
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: theme.border,
     marginBottom: 8,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#2C3E50',
-    letterSpacing: 0.5,
-    alignSelf: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#546E7A',
-    marginTop: 4,
-    alignSelf: 'center',
-  },
+  title: { fontSize: 24, fontWeight: '800', color: theme.text, letterSpacing: 0.5, alignSelf: 'center' },
+  subtitle: { fontSize: 14, color: theme.subtext, marginTop: 4, alignSelf: 'center' },
 })
 
 export default CourseLister

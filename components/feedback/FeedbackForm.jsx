@@ -8,6 +8,8 @@ import { getUser } from '../../utils/AsyncStorage'
 import { useTranslation } from 'react-i18next'
 import { FeedbackField } from './FeedbackField'
 import { ConfirmationModal } from '../ConfirmationModal'
+import { useTheme } from '../../context/ThemeContext'
+import { showSuccessToast, showErrorToast } from '../../utils/toastUtils'
 
 const FEEDBACK_FIELDS_CONFIG = [
   {
@@ -53,7 +55,7 @@ const createFeedbackValidationSchema = (t) => {
 }
 
 const getInitialValues = () => {
-  const values = { returnAsTeacher: false }
+  const values = { returnAsTeacher: false , anonymous: false}
   FEEDBACK_FIELDS_CONFIG.forEach((field) => {
     values[field.name] = ''
   })
@@ -67,6 +69,8 @@ export const FeedbackForm = ({ courseName, onClose }) => {
   const [pendingValues, setPendingValues] = useState(null)
   const { submitFeedback, isSubmitting } = useFeedback()
   const { t } = useTranslation()
+  const { theme } = useTheme();
+  const styles = makeStyles(theme);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -87,6 +91,7 @@ export const FeedbackForm = ({ courseName, onClose }) => {
       userId: user.id,
       courseName,
       returnAsTeacher: values.returnAsTeacher,
+      anonymous: values.anonymous,
     }
     FEEDBACK_FIELDS_CONFIG.forEach((field) => {
       data[field.name] = values[field.name]
@@ -96,7 +101,7 @@ export const FeedbackForm = ({ courseName, onClose }) => {
 
   const handleSubmit = useCallback(async (values) => {
     if (!user) {
-      alert(t('feedback.userNotFound') || 'User data not found. Please log in again.')
+      showErrorToast(t('common.error'), t('feedback.userNotFound'))
       return
     }
 
@@ -112,11 +117,11 @@ export const FeedbackForm = ({ courseName, onClose }) => {
 
     submitFeedback(feedbackData, {
       onSuccess: () => {
-        alert(t('feedback.thankYou'))
-        onClose()
+        showSuccessToast(t('common.success'), t('feedback.thankYou'))
+        setTimeout(() => onClose(), 1500)
       },
       onError: (error) => {
-        alert('Error: ' + (error?.response?.data?.error || error.message))
+        showErrorToast(t('common.error'), t('feedback.error'))
       },
     })
     setPendingValues(null)
@@ -172,6 +177,16 @@ export const FeedbackForm = ({ courseName, onClose }) => {
                 disabled={isSubmitting}
               />
             </View>
+            <View style={styles.switchContainer}>
+              <Text style={styles.switchLabel}>{t('feedback.submitAnonymously') || 'Submit Anonymously'}</Text>
+              <Switch
+                value={values.anonymous}
+                onValueChange={(value) => setFieldValue('anonymous', value)}
+                trackColor={{ false: theme.disabled, true: theme.accent }}
+                thumbColor={values.anonymous ? theme.primary : theme.label}
+                disabled={isSubmitting}
+              />
+            </View>
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -217,11 +232,8 @@ export const FeedbackForm = ({ courseName, onClose }) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#F8F9FA',
-    flex: 1,
-  },
+const makeStyles = (theme) => StyleSheet.create({
+  container: { backgroundColor: theme.background, flex: 1 },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -229,80 +241,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 12,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: theme.border,
   },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#2C3E50',
-    flex: 1,
-  },
-  closeButton: {
-    padding: 8,
-  },
-  closeText: {
-    fontSize: 24,
-    color: '#546E7A',
-    fontWeight: '600',
-  },
-  formContainer: {
-    padding: 16,
-  },
+  title: { fontSize: 18, fontWeight: '700', color: theme.text, flex: 1 },
+  closeButton: { padding: 8 },
+  closeText: { fontSize: 24, color: theme.subtext, fontWeight: '600' },
+  formContainer: { padding: 16 },
   switchContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     padding: 16,
     borderRadius: 8,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: theme.border,
   },
-  switchLabel: {
-    fontSize: 14,
-    color: '#2C3E50',
-    fontWeight: '600',
-    flex: 1,
-    marginRight: 12,
-  },
-  buttonContainer: {
-    gap: 12,
-  },
+  switchLabel: { fontSize: 14, color: theme.text, fontWeight: '600', flex: 1, marginRight: 12 },
+  buttonContainer: { gap: 12 },
   submitButton: {
-    backgroundColor: '#F9C94D',
+    backgroundColor: theme.accent,
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 8,
   },
-  submitButtonDisabled: {
-    opacity: 0.6,
-  },
-  submitButtonText: {
-    color: '#2C3E50',
-    fontSize: 15,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-  },
-  clearButton: {
-    backgroundColor: '#E0E0E0',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  clearButtonText: {
-    color: '#2C3E50',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  spacer: {
-    height: 40,
-  },
+  submitButtonDisabled: { opacity: 0.6 },
+  submitButtonText: { color: theme.text, fontSize: 15, fontWeight: '700', letterSpacing: 0.5 },
+  clearButton: { backgroundColor: theme.disabled, paddingVertical: 14, paddingHorizontal: 16, borderRadius: 8, alignItems: 'center' },
+  clearButtonText: { color: theme.text, fontSize: 15, fontWeight: '600' },
+  spacer: { height: 40 },
 })
 
 FeedbackForm.propTypes = {

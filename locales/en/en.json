@@ -24,6 +24,13 @@
     "feedbackSubmitted": "✓ Feedback Submitted",
     "alreadySubmitted": "Feedback Already Submitted",
     "alreadySubmittedMessage": "You have already submitted feedback for {{courseName}}. You can only submit feedback once per course.",
+    "userNotFound": "User data not found. Please log in again.",
+    "error": "Error submitting feedback",
+    "thankYou": "Thank you for your feedback!",
+    "feedbackFor": "Feedback for {{courseName}}",
+    "confirmSubmit": "Confirm Submission",
+    "confirmSubmitMessage": "Are you sure you want to submit this feedback?",
+    "yesSubmit": "Yes, Submit",
     "teacherEvaluation": "Teacher Evaluation",
     "teacherEvaluationHint": "Share your thoughts about the teacher...",
     "teacherEvaluationRequired": "Teacher evaluation is required",
@@ -47,12 +54,7 @@
     "returnAsTeacher": "Would you like to return as a teacher?",
     "submitFeedback": "Submit Feedback",
     "clear": "Clear",
-    "thankYou": "Thank you for your feedback!",
-    "feedbackFor": "Feedback for {{courseName}}",
-    "minCharacters": "Please provide at least 10 characters",
-    "confirmSubmit": "Are You Sure?",
-    "confirmSubmitMessage": "Are you sure you want to submit this feedback?",
-    "yesSubmit": "Yes, Submit"
+    "minCharacters": "Please provide at least 10 characters"
   },
   "profile": {
     "title": "Profile",
@@ -107,10 +109,20 @@
     "resetPasswordInstruction": "Enter your email to reset your password",
     "confirm": "Confirm",
     "verifyCode": "Verify Code",
-    "codeSent": "Enter the 6-digit code sent to {{email}}",
+    "codeSent": "Code sent to your email",
+    "invalidCode": "Invalid code. Please try again",
+    "verifySuccess": "Code verified! Now set your new password",
+    "emailNotFound": "Email not found in our system",
+    "passwordResetSuccess": "Your password has been reset successfully!",
     "setNewPassword": "Set New Password",
     "createPasswordInstruction": "Create a strong password for your account",
     "resetPassword": "Reset Password"
+  },
+  "notfound": {
+    "title": "404",
+    "subtitle": "PAGE NOT FOUND",
+    "message": "Oops! We can't seem to find the page you're looking for.",
+    "goHome": "GO TO HOME",
+    "reportProblem": "Report a problem"
   }
-
 }

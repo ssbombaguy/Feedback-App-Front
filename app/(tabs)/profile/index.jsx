@@ -13,6 +13,9 @@ import { PersonalInfo } from '../../../components/profile/PersonalInfo'
 import { CoursesSection } from '../../../components/profile/CourseSection'
 import { ProfileHeader } from '../../../components/profile/ProfileHeader'
 import Logo from "../../../assets/MziuriLogo.svg"
+import { useTheme } from '../../../context/ThemeContext'
+import { showErrorToast, showSuccessToast } from '../../../utils/toastUtils'
+
 
 const profile = () => {
   const router = useRouter()
@@ -21,6 +24,8 @@ const profile = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const { t } = useTranslation()
+  const { theme } = useTheme();
+  const styles = makeStyles(theme);
 
   const loadUser = useCallback(async () => {
     try {
@@ -49,7 +54,7 @@ const profile = () => {
       router.replace('/auth')
     } catch (error) {
       console.error('Logout error:', error)
-      alert(t('common.error'))
+      showErrorToast(t('common.error'), error.message)
     } finally {
       setIsLoggingOut(false)
       setShowLogoutConfirm(false)
@@ -57,7 +62,7 @@ const profile = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView
         style={styles.scrollContainer}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -109,31 +114,35 @@ const profile = () => {
 
 export default profile
 
-const styles = StyleSheet.create({
-  scrollContainer: { flex: 1, backgroundColor: '#f5f5f5' },
-  container: {
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    width: phoneWidth,
-    paddingBottom: 40,
-  },
-  logo: { width: 180, height: 80, alignSelf: 'center' },
-  emptyText: { fontSize: 16, color: '#999', marginTop: 40 },
-  buttonContainer: { width: '100%', marginTop: 12 },
-  logoutButton: {
-    backgroundColor: '#F9C94D',
-    borderRadius: 10,
-    padding: 14,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    marginBottom: 50,
-  },
-  logoutText: { fontSize: 16, color: '#243d4d', fontWeight: '700' },
-})
+const makeStyles = (theme) =>
+  StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: theme.background },
+    scrollContainer: { flex: 1, backgroundColor: theme.background },
+    container: {
+      alignItems: 'center',
+      paddingHorizontal: 20,
+      width: phoneWidth,
+      paddingBottom: 100,
+      marginTop: 40,
+    },
+    logo: { width: 180, height: 80, resizeMode: 'contain', alignSelf: 'center' },
+    content: { alignItems: 'flex-start', width: '100%', marginTop: 30 },
+    emptyText: { fontSize: 16, color: theme.label, marginTop: 40 },
+    buttonContainer: { width: '100%', marginTop: 12 },
+    logoutButton: {
+      backgroundColor: theme.accent,
+      borderRadius: 10,
+      padding: 14,
+      justifyContent: 'center',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+      marginBottom: 50,
+    },
+    logoutText: { fontSize: 16, color: theme.textSecondary, fontWeight: '700' },
+  })
