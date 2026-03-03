@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TextInput } from 'react-native'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '../../context/ThemeContext'
 
 export const FeedbackField = ({
   name,
@@ -19,6 +20,8 @@ export const FeedbackField = ({
   numberOfLines = 4,
 }) => {
   const { t } = useTranslation()
+  const { theme } = useTheme();
+  const styles = makeStyles(theme);
   const hasError = touched && error
 
   return (
@@ -77,40 +80,22 @@ FeedbackField.propTypes = {
   numberOfLines: PropTypes.number,
 }
 
-const styles = StyleSheet.create({
-  fieldContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#2C3E50',
-    marginBottom: 4,
-  },
-  hint: {
-    fontSize: 12,
-    fontStyle: 'italic',
-    color: '#666',
-    marginBottom: 8,
-  },
+const makeStyles = (theme) => StyleSheet.create({
+  fieldContainer: { marginBottom: 20 },
+  labelContainer: { flexDirection: 'row', alignItems: 'center' },
+  label: { fontSize: 14, fontWeight: '700', color: theme.text, marginBottom: 4 },
+  required: { color: theme.error },
+  hint: { fontSize: 12, fontStyle: 'italic', color: theme.hint, marginBottom: 8 },
   textarea: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: theme.borderInput,
     borderRadius: 8,
     padding: 12,
     fontSize: 14,
-    color: '#2C3E50',
-    backgroundColor: '#fff',
+    color: theme.text,
+    backgroundColor: theme.inputBg,
     minHeight: 100,
   },
-  inputError: {
-    borderColor: '#F44336',
-    backgroundColor: '#FFEBEE',
-  },
-  errorText: {
-    color: '#F44336',
-    fontSize: 12,
-    marginTop: 6,
-    fontWeight: '600',
-  },
+  inputError: { borderColor: theme.error, backgroundColor: theme.errorBg },
+  errorText: { color: theme.error, fontSize: 12, marginTop: 6, fontWeight: '600' },
 })

@@ -3,8 +3,10 @@ import { Tabs, TabSlot, TabList, TabTrigger } from "expo-router/ui";
 import TabButton from "./TabButton";
 import Home from "../../assets/home.svg";
 import Profile from "../../assets/profile.svg";
-
+import { useTheme } from "../../context/ThemeContext";
 export default function CustomTabBar() {
+  const { theme } = useTheme();
+  const styles = makeStyles(theme);
   return (
     <Tabs>
       <TabSlot />
@@ -24,18 +26,17 @@ export default function CustomTabBar() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    backgroundColor: "#243E4D",
-    marginHorizontal: 20,
-    marginBottom: 20,
-    borderRadius: 35,
-    padding: 5,
-
-    position: "absolute",
-    bottom: 25,
-    left: 0,
-    right: 0,
-  },
-});
+const makeStyles = (theme) => StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      backgroundColor: theme.tabBar,
+      marginHorizontal: 20,
+      marginBottom: 20,
+      borderRadius: 35,
+      padding: 5,
+      position: "absolute",
+      bottom: 25,
+      left: 0,
+      right: 0,
+    },
+  });

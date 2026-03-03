@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native'
 import React from 'react'
 import PropTypes from 'prop-types'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useTheme } from '../context/ThemeContext'
 
 export const ConfirmationModal = ({
   visible,
@@ -14,6 +15,9 @@ export const ConfirmationModal = ({
   isLoading = false,
   isDangerous = false,
 }) => {
+  const {theme} = useTheme();
+  const styles = makeStyles(theme);
+
   return (
     <Modal
       visible={visible}
@@ -73,16 +77,10 @@ ConfirmationModal.propTypes = {
   isDangerous: PropTypes.bool,
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
+const makeStyles = (theme) => StyleSheet.create({
+  overlay: { flex: 1, backgroundColor: theme.overlay, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.modalBg,
     borderRadius: 16,
     paddingVertical: 24,
     paddingHorizontal: 20,
@@ -96,67 +94,18 @@ const styles = StyleSheet.create({
     maxWidth: 340,
   },
   iconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#F9C94D',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
+    width: 60, height: 60, borderRadius: 30,
+    backgroundColor: theme.accent,
+    justifyContent: 'center', alignItems: 'center', marginBottom: 16,
   },
-  dangerIcon: {
-    backgroundColor: '#F44336',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#2C3E50',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  message: {
-    fontSize: 14,
-    color: '#546E7A',
-    marginBottom: 24,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  buttonContainer: {
-    width: '100%',
-    gap: 12,
-  },
-  confirmButton: {
-    backgroundColor: '#F9C94D',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dangerButton: {
-    backgroundColor: '#F44336',
-  },
-  cancelButton: {
-    backgroundColor: '#E0E0E0',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  confirmButtonText: {
-    color: '#2C3E50',
-    fontSize: 15,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-  },
-  dangerButton: {
-    backgroundColor: '#F44336',
-  },
-  cancelButtonText: {
-    color: '#2C3E50',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
+  dangerIcon: { backgroundColor: theme.error },
+  title: { fontSize: 18, fontWeight: '700', color: theme.text, marginBottom: 8, textAlign: 'center' },
+  message: { fontSize: 14, color: theme.subtext, marginBottom: 24, textAlign: 'center', lineHeight: 20 },
+  buttonContainer: { width: '100%', gap: 12 },
+  confirmButton: { backgroundColor: theme.accent, paddingVertical: 14, borderRadius: 8, alignItems: 'center' },
+  dangerButton: { backgroundColor: theme.error },
+  cancelButton: { backgroundColor: theme.disabled, paddingVertical: 14, borderRadius: 8, alignItems: 'center' },
+  confirmButtonText: { color: theme.text, fontSize: 15, fontWeight: '700', letterSpacing: 0.5 },
+  cancelButtonText: { color: theme.text, fontSize: 15, fontWeight: '600' },
+  buttonDisabled: { opacity: 0.6 },
 })
