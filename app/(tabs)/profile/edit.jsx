@@ -250,22 +250,7 @@ const makeStyles = (theme) => StyleSheet.create({
     inputGroup: {
       marginBottom: 20,
     },
-    label: {
-      marginBottom: 6,
-      color: theme.textSecondary,
-      fontSize: 14,
-      fontWeight: "500",
-    },
-    input: {
-      borderWidth: 2,
-      borderColor: theme.borderInput,
-      borderRadius: 15,
-      paddingVertical: 14,
-      paddingHorizontal: 16,
-      fontSize: 15,
-      color: theme.text,
-      backgroundColor: theme.inputBg,
-    },
+  
     inputError: {
       borderColor: theme.error,
     },
