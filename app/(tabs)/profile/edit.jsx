@@ -55,143 +55,146 @@ export default function EditProfile() {
   });
 
   return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={styles.backButton}
-          >
-            <Feather name="chevron-left" size={20} color="#243E4D" />
-            <Text style={styles.backText}>{t("edit.back")}</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.headerTitle}>{t("edit.editProfile")}</Text>
-          <View style={{ width: 60 }} />
-        </View>
-
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 5}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
         >
-          <ScrollView contentContainerStyle={styles.container}>
-            <Logo
-              style={styles.logo}
-            />
+          <Feather name="chevron-left" size={20} color="#243E4D" />
+          <Text style={styles.backText}>{t("edit.back")}</Text>
+        </TouchableOpacity>
 
-            <View style={styles.iconContainer}>
-              <FontAwesome name="user-circle-o" size={100} color="#243E4D" />
-              <Text style={styles.changePicture}>{t("edit.changePicture")}</Text>
-            </View>
+        <Text style={styles.headerTitle}>{t("edit.editProfile")}</Text>
+        <View style={{ width: 60 }} />
+      </View>
 
-            <Formik
-              validationSchema={validationSchema}
-              initialValues={{
-                name: userProfile?.name || "",
-                lastname: userProfile?.lastname || "",
-                email: userProfile?.email || "",
-              }}
-              enableReinitialize
-              onSubmit={(values) => {
-                updateMutation.mutate(values);
-              }}
-            >
-              {({
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                values,
-                errors,
-                touched,
-              }) => (
-                <>
-                  <View style={styles.inputGroup}>
-                    <TextInput
-                      style={[
-                        styles.input,
-                        errors.name && touched.name && styles.inputError,
-                      ]}
-                      labelStyle={{ fontSize: 16 }}
-                      outlineStyle={{
-                        borderWidth: 2,
-                      }}
-                      value={values.name}
-                      mode="outlined"
-                      label={t("edit.firstName")}
-                      onChangeText={handleChange("name")}
-                      onBlur={handleBlur("name")}
-                    />
-                    {errors.name && touched.name && (
-                      <Text style={styles.errorText}>{errors.name}</Text>
-                    )}
-                  </View>
-                  <View style={styles.inputGroup}>
-                    <TextInput
-                      style={[
-                        styles.input,
-                        errors.lastname &&
-                          touched.lastname &&
-                          styles.inputError,
-                      ]}
-                      mode="outlined"
-                      label={t("edit.lastName")}
-                      labelStyle={{ fontSize: 16 }}
-                      outlineStyle={{
-                        borderWidth: 2,
-                      }}
-                      value={values.lastname}
-                      onChangeText={handleChange("lastname")}
-                      onBlur={handleBlur("lastname")}
-                    />
-                    {errors.lastname && touched.lastname && (
-                      <Text style={styles.errorText}>{errors.lastname}</Text>
-                    )}
-                  </View>
-                  <View style={styles.inputGroup}>
-                    <TextInput
-                      style={[
-                        styles.input,
-                        errors.email && touched.email && styles.inputError,
-                      ]}
-                      mode="outlined"
-                      label={t("auth.email")}
-                      labelStyle={{ fontSize: 16 }}
-                      outlineStyle={{
-                        borderWidth: 2,
-                      }}
-                      value={values.email}
-                      keyboardType="email-address"
-                      autoCapitalize="none"
-                      onChangeText={handleChange("email")}
-                      onBlur={handleBlur("email")}
-                    />
-                    {errors.email && touched.email && (
-                      <Text style={styles.errorText}>{errors.email}</Text>
-                    )}
-                  </View>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 5}
+      >
+        <ScrollView contentContainerStyle={styles.container}>
+          <Logo style={styles.logo} />
 
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={handleSubmit}
-                    disabled={updateMutation.isLoading}
-                  >
-                    <Text style={styles.buttonText}>
-                    {updateMutation.isLoading ? t("edit.isUpdating") : t("edit.update")}
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </Formik>
-          </ScrollView>
-        </KeyboardAvoidingView>
-    <YellowBg
-      style={styles.background}
-    />
-      </SafeAreaView>
+          <View style={styles.iconContainer}>
+            <FontAwesome name="user-circle-o" size={100} color="#243E4D" />
+            <Text style={styles.changePicture}>{t("edit.changePicture")}</Text>
+          </View>
+
+          <Formik
+            validationSchema={validationSchema}
+            initialValues={{
+              name: userProfile?.name || "",
+              lastname: userProfile?.lastname || "",
+              email: userProfile?.email || "",
+            }}
+            enableReinitialize
+            onSubmit={(values) => {
+              updateMutation.mutate(values);
+            }}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <>
+                <View style={styles.inputGroup}>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      errors.name && touched.name && styles.inputError,
+                    ]}
+                    labelStyle={{ fontSize: 16 }}
+                    outlineStyle={{
+                      borderWidth: 2,
+                      borderRadius: 15,
+                    }}
+                    value={values.name}
+                    mode="outlined"
+                    label={t("edit.firstName")}
+                    onChangeText={handleChange("name")}
+                    onBlur={handleBlur("name")}
+                  />
+                  {errors.name && touched.name && (
+                    <Text style={styles.errorText}>{errors.name}</Text>
+                  )}
+                </View>
+                <View style={styles.inputGroup}>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      errors.lastname && touched.lastname && styles.inputError,
+                    ]}
+                    mode="outlined"
+                    label={t("edit.lastName")}
+                    labelStyle={{ fontSize: 16 }}
+                    outlineStyle={{
+                      borderWidth: 2,
+                      borderRadius: 15,
+                    }}
+                    value={values.lastname}
+                    onChangeText={handleChange("lastname")}
+                    onBlur={handleBlur("lastname")}
+                  />
+                  {errors.lastname && touched.lastname && (
+                    <Text style={styles.errorText}>{errors.lastname}</Text>
+                  )}
+                </View>
+                <View style={styles.inputGroup}>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      errors.email && touched.email && styles.inputError,
+                    ]}
+                    mode="outlined"
+                    label={t("auth.email")}
+                    labelStyle={{ fontSize: 16 }}
+                    outlineStyle={{
+                      borderWidth: 2,
+                      borderRadius: 15,
+                    }}
+                    value={values.email}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                  />
+                  {errors.email && touched.email && (
+                    <Text style={styles.errorText}>{errors.email}</Text>
+                  )}
+                </View>
+
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={handleSubmit}
+                  disabled={updateMutation.isLoading}
+                >
+                  <Text style={styles.buttonText}>
+                    {updateMutation.isLoading
+                      ? t("edit.isUpdating")
+                      : t("edit.update")}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </Formik>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      <YellowBg style={styles.background} />
+    </SafeAreaView>
   );
 }
 
 const makeStyles = (theme) => StyleSheet.create({
+  safeArea:{ 
+  flex: 1, 
+  backgroundColor: theme.background 
+},
    header: {
       flexDirection: "row",
       alignItems: "center",
@@ -220,9 +223,6 @@ const makeStyles = (theme) => StyleSheet.create({
       paddingHorizontal: 25,
       paddingTop: 25,
       paddingBottom: 40,
-      backgroundColor: theme.background,
-      borderTopLeftRadius: 30,
-      borderTopRightRadius: 30,
       flexGrow: 1,
     },
     logo: {
@@ -253,6 +253,9 @@ const makeStyles = (theme) => StyleSheet.create({
   
     inputError: {
       borderColor: theme.error,
+    },
+    input: {
+    borderRadius: 15,
     },
     errorText: {
       marginTop: 4,
