@@ -5,9 +5,7 @@ import { AuthProvider, useAuth } from "../context/AuthContext"
 import { QueryProvider } from "../context/QueryProvider"
 import { I18nextProvider } from 'react-i18next'
 import i18n, { getStoredLanguage } from '../i18n/index'
-import {
-  PaperProvider,
-} from "react-native-paper";
+import { PaperProvider} from "react-native-paper";
 import { ThemeProvider } from "../context/ThemeContext"
 import Toast from "react-native-toast-message"
 import { CustomToast } from "../components/CustomToast"

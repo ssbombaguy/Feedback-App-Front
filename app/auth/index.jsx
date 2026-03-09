@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -21,9 +20,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { useState } from "react";
-import AntDesign from '@expo/vector-icons/AntDesign';
-import Logo from "../../assets/MziuriLogo.svg"
-import YellowBg from "../../assets/yellowBg"
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Logo from "../../assets/MziuriLogo.svg";
+import YellowBg from "../../assets/yellowBg";
 import { useTheme } from "../../context/ThemeContext";
 
 const AuthSchema = Yup.object().shape({
@@ -72,9 +71,7 @@ export default function Authentication() {
       >
         <View style={styles.container}>
           <View style={styles.topPart}>
-            <Logo
-              style={styles.logo}
-            />
+            <Logo style={styles.logo} />
 
             <Text style={styles.smallTitle}>{t("auth.welcomeBack")}</Text>
           </View>
@@ -196,61 +193,120 @@ export default function Authentication() {
           </Formik>
         </View>
       </KeyboardAvoidingView>
-      <YellowBg
-        style={styles.background}
-      />
+      <YellowBg style={styles.background} />
     </SafeAreaView>
   );
 }
 
-const makeStyles = (theme) => StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: theme.background },
-  keyboardView: { flex: 1 },
-  container: { flex: 1, justifyContent: 'flex-start', padding: 24, paddingHorizontal: 50, width: phoneWidth },
-  topPart: { alignSelf: 'center' },
-  logo: { width: 220, height: 120, resizeMode: 'contain', alignSelf: 'center' },
-  smallTitle: { fontSize: 20, fontWeight: '600', marginBottom: 24, textAlign: 'center', color: theme.textSecondary },
-  bigTitle: { fontSize: 35, fontWeight: '700', marginBottom: 20, marginTop: 100, color: theme.textSecondary, textAlign: 'center' },
-  input: {
-    borderWidth: 1,
-    borderColor: theme.borderInput,
-    borderRadius: 15,
-    padding: 14,
-    marginBottom: 6,
-    color: theme.text,
-    backgroundColor: theme.inputBg,
-  },
-  inputError: { borderColor: theme.error, borderRadius: 15 },
-  error: { color: theme.error, marginBottom: 12 },
-  button: {
-    backgroundColor: theme.primary,
-    padding: 16,
-    borderRadius: 15,
-    alignItems: 'center',
-    marginTop: 16,
-    minHeight: 50,
-    justifyContent: 'center',
-  },
-  buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  apiError: {
-    color: theme.error,
-    marginTop: 12,
-    padding: 10,
-    backgroundColor: theme.errorBg,
-    borderRadius: 4,
-    textAlign: 'center',
-    fontWeight: '600',
-  },
-  passwordContainer: { position: 'relative', width: '100%', marginBottom: 6 },
-  passwordInput: { paddingRight: 50 },
-  eyeIcon: { position: 'absolute', right: 14, top: 14, zIndex: 10 },
-  optionsRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 10, marginBottom: 20 },
-  rememberRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  checkbox: { width: 18, height: 18, borderWidth: 2, borderColor: theme.textSecondary, borderRadius: 4, marginRight: 8 },
-  checkboxChecked: { backgroundColor: theme.textSecondary },
-  checkmark: { color: '#fff', fontWeight: 'bold', fontSize: 12, textAlign: 'center' },
-  rememberText: { color: theme.textSecondary, fontWeight: '600', fontSize: 14 },
-  languageContainer: { marginTop: 10, width: '100%', alignItems: 'flex-start' },
-  recoveryText: { color: theme.accent, fontSize: 15, fontWeight: '700' },
-  background: { position: 'absolute', bottom: 0, width: '100%', zIndex: -50 },
-});
+const makeStyles = (theme) =>
+  StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: theme.background },
+    keyboardView: { flex: 1 },
+    container: {
+      flex: 1,
+      justifyContent: "flex-start",
+      padding: 24,
+      paddingHorizontal: 50,
+      width: phoneWidth,
+    },
+    topPart: { alignSelf: "center" },
+    logo: {
+      width: 220,
+      height: 120,
+      resizeMode: "contain",
+      alignSelf: "center",
+    },
+    smallTitle: {
+      fontSize: 20,
+      fontWeight: "600",
+      marginBottom: 24,
+      textAlign: "center",
+      color: theme.textSecondary,
+    },
+    bigTitle: {
+      fontSize: 35,
+      fontWeight: "700",
+      marginBottom: 20,
+      marginTop: 100,
+      color: theme.textSecondary,
+      textAlign: "center",
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: theme.borderInput,
+      borderRadius: 15,
+      padding: 14,
+      marginBottom: 6,
+      color: theme.text,
+      backgroundColor: theme.inputBg,
+    },
+    inputError: { borderColor: theme.error, borderRadius: 15 },
+    error: { color: theme.error, marginBottom: 12 },
+    button: {
+      backgroundColor: theme.primary,
+      padding: 16,
+      borderRadius: 15,
+      alignItems: "center",
+      marginTop: 16,
+      minHeight: 50,
+      justifyContent: "center",
+    },
+    buttonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+    apiError: {
+      color: theme.error,
+      marginTop: 12,
+      padding: 10,
+      backgroundColor: theme.errorBg,
+      borderRadius: 4,
+      textAlign: "center",
+      fontWeight: "600",
+    },
+    passwordContainer: { position: "relative", width: "100%", marginBottom: 6 },
+    passwordInput: { paddingRight: 50 },
+    eyeIcon: { position: "absolute", right: 14, top: 14, zIndex: 10 },
+    optionsRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginTop: 10,
+      marginBottom: 20,
+    },
+    rememberRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 10,
+    },
+    checkbox: {
+      width: 18,
+      height: 18,
+      borderWidth: 2,
+      borderColor: theme.textSecondary,
+      borderRadius: 4,
+      marginRight: 8,
+    },
+    checkboxChecked: { backgroundColor: theme.textSecondary },
+    checkmark: {
+      color: "#fff",
+      fontWeight: "bold",
+      fontSize: 12,
+      textAlign: "center",
+    },
+    rememberText: {
+      color: theme.textSecondary,
+      fontWeight: "600",
+      fontSize: 14,
+    },
+    languageContainer: {
+      marginTop: 10,
+      width: "100%",
+      alignItems: "flex-start",
+    },
+    recoveryText: { color: theme.accent, fontSize: 15, fontWeight: "700" },
+    background: {
+      position: "absolute",
+      bottom: 0,
+      width: "100%",
+      zIndex: -50,
+      alignSelf: "center",
+    },
+  });
