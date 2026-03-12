@@ -129,7 +129,7 @@ export default function Authentication() {
                     <AntDesign
                       name={showPassword ? "eye" : "eye-invisible"}
                       size={22}
-                      color="#243E4D"
+                      style={styles.eye}
                     />
                   </TouchableOpacity>
                 </View>
@@ -264,6 +264,7 @@ const makeStyles = (theme) =>
     passwordContainer: { position: "relative", width: "100%", marginBottom: 6 },
     passwordInput: { paddingRight: 50 },
     eyeIcon: { position: "absolute", right: 14, top: 14, zIndex: 10 },
+    eye: { color: theme.primary },
     optionsRow: {
       flexDirection: "row",
       justifyContent: "space-between",
