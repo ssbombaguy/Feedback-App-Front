@@ -54,7 +54,8 @@
     "returnAsTeacher": "Would you like to return as a teacher?",
     "submitFeedback": "Submit Feedback",
     "clear": "Clear",
-    "minCharacters": "Please provide at least 10 characters"
+    "minCharacters": "Please provide at least 10 characters",
+    "submitAnonymously": "Submit Anonymously"
   },
   "profile": {
     "title": "Profile",
