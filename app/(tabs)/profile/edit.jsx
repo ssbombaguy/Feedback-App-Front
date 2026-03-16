@@ -170,7 +170,7 @@ export default function EditProfile() {
                 </View>
 
                 <TouchableOpacity
-                  style={styles.button}
+                  style={styles.updateButton}
                   onPress={handleSubmit}
                   disabled={updateMutation.isLoading}
                 >
@@ -190,12 +190,13 @@ export default function EditProfile() {
   );
 }
 
-const makeStyles = (theme) => StyleSheet.create({
-  safeArea:{ 
-  flex: 1, 
-  backgroundColor: theme.background 
-},
-   header: {
+const makeStyles = (theme) =>
+  StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: theme.background,
+    },
+    header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
@@ -250,28 +251,33 @@ const makeStyles = (theme) => StyleSheet.create({
     inputGroup: {
       marginBottom: 20,
     },
-  
+
     inputError: {
       borderColor: theme.error,
     },
     input: {
-    borderRadius: 15,
+      borderRadius: 15,
     },
     errorText: {
       marginTop: 4,
       fontSize: 12,
       color: theme.error,
     },
-    button: {
+    updateButton: {
       backgroundColor: theme.accent,
       paddingVertical: 16,
       borderRadius: 14,
       alignItems: "center",
       marginTop: 10,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.25,
+      shadowRadius: 15,
+      elevation: 6,
     },
     buttonText: {
       color: theme.textSecondary,
       fontWeight: "700",
       fontSize: 16,
     },
-});
+  });

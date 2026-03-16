@@ -39,7 +39,7 @@ const AuthSchema = Yup.object().shape({
 export default function Authentication() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
   const loginMutation = useMutation({
@@ -134,7 +134,15 @@ export default function Authentication() {
                   </TouchableOpacity>
                 </View>
 
-                <View style={styles.optionsRow}>
+                <View
+                  style={[
+                    styles.optionsRow,
+                    {
+                      flexDirection: i18n.language === "ka" ? "column" : "row",
+                      gap: i18n.language === "ka" ? 5 : "row",
+                    },
+                  ]}
+                >
                   <View>
                     <View style={styles.rememberRow}>
                       <TouchableOpacity
@@ -151,10 +159,6 @@ export default function Authentication() {
                         {t("auth.rememberMe")}
                       </Text>
                     </View>
-
-                    <View style={styles.languageContainer}>
-                      <LanguageSwitcher />
-                    </View>
                   </View>
 
                   <TouchableOpacity
@@ -165,10 +169,12 @@ export default function Authentication() {
                     </Text>
                   </TouchableOpacity>
                 </View>
-
+                <View style={styles.languageContainer}>
+                  <LanguageSwitcher />
+                </View>
                 <TouchableOpacity
                   onPress={handleSubmit}
-                  style={styles.button}
+                  style={styles.submitButton}
                   disabled={loginMutation.isPending}
                 >
                   {loginMutation.isPending ? (
@@ -242,7 +248,7 @@ const makeStyles = (theme) =>
     },
     inputError: { borderColor: theme.error, borderRadius: 15 },
     error: { color: theme.error, marginBottom: 12 },
-    button: {
+    submitButton: {
       backgroundColor: theme.primary,
       padding: 16,
       borderRadius: 15,
@@ -250,6 +256,11 @@ const makeStyles = (theme) =>
       marginTop: 16,
       minHeight: 50,
       justifyContent: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.25,
+      shadowRadius: 15,
+      elevation: 6, 
     },
     buttonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
     apiError: {
