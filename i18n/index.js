@@ -15,12 +15,10 @@ export const getStoredLanguage = async () => {
 
     if (savedLanguage) return savedLanguage;
 
-    const deviceLang = Localization.getLocales()[0].languageCode;
-
-    return ["en", "ka"].includes(deviceLang) ? deviceLang : "en";
+    return "ka"; 
   } catch (error) {
     console.error("Error getting language:", error);
-    return "en";
+    return "ka";
   }
 };
 
@@ -43,7 +41,7 @@ const initI18n = async () => {
       ka: { translation: ka },
     },
     lng: language,
-    fallbackLng: "en",
+    fallbackLng: "ka",
     interpolation: {
       escapeValue: false,
     },

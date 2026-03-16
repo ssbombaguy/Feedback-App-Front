@@ -80,6 +80,25 @@ export const FeedbackForm = ({ courseName, onClose }) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
+  const [showAnonymousConfirm, setShowAnonymousConfirm] = useState(false);
+  const [pendingAnonymousValue, setPendingAnonymousValue] = useState(false);
+
+  const handleAnonymousToggle = (value, setFieldValue, values) => {
+    if (value === true) {
+      setPendingAnonymousValue(true);
+      setShowAnonymousConfirm(true);
+    } else {
+      setFieldValue("anonymous", false);
+    }
+  };
+
+  const handleReturnAsTeacherToggle = (value, setFieldValue, values) => {
+    if (value === true && values.anonymous) {
+      showErrorToast(t("common.warning"), t("feedback.teacherRequiresName"));
+      return;
+    }
+    setFieldValue("returnAsTeacher", value);
+  };
 
   useEffect(() => {
     const loadUser = async () => {
@@ -168,81 +187,115 @@ export const FeedbackForm = ({ courseName, onClose }) => {
             errors,
             touched,
           }) => (
-            <View style={styles.formContainer}>
-              {FEEDBACK_FIELDS_CONFIG.map((field) => (
-                <FeedbackField
-                  key={field.name}
-                  name={field.name}
-                  labelKey={field.labelKey}
-                  hintKey={field.hintKey}
-                  placeholderKey={field.placeholderKey}
-                  value={values[field.name]}
-                  onChangeText={handleChange(field.name)}
-                  onBlur={handleBlur(field.name)}
-                  error={errors[field.name]}
-                  touched={touched[field.name]}
-                  isSubmitting={isSubmitting}
-                />
-              ))}
+            <>
+              <View style={styles.formContainer}>
+                {FEEDBACK_FIELDS_CONFIG.map((field) => (
+                  <FeedbackField
+                    key={field.name}
+                    name={field.name}
+                    labelKey={field.labelKey}
+                    hintKey={field.hintKey}
+                    placeholderKey={field.placeholderKey}
+                    value={values[field.name]}
+                    onChangeText={handleChange(field.name)}
+                    onBlur={handleBlur(field.name)}
+                    error={errors[field.name]}
+                    touched={touched[field.name]}
+                    isSubmitting={isSubmitting}
+                  />
+                ))}
 
-              <View style={styles.switchContainer}>
-                <Text style={styles.switchLabel}>
-                  {t("feedback.returnAsTeacher")}
-                </Text>
-                <Switch
-                  value={values.returnAsTeacher}
-                  onValueChange={(value) =>
-                    setFieldValue("returnAsTeacher", value)
-                  }
-                  trackColor={{ false: "#E0E0E0", true: "#F9C94D" }}
-                  thumbColor={values.returnAsTeacher ? "#243d4d" : "#f4f3f4"}
-                  disabled={isSubmitting}
-                />
-              </View>
-              <View style={styles.switchContainer}>
-                <Text style={styles.switchLabel}>
-                  {t("feedback.submitAnonymously") || "Submit Anonymously"}
-                </Text>
-                <Switch
-                  value={values.anonymous}
-                  onValueChange={(value) => setFieldValue("anonymous", value)}
-                  trackColor={{ false: theme.disabled, true: theme.accent }}
-                  thumbColor={values.anonymous ? theme.primary : theme.label}
-                  disabled={isSubmitting}
-                />
-              </View>
-
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={[
-                    styles.submitButton,
-                    isSubmitting && styles.submitButtonDisabled,
-                  ]}
-                  onPress={handleFormSubmit}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <ActivityIndicator color="#2C3E50" size="small" />
-                  ) : (
-                    <Text style={styles.submitButtonText}>
-                      {t("feedback.submitFeedback")}
-                    </Text>
-                  )}
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.clearButton}
-                  onPress={onClose}
-                  disabled={isSubmitting}
-                >
-                  <Text style={styles.clearButtonText}>
-                    {t("common.cancel")}
+                <View style={styles.switchContainer}>
+                  <Text style={styles.switchLabel}>
+                    {t("feedback.returnAsTeacher")}
                   </Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() =>
+                      handleReturnAsTeacherToggle(
+                        !values.returnAsTeacher,
+                        setFieldValue,
+                        values
+                      )
+                    }
+                  >
+                    <Switch
+                      value={values.returnAsTeacher}
+                      trackColor={{ false: "#E0E0E0", true: "#F9C94D" }}
+                      thumbColor={
+                        values.returnAsTeacher ? "#243d4d" : "#f4f3f4"
+                      }
+                      disabled={isSubmitting}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.switchContainer}>
+                  <Text style={styles.switchLabel}>
+                    {t("feedback.submitAnonymously") || "Submit Anonymously"}
+                  </Text>
+                  <Switch
+                    value={values.anonymous}
+                    onValueChange={(value) =>
+                      handleAnonymousToggle(value, setFieldValue, values)
+                    }
+                    trackColor={{ false: theme.disabled, true: theme.accent }}
+                    thumbColor={values.anonymous ? theme.primary : theme.label}
+                    disabled={isSubmitting || values.returnAsTeacher}
+                  />
+                </View>
+
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={[
+                      styles.submitButton,
+                      isSubmitting && styles.submitButtonDisabled,
+                    ]}
+                    onPress={handleFormSubmit}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <ActivityIndicator color="#2C3E50" size="small" />
+                    ) : (
+                      <Text style={styles.submitButtonText}>
+                        {t("feedback.submitFeedback")}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.clearButton}
+                    onPress={onClose}
+                    disabled={isSubmitting}
+                  >
+                    <Text style={styles.clearButtonText}>
+                      {t("common.cancel")}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.spacer} />
               </View>
 
-              <View style={styles.spacer} />
-            </View>
+              <ConfirmationModal
+                visible={showAnonymousConfirm}
+                title={t("feedback.submitAnonymously?")}
+                message={
+                  <Text style={{ textAlign: "center", fontSize: 16 }}>
+                    {t("feedback.submitAnonymouslyMessage")}
+                  </Text>
+                }
+                confirmText={t("feedback.yesSubmitAnonymously")}
+                cancelText={t("feedback.noSubmitAnonymously")}
+                onConfirm={() => {
+                  setFieldValue("anonymous", true);
+                  setFieldValue("returnAsTeacher", false);
+                  setShowAnonymousConfirm(false);
+                }}
+                onCancel={() => {
+                  setShowAnonymousConfirm(false);
+                }}
+              />
+            </>
           )}
         </Formik>
 
@@ -266,7 +319,7 @@ export const FeedbackForm = ({ courseName, onClose }) => {
 
 const makeStyles = (theme) =>
   StyleSheet.create({
-    safeArea:{
+    safeArea: {
       flex: 1,
       backgroundColor: theme.background,
     },

@@ -55,7 +55,12 @@
     "submitFeedback": "Submit Feedback",
     "clear": "Clear",
     "minCharacters": "Please provide at least 10 characters",
-    "submitAnonymously": "Submit Anonymously"
+    "submitAnonymously": "Submit Anonymously",
+    "submitAnonymously?": "Submit Anonymously?",
+    "submitAnonymouslyMessage": "If you submit anonymously, your name will not be visible and you cannot return as a teacher.",
+    "yesSubmitAnonymously": "Yes, Submit Anonymously",
+    "noSubmitAnonymously": "No, Submit with Name",
+    "teacherRequiresName": "To return as a teacher, you must submit feedback with your name. Please choose 'No, Submit with Name' if you want to be considered for returning as a teacher."
   },
   "profile": {
     "title": "Profile",
