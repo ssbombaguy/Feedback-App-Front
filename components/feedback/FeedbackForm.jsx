@@ -19,6 +19,8 @@ import { ConfirmationModal } from "../ConfirmationModal";
 import { useTheme } from "../../context/ThemeContext";
 import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
+import { CustomToast } from "../CustomToast";
 
 const FEEDBACK_FIELDS_CONFIG = [
   {
@@ -92,11 +94,17 @@ export const FeedbackForm = ({ courseName, onClose }) => {
     }
   };
 
-  const handleReturnAsTeacherToggle = (value, setFieldValue, values) => {
-    if (value === true && values.anonymous) {
-      showErrorToast(t("common.warning"), t("feedback.teacherRequiresName"));
+  const handleReturnAsTeacherToggle = (
+    value,
+    setFieldValue,
+    anonymousValue,
+  ) => {
+    if (value && anonymousValue) {
+      console.log(value, anonymousValue);
+      showErrorToast(t("feedback.teacherRequiresName"));
       return;
     }
+
     setFieldValue("returnAsTeacher", value);
   };
 
@@ -127,7 +135,7 @@ export const FeedbackForm = ({ courseName, onClose }) => {
       });
       return data;
     },
-    [user, courseName]
+    [user, courseName],
   );
 
   const handleSubmit = useCallback(
@@ -140,7 +148,7 @@ export const FeedbackForm = ({ courseName, onClose }) => {
       setPendingValues(values);
       setShowConfirmation(true);
     },
-    [user, t]
+    [user, t],
   );
 
   const handleConfirmSubmit = useCallback(async () => {
@@ -209,25 +217,19 @@ export const FeedbackForm = ({ courseName, onClose }) => {
                   <Text style={styles.switchLabel}>
                     {t("feedback.returnAsTeacher")}
                   </Text>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() =>
+                  <Switch
+                    value={values.returnAsTeacher}
+                    trackColor={{ false: "#E0E0E0", true: "#F9C94D" }}
+                    thumbColor={values.returnAsTeacher ? "#243d4d" : "#f4f3f4"}
+                    onValueChange={(value) =>
                       handleReturnAsTeacherToggle(
-                        !values.returnAsTeacher,
+                        value,
                         setFieldValue,
-                        values
+                        values.anonymous,
                       )
                     }
-                  >
-                    <Switch
-                      value={values.returnAsTeacher}
-                      trackColor={{ false: "#E0E0E0", true: "#F9C94D" }}
-                      thumbColor={
-                        values.returnAsTeacher ? "#243d4d" : "#f4f3f4"
-                      }
-                      disabled={isSubmitting}
-                    />
-                  </TouchableOpacity>
+                    disabled={isSubmitting}
+                  />
                 </View>
                 <View style={styles.switchContainer}>
                   <Text style={styles.switchLabel}>
@@ -313,6 +315,14 @@ export const FeedbackForm = ({ courseName, onClose }) => {
           isLoading={isSubmitting}
         />
       </ScrollView>
+
+      <Toast
+        config={{
+          success: (props) => <CustomToast {...props} type="success" />,
+          error: (props) => <CustomToast {...props} type="error" />,
+          info: (props) => <CustomToast {...props} type="info" />,
+        }}
+      />
     </SafeAreaView>
   );
 };
