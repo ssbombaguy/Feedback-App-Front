@@ -12,7 +12,7 @@ export const ProfileCourseCard = ({ course, isActive = false }) => {
   return (
     <View style={[styles.courseCard, isActive && styles.activeCourseCard]}>
       <View style={styles.courseHeader}>
-        <Text style={styles.courseName}>{course.name}</Text>
+        <Text style={styles.courseName}>{course.course_name}</Text>
         {isActive && (
           <View style={styles.activeBadge}>
             <Ionicons name="checkmark-circle" size={16} color="#fff" />
@@ -25,25 +25,14 @@ export const ProfileCourseCard = ({ course, isActive = false }) => {
           <MaterialCommunityIcons name="clock-outline" size={16} color="#243d4d" style={styles.courseIcon} />
           <View>
             <Text style={styles.courseLabel}>{t('course.duration')}</Text>
-            <Text style={styles.courseValue}>{course.duration}</Text>
+            <Text style={styles.courseValue}>{course.focus_area }</Text>
           </View>
         </View>
         <View style={styles.courseInfo}>
           <MaterialCommunityIcons name="human-greeting" size={16} color="#243d4d" style={styles.courseIcon} />
           <View>
             <Text style={styles.courseLabel}>{t('course.teacher')}</Text>
-            <Text style={styles.courseValue}>
-              {Array.isArray(course.teachersName)
-                ? course.teachersName.join(', ')
-                : course.teachersName || 'N/A'}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.courseInfo}>
-          <MaterialCommunityIcons name="laptop" size={16} color="#243d4d" style={styles.courseIcon} />
-          <View>
-            <Text style={styles.courseLabel}>{t('course.learningType')}</Text>
-            <Text style={styles.courseValue}>{course.learningType}</Text>
+            <Text style={styles.courseValue}>{course.teacher || 'N/A'}</Text>
           </View>
         </View>
       </View>

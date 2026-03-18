@@ -27,55 +27,34 @@ const feedback = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-
+  
+  
   const loadUserCourses = useCallback(async () => {
-    try {
-      const response = await userAPI.getCurrentUserProfile();
-      const user = response.user;
+  try {
+    const response = await userAPI.getCurrentUserProfile();
+    const user = response.user;
 
-      if (!user || !user.courses) {
-        setCourses([]);
-        return;
-      }
-
-      const allCourses = [];
-
-      if (user.courses.active && user.courses.active.name) {
-        const active = user.courses.active;
-        allCourses.push({
-          courseName: active.name,
-          focusArea: active.duration,
-          teacher: Array.isArray(active.teachersName)
-            ? active.teachersName.join(", ")
-            : active.teachersName || "",
-          isActive: true,
-        });
-      }
-
-      if (user.courses.passed && user.courses.passed.length > 0) {
-        user.courses.passed.forEach((course) => {
-          if (course && course.name) {
-            allCourses.push({
-              courseName: course.name,
-              focusArea: course.duration,
-              teacher: Array.isArray(course.teachersName)
-                ? course.teachersName.join(", ")
-                : course.teachersName || "",
-              isActive: false,
-            });
-          }
-        });
-      }
-
-      setCourses(allCourses);
-    } catch (error) {
-      console.error("Error loading courses:", error);
+    if (!user || !user.enrolled_courses) {
       setCourses([]);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+      return;
     }
-  }, []);
+
+    const allCourses = user.enrolled_courses.map((enrollment) => ({
+      courseName: enrollment.course.course_name,
+      focusArea: enrollment.course.focus_area,
+      teacher: enrollment.course.teacher,
+      isActive: enrollment.is_active,
+    }));
+
+    setCourses(allCourses);
+  } catch (error) {
+    console.error('Error loading courses:', error);
+    setCourses([]);
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+}, []);;
 
   useEffect(() => {
     loadUserCourses();
