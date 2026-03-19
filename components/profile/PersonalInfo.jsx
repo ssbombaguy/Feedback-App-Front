@@ -25,9 +25,9 @@ export const PersonalInfo = ({ user }) => {
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{t('profile.personalInfo')}</Text>
-      <InfoRow icon="phone" label={t('profile.phone')} value={user?.phone} />
-      <InfoRow icon="card-account-details" label={t('profile.privateNumber')} value={user?.privateNumber} />
-      <InfoRow icon="map-marker" label={t('profile.town')} value={user?.town} />
+      <InfoRow icon="phone" label={t('profile.phone')} value={user?.phoneNumber} />
+      <InfoRow icon="card-account-details" label={t('profile.privateNumber')} value={user?.personalNumber} />
+      <InfoRow icon="map-marker" label={t('profile.town')} value={user?.city} />
       <InfoRow icon="school" label={t('profile.grade')} value={user?.grade} isLast />
     </View>
   )

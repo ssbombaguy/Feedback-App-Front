@@ -4,8 +4,8 @@ import { Platform } from "react-native";
 
 const API_BASE_URL =
   Platform.OS === "android"
-    ? "http://192.168.100.2:3000/api"
-    : "http://192.168.100.2:3000/api";
+    ? "http://192.168.100.3:3000/api"
+    : "http://192.168.100.3:3000/api";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -71,23 +71,9 @@ export const authAPI = {
 };
 
 export const userAPI = {
-  getUserByEmail: async (email) => {
-    const response = await axiosInstance.get(`/users/${email}`);
-    return response.data;
-  },
-
+  
   getCurrentUserProfile: async () => {
     const response = await axiosInstance.get("/users/me/profile");
-    return response.data;
-  },
-
-  getUserById: async (userId) => {
-    const response = await axiosInstance.get(`/users/id/${userId}`);
-    return response.data;
-  },
-  
-  updateCurrentUser: async (data) => {
-    const response = await axiosInstance.put("/users/me", data);
     return response.data;
   },
 };

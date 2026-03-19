@@ -77,7 +77,7 @@ const profile = () => {
             <View style={{ alignItems: 'flex-start', width: '100%', marginTop: 30 }}>
               <ProfileHeader user={user} />
               <PersonalInfo user={user} />
-              <CoursesSection courses={user.courses} />
+              <CoursesSection courses={user.enrolled_courses} />
 
               <View style={styles.buttonContainer}>
                 <TouchableOpacity

@@ -13,18 +13,18 @@ export const ProfileHeader = ({ user }) => {
     <View style={styles.profileHeader}>
       <Image
         style={styles.profilePicture}
-        source={{ uri: user?.profilePicture || 'https://via.placeholder.com/150' }}
+        source={{ uri: user?.photo || 'https://via.placeholder.com/150' }}
       />
 
       <View style={styles.userBasicInfo}>
-        <Text style={styles.name}>{user?.name || ''}</Text>
-        <Text style={styles.lastname}>{user?.lastname || ''}</Text>
+        <Text style={styles.name}>{user?.firstName  || ''}</Text>
+        <Text style={styles.lastname}>{user?.lastName  || ''}</Text>
         <Text style={styles.email}>{user?.email || ''}</Text>
       </View>
 
-      <Pressable onPress={() => router.push('/profile/edit')}>
+      {/* <Pressable onPress={() => router.push('/profile/edit')}>
         <AntDesign name="edit" size={25} color="#243E4D" />
-      </Pressable>
+      </Pressable> */}
     </View>
   )
 }

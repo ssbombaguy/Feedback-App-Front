@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useState, useCallback } from "react";
 import CourseLister from "../../../components/feedback/courseLister";
 import { FeedbackForm } from "../../../components/feedback/FeedbackForm";
-import { userAPI } from "../../../api/apiClient";
+import { userAPI,coursesAPI  } from "../../../api/apiClient";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../../assets/MziuriLogo.svg";
@@ -27,55 +27,46 @@ const feedback = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-
+  
+  
   const loadUserCourses = useCallback(async () => {
-    try {
-      const response = await userAPI.getCurrentUserProfile();
-      const user = response.user;
+  try {
+    const [profileResponse, coursesResponse] = await Promise.all([
+      userAPI.getCurrentUserProfile(),
+      coursesAPI.getAllCourses(),
+    ]);
 
-      if (!user || !user.courses) {
-        setCourses([]);
-        return;
-      }
+    const user = profileResponse.user;
+    const allCoursesFromAPI = coursesResponse.courses;
 
-      const allCourses = [];
-
-      if (user.courses.active && user.courses.active.name) {
-        const active = user.courses.active;
-        allCourses.push({
-          courseName: active.name,
-          focusArea: active.duration,
-          teacher: Array.isArray(active.teachersName)
-            ? active.teachersName.join(", ")
-            : active.teachersName || "",
-          isActive: true,
-        });
-      }
-
-      if (user.courses.passed && user.courses.passed.length > 0) {
-        user.courses.passed.forEach((course) => {
-          if (course && course.name) {
-            allCourses.push({
-              courseName: course.name,
-              focusArea: course.duration,
-              teacher: Array.isArray(course.teachersName)
-                ? course.teachersName.join(", ")
-                : course.teachersName || "",
-              isActive: false,
-            });
-          }
-        });
-      }
-
-      setCourses(allCourses);
-    } catch (error) {
-      console.error("Error loading courses:", error);
+    if (!user || !user.enrolled_courses || user.enrolled_courses.length === 0) {
       setCourses([]);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+      return;
     }
-  }, []);
+
+    const allCourses = user.enrolled_courses
+      .filter((enrollment) => enrollment.courseId != null)
+      .map((enrollment) => {
+        const course = allCoursesFromAPI.find(
+          (c) => c.id.toString() === enrollment.courseId.toString()
+        );
+        return {
+          courseName: course?.course_name || 'Unknown',
+          focusArea: course?.focus_area || '',
+          teacher: course?.teacher || '',
+          isActive: enrollment.is_active,
+        };
+      });
+    console.log('final mapped courses:', JSON.stringify(allCourses, null, 2));
+    setCourses(allCourses);
+  } catch (error) {
+    console.error('Error loading courses:', error);
+    setCourses([]);
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+}, []);
 
   useEffect(() => {
     loadUserCourses();
