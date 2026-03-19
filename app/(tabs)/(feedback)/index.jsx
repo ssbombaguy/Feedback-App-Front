@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useState, useCallback } from "react";
 import CourseLister from "../../../components/feedback/courseLister";
 import { FeedbackForm } from "../../../components/feedback/FeedbackForm";
-import { userAPI } from "../../../api/apiClient";
+import { userAPI,coursesAPI  } from "../../../api/apiClient";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../../assets/MziuriLogo.svg";
@@ -31,21 +31,33 @@ const feedback = () => {
   
   const loadUserCourses = useCallback(async () => {
   try {
-    const response = await userAPI.getCurrentUserProfile();
-    const user = response.user;
+    const [profileResponse, coursesResponse] = await Promise.all([
+      userAPI.getCurrentUserProfile(),
+      coursesAPI.getAllCourses(),
+    ]);
 
-    if (!user || !user.enrolled_courses) {
+    const user = profileResponse.user;
+    const allCoursesFromAPI = coursesResponse.courses;
+
+    if (!user || !user.enrolled_courses || user.enrolled_courses.length === 0) {
       setCourses([]);
       return;
     }
 
-    const allCourses = user.enrolled_courses.map((enrollment) => ({
-      courseName: enrollment.course.course_name,
-      focusArea: enrollment.course.focus_area,
-      teacher: enrollment.course.teacher,
-      isActive: enrollment.is_active,
-    }));
-
+    const allCourses = user.enrolled_courses
+      .filter((enrollment) => enrollment.courseId != null)
+      .map((enrollment) => {
+        const course = allCoursesFromAPI.find(
+          (c) => c.id.toString() === enrollment.courseId.toString()
+        );
+        return {
+          courseName: course?.course_name || 'Unknown',
+          focusArea: course?.focus_area || '',
+          teacher: course?.teacher || '',
+          isActive: enrollment.is_active,
+        };
+      });
+    console.log('final mapped courses:', JSON.stringify(allCourses, null, 2));
     setCourses(allCourses);
   } catch (error) {
     console.error('Error loading courses:', error);
@@ -54,7 +66,7 @@ const feedback = () => {
     setLoading(false);
     setRefreshing(false);
   }
-}, []);;
+}, []);
 
   useEffect(() => {
     loadUserCourses();
