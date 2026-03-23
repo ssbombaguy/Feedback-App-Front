@@ -1,5 +1,5 @@
 import { Stack, router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import { QueryProvider } from "../context/QueryProvider";
@@ -9,6 +9,8 @@ import { PaperProvider } from "react-native-paper";
 import { ThemeProvider } from "../context/ThemeContext";
 import Toast from "react-native-toast-message";
 import { CustomToast } from "../components/CustomToast";
+import * as Notifications from "expo-notifications";
+import { registerForPushNotifications } from "../utils/notifications";
 
 function RootLayoutContent() {
   const { user, isLoading } = useAuth();
@@ -28,6 +30,8 @@ function RootLayoutContent() {
 
 export default function RootLayout() {
   const [isInitialized, setIsInitialized] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
   useEffect(() => {
     const initializeLanguage = async () => {
@@ -42,6 +46,27 @@ export default function RootLayout() {
     };
 
     initializeLanguage();
+  }, []);
+
+  useEffect(() => {
+    registerForPushNotifications();
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        console.log("🔔 Notification received:", notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log("👆 Notification tapped:", response);
+      });
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
   }, []);
 
   if (!isInitialized) {
