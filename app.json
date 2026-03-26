@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Feedback-Front",
-    "slug": "Feedback-Front",
+    "slug": "feedback-app",
     "version": "1.0.0",
     "scheme": "com.anonymous.feedbackfront",
     "orientation": "portrait",
@@ -48,6 +48,7 @@
       "eas": {
         "projectId": "b864e9b2-78b7-47b6-951f-21b615b1b493"
       }
-    }
+    },
+    "owner": "ssbombaguys-organization"
   }
 }

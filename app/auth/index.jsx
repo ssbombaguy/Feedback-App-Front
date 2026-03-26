@@ -19,11 +19,12 @@ import { phoneWidth } from "../../constants/Dimensions";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Logo from "../../assets/MziuriLogo.svg";
 import YellowBg from "../../assets/yellowBg";
 import { useTheme } from "../../context/ThemeContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthSchema = Yup.object().shape({
   email: Yup.string().required("auth.emailRequired").email("auth.invalidEmail"),
@@ -39,6 +40,7 @@ const AuthSchema = Yup.object().shape({
 export default function Authentication() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [pushToken, setPushToken] = useState("");
   const { t, i18n } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
@@ -62,6 +64,16 @@ export default function Authentication() {
     loginMutation.mutate({ ...values, rememberMe });
   };
 
+  useEffect(() => {
+    const getPushToken = async () => {
+      const token = await AsyncStorage.getItem("pushToken");
+
+      setPushToken(token);
+    };
+
+    getPushToken();
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
@@ -74,6 +86,7 @@ export default function Authentication() {
             <Logo style={styles.logo} />
 
             <Text style={styles.smallTitle}>{t("auth.welcomeBack")}</Text>
+            <Text style={styles.smallTitle}>{pushToken}</Text>
           </View>
 
           <Text style={styles.bigTitle}>{t("auth.signIn")}</Text>
@@ -260,7 +273,7 @@ const makeStyles = (theme) =>
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: 0.25,
       shadowRadius: 15,
-      elevation: 6, 
+      elevation: 6,
     },
     buttonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
     apiError: {
