@@ -1,3 +1,4 @@
+import '../utils/firebase'; 
 import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -11,7 +12,9 @@ import Toast from "react-native-toast-message";
 import { CustomToast } from "../components/CustomToast";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotifications } from "../utils/notifications";
-import '../utils/firebase'
+import { View, Text } from "react-native";  
+
+
 
 function RootLayoutContent() {
   const { user, isLoading } = useAuth();
@@ -33,6 +36,7 @@ export default function RootLayout() {
   const [isInitialized, setIsInitialized] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  const [pushToken, setPushToken] = useState('')
 
   useEffect(() => {
     const initializeLanguage = async () => {
