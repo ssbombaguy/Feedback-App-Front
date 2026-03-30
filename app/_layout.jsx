@@ -11,6 +11,7 @@ import Toast from "react-native-toast-message";
 import { CustomToast } from "../components/CustomToast";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotifications } from "../utils/notifications";
+import '../utils/firebase'
 
 function RootLayoutContent() {
   const { user, isLoading } = useAuth();
@@ -49,7 +50,9 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    registerForPushNotifications();
+    registerForPushNotifications().then(token => {
+      if (token) setPushToken(token) // add this
+    });
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
@@ -81,6 +84,11 @@ export default function RootLayout() {
             <AuthProvider>
               <PaperProvider>
                 <RootLayoutContent />
+                {pushToken ? ( 
+                  <View style={{ position: 'absolute', top: 60, left: 10, right: 10, backgroundColor: 'black', padding: 10, zIndex: 9999 }}>
+                    <Text selectable style={{ color: 'white', fontSize: 10 }}>{pushToken}</Text>
+                  </View>
+                ) : null}
               </PaperProvider>
             </AuthProvider>
           </QueryProvider>
