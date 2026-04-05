@@ -60,7 +60,8 @@
     "submitAnonymouslyMessage": "If you submit anonymously, your name will not be visible and you cannot return as a teacher.",
     "yesSubmitAnonymously": "Yes, Submit Anonymously",
     "noSubmitAnonymously": "No, Submit with Name",
-    "teacherRequiresName": "To return as a teacher, you must submit feedback with your name. Please choose 'No, Submit with Name'."
+    "teacherRequiresName": "To return as a teacher, you must submit feedback with your name. Please choose 'No, Submit with Name'.",
+    "changeFeedback": "Change Feedback"
   },
   "profile": {
     "title": "Profile",
@@ -78,7 +79,21 @@
     "confirmLogout": "Are You Sure?",
     "confirmLogoutMessage": "Are you sure you want to log out?",
     "yesLogout": "Yes, Log Out",
-    "active":"Active"
+    "active":"Active",
+    "email": "Email",
+    "school": "School",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "readOnlyInfo": "Personal Information",
+    "editableInfo": "Edit Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "saveChanges": "Save Changes",
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Failed to update profile",
+    "phoneRequired": "Phone number is required",
+    "invalidUrl": "Please enter a valid URL",
+    "editProfile": "Edit Profile"
   },
   "edit":{
    "back": "Back",

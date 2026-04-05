@@ -4,7 +4,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
@@ -14,20 +13,21 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { router } from "expo-router";
 import { setLoggedIn } from "../../utils/AsyncStorage";
-import { authAPI } from "../../api/apiClient";
 import { phoneWidth } from "../../constants/Dimensions";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Logo from "../../assets/MziuriLogo.svg";
 import YellowBg from "../../assets/yellowBg";
 import { useTheme } from "../../context/ThemeContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "../../context/AuthContext";
+import { showErrorToast } from "../../utils/toastUtils";
 
 const AuthSchema = Yup.object().shape({
   email: Yup.string().required("auth.emailRequired").email("auth.invalidEmail"),
-
   password: Yup.string()
     .required("auth.passwordRequired")
     .min(8, "auth.passwordMin8")
@@ -39,28 +39,38 @@ const AuthSchema = Yup.object().shape({
 export default function Authentication() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [pushToken, setPushToken] = useState("");
   const { t, i18n } = useTranslation();
   const { theme } = useTheme();
+  const { login } = useAuth();
   const styles = makeStyles(theme);
+
   const loginMutation = useMutation({
-    mutationFn: (values) =>
-      authAPI.login(values.email, values.password, values.rememberMe),
+    mutationFn: (values) => login(values.email, values.password, values.rememberMe),
     onSuccess: async (response) => {
-      if (response.user) {
+      if (response?.user) {
         await setLoggedIn(response.user);
         router.replace("/(tabs)/(feedback)");
       }
     },
     onError: (error) => {
-      console.error("Login error:", error);
-      console.log("Response:", error.response?.data);
-      console.log("Status:", error.response?.status);
+      const message =
+        error.response?.data?.message || error.message || "Something went wrong";
+      showErrorToast(t("common.error"), message);
     },
   });
 
   const handleLogin = (values) => {
     loginMutation.mutate({ ...values, rememberMe });
   };
+
+  useEffect(() => {
+    const getPushToken = async () => {
+      const token = await AsyncStorage.getItem("pushToken");
+      setPushToken(token);
+    };
+    getPushToken();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -72,11 +82,11 @@ export default function Authentication() {
         <View style={styles.container}>
           <View style={styles.topPart}>
             <Logo style={styles.logo} />
-
             <Text style={styles.smallTitle}>{t("auth.welcomeBack")}</Text>
           </View>
 
           <Text style={styles.bigTitle}>{t("auth.signIn")}</Text>
+
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={AuthSchema}
@@ -85,7 +95,8 @@ export default function Authentication() {
             {({
               handleChange,
               handleBlur,
-              handleSubmit,
+              handleSubmit: handleFormSubmit,
+              validateForm,
               values,
               errors,
               touched,
@@ -103,7 +114,6 @@ export default function Authentication() {
                     touched.email && errors.email && styles.inputError,
                   ]}
                 />
-
                 {touched.email && errors.email && (
                   <Text style={styles.error}>{t(errors.email)}</Text>
                 )}
@@ -121,7 +131,6 @@ export default function Authentication() {
                       touched.password && errors.password && styles.inputError,
                     ]}
                   />
-
                   <TouchableOpacity
                     style={styles.eyeIcon}
                     onPress={() => setShowPassword((prev) => !prev)}
@@ -133,13 +142,16 @@ export default function Authentication() {
                     />
                   </TouchableOpacity>
                 </View>
+                {touched.password && errors.password && (
+                  <Text style={styles.error}>{t(errors.password)}</Text>
+                )}
 
                 <View
                   style={[
                     styles.optionsRow,
                     {
                       flexDirection: i18n.language === "ka" ? "column" : "row",
-                      gap: i18n.language === "ka" ? 5 : "row",
+                      gap: i18n.language === "ka" ? 5 : undefined,
                     },
                   ]}
                 >
@@ -154,26 +166,34 @@ export default function Authentication() {
                       >
                         {rememberMe && <Text style={styles.checkmark}>✓</Text>}
                       </TouchableOpacity>
-
                       <Text style={styles.rememberText}>
                         {t("auth.rememberMe")}
                       </Text>
                     </View>
                   </View>
 
-                  <TouchableOpacity
-                    onPress={() => router.push("/auth/recovery")}
-                  >
+                  <TouchableOpacity onPress={() => router.push("/auth/recovery")}>
                     <Text style={styles.recoveryText}>
                       {t("auth.forgotPassword")}
                     </Text>
                   </TouchableOpacity>
                 </View>
+
                 <View style={styles.languageContainer}>
                   <LanguageSwitcher />
                 </View>
+
                 <TouchableOpacity
-                  onPress={handleSubmit}
+                  onPress={async () => {
+                    const formErrors = await validateForm();
+                    if (Object.keys(formErrors).length > 0) {
+                      showErrorToast(
+                        t("auth.validationError"),
+                        t("auth.fillAllFields")
+                      );
+                    }
+                    handleFormSubmit();
+                  }}
                   style={styles.submitButton}
                   disabled={loginMutation.isPending}
                 >
@@ -184,16 +204,10 @@ export default function Authentication() {
                   )}
                 </TouchableOpacity>
 
-                {loginMutation.error && (
-                  <Text style={styles.apiError}>
-                    {loginMutation.error.message}
-                  </Text>
-                )}
-
                 <TouchableOpacity
                   onPress={() => router.push("/auth/recovery")}
                   style={styles.recoveryButton}
-                ></TouchableOpacity>
+                />
               </>
             )}
           </Formik>
@@ -260,18 +274,9 @@ const makeStyles = (theme) =>
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: 0.25,
       shadowRadius: 15,
-      elevation: 6, 
+      elevation: 6,
     },
     buttonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
-    apiError: {
-      color: theme.error,
-      marginTop: 12,
-      padding: 10,
-      backgroundColor: theme.errorBg,
-      borderRadius: 4,
-      textAlign: "center",
-      fontWeight: "600",
-    },
     passwordContainer: { position: "relative", width: "100%", marginBottom: 6 },
     passwordInput: { paddingRight: 50 },
     eyeIcon: { position: "absolute", right: 14, top: 14, zIndex: 10 },
