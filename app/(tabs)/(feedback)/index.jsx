@@ -3,94 +3,148 @@ import {
   Text,
   StyleSheet,
   Modal,
-  Image,
   ActivityIndicator,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import CourseLister from "../../../components/feedback/courseLister";
 import { FeedbackForm } from "../../../components/feedback/FeedbackForm";
-import { userAPI,coursesAPI  } from "../../../api/apiClient";
+import { userAPI, coursesAPI } from "../../../api/apiClient";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../../assets/MziuriLogo.svg";
 import { useTheme } from "../../../context/ThemeContext";
-import Toast from "react-native-toast-message";
+import { useAuth } from "../../../context/AuthContext";
+import { showErrorToast } from "../../../utils/toastUtils";
+import { getErrorMessage, isUnauthorizedError } from "../../../utils/errorHandler";
 
 const feedback = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [error, setError] = useState(null);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [selectedCourseName, setSelectedCourseName] = useState(null);
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const { user, logout } = useAuth();
   const styles = makeStyles(theme);
-  
-  
+
   const loadUserCourses = useCallback(async () => {
-  try {
-    const [profileResponse, coursesResponse] = await Promise.all([
-      userAPI.getCurrentUserProfile(),
-      coursesAPI.getAllCourses(),
-    ]);
+    try {
+      setError(null);
+      const [profileResponse, coursesResponse] = await Promise.all([
+        userAPI.getCurrentUserProfile(),
+        coursesAPI.getAllCourses(),
+      ]);
 
-    const user = profileResponse.user;
-    const allCoursesFromAPI = coursesResponse.courses;
 
-    if (!user || !user.enrolled_courses || user.enrolled_courses.length === 0) {
+const userData = profileResponse;           
+
+if (!userData?.all_enrolled_groups?.length) {
+  setCourses([]);
+  return;
+}
+
+const allCourses = userData.all_enrolled_groups
+  .filter((enrollment) => enrollment.course_id != null)
+  .map((enrollment) => {
+    const course = enrollment.course;         
+    const teacher = course?.groups?.[0]?.teachers?.[0]?.fullName || "";
+    return {
+      courseName: course?.course_name || "Unknown",
+      focusArea: course?.focus_area || "",
+      teacher,
+      isActive: enrollment.is_active,
+      groupId: course?.groups?.[0]?.id,
+    };
+  });
+     
+
+      setCourses(allCourses);
+    } catch (error) {
+      console.error("Error loading courses:", error);
+      
+      const errorInfo = getErrorMessage(error);
+      setError(errorInfo);
+      
+      // Show error toast
+      showErrorToast(errorInfo.title, errorInfo.message);
+      
+      // If unauthorized, trigger logout
+      if (isUnauthorizedError(error)) {
+        console.log("Unauthorized access - logging out");
+        if (logout) {
+          await logout();
+        }
+      }
+      
       setCourses([]);
-      return;
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
-
-    const allCourses = user.enrolled_courses
-      .filter((enrollment) => enrollment.courseId != null)
-      .map((enrollment) => {
-        const course = allCoursesFromAPI.find(
-          (c) => c.id.toString() === enrollment.courseId.toString()
-        );
-        return {
-          courseName: course?.course_name || 'Unknown',
-          focusArea: course?.focus_area || '',
-          teacher: course?.teacher || '',
-          isActive: enrollment.is_active,
-        };
-      });
-    console.log('final mapped courses:', JSON.stringify(allCourses, null, 2));
-    setCourses(allCourses);
-  } catch (error) {
-    console.error('Error loading courses:', error);
-    setCourses([]);
-  } finally {
-    setLoading(false);
-    setRefreshing(false);
-  }
-}, []);
+  }, [logout]);
 
   useEffect(() => {
-    loadUserCourses();
-  }, [loadUserCourses]);
+    if (user) {
+      loadUserCourses();
+    }
+  }, [user, loadUserCourses]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     loadUserCourses();
   }, [loadUserCourses]);
 
-  const handleFeedbackPress = (courseName) => {
-    setSelectedCourseName(courseName);
-    setShowFeedbackForm(true);
-  };
+ const handleFeedbackPress = (courseName, groupId, existingFeedback) => {
+  setSelectedCourseName(courseName);
+  setSelectedGroupId(groupId);
+  setSelectedFeedback(existingFeedback || null);
+  setShowFeedbackForm(true);
+};
 
   const handleCloseFeedbackForm = () => {
     setShowFeedbackForm(false);
     setSelectedCourseName(null);
+    setSelectedGroupId(null)
+    setSelectedFeedback(null);
   };
 
   if (loading) {
     return (
       <SafeAreaView style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#243d4d" />
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={styles.centerContainer}>
+        <ScrollView
+          contentContainerStyle={styles.centerContent}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <Logo style={styles.logo} />
+          <Text style={styles.errorTitle}>{error.title}</Text>
+          <Text style={styles.errorMessage}>{error.message}</Text>
+          <TouchableOpacity 
+            style={styles.retryButton}
+            onPress={() => {
+              setLoading(true);
+              loadUserCourses();
+            }}
+          >
+            <Text style={styles.retryButtonText}>{t("common.retry") || "Retry"}</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -132,6 +186,8 @@ const feedback = () => {
       >
         <FeedbackForm
           courseName={selectedCourseName}
+          groupId={selectedGroupId}
+          existingFeedback={selectedFeedback}
           onClose={handleCloseFeedbackForm}
         />
       </Modal>
@@ -158,6 +214,33 @@ const makeStyles = (theme) =>
       marginBottom: 8,
     },
     emptySubtext: { fontSize: 14, color: theme.subtext, textAlign: "center" },
+    errorTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: theme.error || "#d32f2f",
+      marginBottom: 12,
+      textAlign: "center",
+    },
+    errorMessage: {
+      fontSize: 14,
+      color: theme.subtext,
+      textAlign: "center",
+      marginBottom: 24,
+      lineHeight: 20,
+    },
+    retryButton: {
+      backgroundColor: theme.primary || "#243d4d",
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      borderRadius: 8,
+      marginTop: 16,
+    },
+    retryButtonText: {
+      color: "#fff",
+      fontSize: 16,
+      fontWeight: "600",
+      textAlign: "center",
+    },
     logo: {
       width: 180,
       height: 80,

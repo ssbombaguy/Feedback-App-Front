@@ -4,13 +4,16 @@ import { Platform } from "react-native";
 
 const API_BASE_URL =
   Platform.OS === "android"
-    ? "http://192.168.100.2:3000/api"
-    : "http://192.168.100.2:3000/api";
+    ? process.env.EXPO_PUBLIC_API_URL
+    : process.env.EXPO_PUBLIC_API_URL;
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 10000,
+});
 
-  
+const publicAxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
   timeout: 10000,
 });
 
@@ -20,6 +23,7 @@ axiosInstance.interceptors.request.use(
       const token = await AsyncStorage.getItem("authToken");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+      } else {
       }
     } catch (error) {
       console.error("Error retrieving token:", error);
@@ -35,8 +39,20 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      await AsyncStorage.removeItem("authToken");
-      await AsyncStorage.removeItem("user");
+      if (error.config?.url?.includes('/verify-token')) {
+        try {
+          console.log("Token invalid, logging out");
+          await AsyncStorage.removeItem("authToken");
+          await AsyncStorage.removeItem("user");
+          await AsyncStorage.removeItem("isLoggedIn");
+        } catch (storageError) {
+          console.error("Error clearing storage:", storageError);
+        }
+      }
+    }
+    
+    if (error.response?.status !== 404) {
+      console.error("API Error:", error.response?.status, error.config?.url);
     }
     return Promise.reject(error);
   }
@@ -44,7 +60,7 @@ axiosInstance.interceptors.response.use(
 
 export const authAPI = {
   login: async (email, password, rememberMe) => {
-    const response = await axiosInstance.post("/auth/login", {
+    const response = await axiosInstance.post("/login", {
       email,
       password,
     });
@@ -58,10 +74,10 @@ export const authAPI = {
     return response.data;
   },
 
-  verifyToken: async () => {
-    const response = await axiosInstance.get("/auth/verify-token");
-    return response.data;
-  },
+  // verifyToken: async () => {
+  //   const response = await axiosInstance.get("/auth/verify-token");
+  //   return response.data;
+  // },
 
   logout: async () => {
     await AsyncStorage.removeItem("authToken");
@@ -71,19 +87,21 @@ export const authAPI = {
 };
 
 export const userAPI = {
-  
   getCurrentUserProfile: async () => {
-    const response = await axiosInstance.get("/users/me/profile");
+    const response = await axiosInstance.get("/user");
+    return response.data;
+  },
+  updateProfile: async (profileData) => {
+    const response = await axiosInstance.put("/user/profile", profileData);
     return response.data;
   },
 };
 
 export const coursesAPI = {
   getAllCourses: async () => {
-    const response = await axiosInstance.get("/courses");
+    const response = await axiosInstance.get("/user/courses");
     return response.data;
   },
-
   getSingleCourse: async (courseId) => {
     const response = await axiosInstance.get(`/courses/${courseId}`);
     return response.data;
@@ -92,15 +110,19 @@ export const coursesAPI = {
 
 export const feedbackAPI = {
   submit: async (feedbackData) => {
-    const response = await axiosInstance.post("/feedback", feedbackData);
+    const response = await axiosInstance.post(`/feedbacks`, feedbackData);
     return response.data;
   },
-
-  getUserFeedback: async (userId) => {
-    const response = await axiosInstance.get(`/feedback/user/${userId}`);
+  update: async (feedbackId, feedbackData) => {
+    const response = await axiosInstance.put(`/feedbacks/${feedbackId}`, feedbackData);
+    return response.data;
+  },
+  getUserFeedback: async () => {
+    const response = await axiosInstance.get(`/feedbacks`);
     return response.data;
   },
 };
+
 
 export default {
   authAPI,

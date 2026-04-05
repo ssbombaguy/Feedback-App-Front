@@ -30,7 +30,7 @@ const profile = () => {
   const loadUser = useCallback(async () => {
     try {
       const response = await userAPI.getCurrentUserProfile()
-      setUser(response.user)
+      setUser(response)
     } catch (error) {
       console.error('Failed to load user:', error)
     } finally {
@@ -77,7 +77,7 @@ const profile = () => {
             <View style={{ alignItems: 'flex-start', width: '100%', marginTop: 30 }}>
               <ProfileHeader user={user} />
               <PersonalInfo user={user} />
-              <CoursesSection courses={user.enrolled_courses} />
+              <CoursesSection courses={user.all_enrolled_groups} />
 
               <View style={styles.buttonContainer}>
                 <TouchableOpacity

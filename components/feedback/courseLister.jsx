@@ -22,6 +22,7 @@ const CourseLister = ({ data, onFeedbackPress }) => {
           focusArea={item.focusArea}
           teacher={item.teacher}
           isActive={item.isActive}
+          groupId={item.groupId}
           onFeedbackPress={onFeedbackPress}
         />
       ))}

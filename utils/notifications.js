@@ -41,7 +41,6 @@ export async function registerForPushNotifications() {
     });
   }
 
-  console.log("📱 YOUR TOKEN:", token.data);
   await AsyncStorage.setItem("pushToken", String(token.data));
   return token.data;
 }

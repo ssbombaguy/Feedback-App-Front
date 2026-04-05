@@ -22,9 +22,9 @@ export const ProfileHeader = ({ user }) => {
         <Text style={styles.email}>{user?.email || ''}</Text>
       </View>
 
-      {/* <Pressable onPress={() => router.push('/profile/edit')}>
+      <Pressable onPress={() => router.push('/profile/edit')}>
         <AntDesign name="edit" size={25} color="#243E4D" />
-      </Pressable> */}
+      </Pressable>
     </View>
   )
 }

@@ -14,8 +14,6 @@ import * as Notifications from "expo-notifications";
 import { registerForPushNotifications } from "../utils/notifications";
 import { View, Text } from "react-native";  
 
-
-
 function RootLayoutContent() {
   const { user, isLoading } = useAuth();
 
@@ -55,7 +53,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     registerForPushNotifications().then(token => {
-      if (token) setPushToken(token) // add this
+      if (token) setPushToken(token)
     });
 
     notificationListener.current =
@@ -69,10 +67,8 @@ export default function RootLayout() {
       });
 
     return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current
-      );
-      Notifications.removeNotificationSubscription(responseListener.current);
+      notificationListener.current?.remove();
+      responseListener.current?.remove();
     };
   }, []);
 
@@ -81,30 +77,30 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <I18nextProvider i18n={i18n}>
-          <QueryProvider>
-            <AuthProvider>
-              <PaperProvider>
-                <RootLayoutContent />
-                {pushToken ? ( 
-                  <View style={{ position: 'absolute', top: 60, left: 10, right: 10, backgroundColor: 'black', padding: 10, zIndex: 9999 }}>
-                    <Text selectable style={{ color: 'white', fontSize: 10 }}>{pushToken}</Text>
-                  </View>
-                ) : null}
-              </PaperProvider>
-            </AuthProvider>
-          </QueryProvider>
-          <Toast
-            config={{
-              success: (props) => <CustomToast {...props} type="success" />,
-              error: (props) => <CustomToast {...props} type="error" />,
-              info: (props) => <CustomToast {...props} type="info" />,
-            }}
-          />
-        </I18nextProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
-  );
+  <SafeAreaProvider>
+    <ThemeProvider>
+      <I18nextProvider i18n={i18n}>
+        <QueryProvider>
+          <AuthProvider>
+            <PaperProvider>
+              <RootLayoutContent />
+              {/* {pushToken ? ( 
+                <View style={{ position: 'absolute', top: 60, left: 10, right: 10, backgroundColor: 'black', padding: 10, zIndex: 9999 }}>
+                  <Text selectable style={{ color: 'white', fontSize: 10 }}>{pushToken}</Text>
+                </View>
+              ) : null} */}
+            </PaperProvider>
+          </AuthProvider>
+        </QueryProvider>
+      </I18nextProvider>
+      <Toast
+        config={{
+          success: (props) => <CustomToast {...props} type="success" />,
+          error: (props) => <CustomToast {...props} type="error" />,
+          info: (props) => <CustomToast {...props} type="info" />,
+        }}
+      />
+    </ThemeProvider>
+  </SafeAreaProvider>
+);
 }

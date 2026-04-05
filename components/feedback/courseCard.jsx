@@ -5,24 +5,16 @@ import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../context/ThemeContext'
 import { showErrorToast } from '../../utils/toastUtils'
 
-export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbackPress }) => {
+export const CourseCard = ({ courseName, focusArea, teacher, isActive, groupId, onFeedbackPress  }) => {
   const { feedback } = useFeedback()
   const { t } = useTranslation()
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-  
-
-  const feedbackSubmitted = feedback.some(f => f.courseName === courseName)
+  const existingFeedback = feedback.find(f => f.course_name === courseName)
+  const feedbackSubmitted = !!existingFeedback
 
   const handleFeedbackButtonPress = () => {
-    if (feedbackSubmitted) {
-      showErrorToast(
-        t('feedback.alreadySubmitted'),
-        t('feedback.alreadySubmittedMessage', { courseName })
-      )
-    } else {
-      onFeedbackPress(courseName)
-    }
+    onFeedbackPress(courseName, groupId, existingFeedback)
   }
 
   return (
@@ -47,15 +39,14 @@ export const CourseCard = ({ courseName, focusArea, teacher, isActive, onFeedbac
         </View>
       </View>
 
-      <TouchableOpacity
-        style={[styles.button, feedbackSubmitted && styles.buttonSubmitted]}
-        onPress={handleFeedbackButtonPress}
-        disabled={feedbackSubmitted}
-      >
-        <Text style={styles.buttonText}>
-          {feedbackSubmitted ? t('feedback.feedbackSubmitted') : t('feedback.writeFeedback')}
-        </Text>
-      </TouchableOpacity>
+       <TouchableOpacity
+      style={styles.button}
+      onPress={handleFeedbackButtonPress}
+    >
+      <Text style={styles.buttonText}>
+        {feedbackSubmitted ? t('feedback.changeFeedback') : t('feedback.writeFeedback')}
+      </Text>
+    </TouchableOpacity>
     </View>
   )
 }
