@@ -10,7 +10,7 @@ export const CourseCard = ({ courseName, focusArea, teacher, isActive, groupId, 
   const { t } = useTranslation()
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-  const existingFeedback = feedback.find(f => f.course_name === courseName)
+  const existingFeedback = feedback.find(f => f.group_id === groupId)
   const feedbackSubmitted = !!existingFeedback
 
   const handleFeedbackButtonPress = () => {

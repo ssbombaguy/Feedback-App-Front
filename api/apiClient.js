@@ -1,18 +1,9 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Platform } from "react-native";
 
-const API_BASE_URL =
-  Platform.OS === "android"
-    ? process.env.EXPO_PUBLIC_API_URL
-    : process.env.EXPO_PUBLIC_API_URL;
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
-});
-
-const publicAxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
 });
@@ -23,7 +14,6 @@ axiosInstance.interceptors.request.use(
       const token = await AsyncStorage.getItem("authToken");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-      } else {
       }
     } catch (error) {
       console.error("Error retrieving token:", error);
@@ -38,19 +28,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
-      if (error.config?.url?.includes('/verify-token')) {
-        try {
-          console.log("Token invalid, logging out");
-          await AsyncStorage.removeItem("authToken");
-          await AsyncStorage.removeItem("user");
-          await AsyncStorage.removeItem("isLoggedIn");
-        } catch (storageError) {
-          console.error("Error clearing storage:", storageError);
-        }
-      }
-    }
-    
     if (error.response?.status !== 404) {
       console.error("API Error:", error.response?.status, error.config?.url);
     }
@@ -69,16 +46,13 @@ export const authAPI = {
       await AsyncStorage.setItem("authToken", response.data.token);
       await AsyncStorage.setItem("user", JSON.stringify(response.data.user));
       await AsyncStorage.setItem("rememberMe", rememberMe ? "remembered" : "");
+      await AsyncStorage.setItem("isLoggedIn", "true");
     }
 
     return response.data;
   },
 
-  // verifyToken: async () => {
-  //   const response = await axiosInstance.get("/auth/verify-token");
-  //   return response.data;
-  // },
-
+  
   logout: async () => {
     await AsyncStorage.removeItem("authToken");
     await AsyncStorage.removeItem("user");

@@ -61,7 +61,8 @@
     "yesSubmitAnonymously": "Yes, Submit Anonymously",
     "noSubmitAnonymously": "No, Submit with Name",
     "teacherRequiresName": "To return as a teacher, you must submit feedback with your name. Please choose 'No, Submit with Name'.",
-    "changeFeedback": "Change Feedback"
+    "changeFeedback": "Change Feedback",
+    "changeFeedbackMessage": "You have already submitted feedback for this course. Do you want to change it?"
   },
   "profile": {
     "title": "Profile",
@@ -122,7 +123,10 @@
     "save": "Save",
     "close": "Close",
     "en": "EN",
-    "ka": "KA"
+    "ka": "KA",
+    "yes": "Yes",
+    "no": "No"
+
   },
   "recovery": {
     "forgotPassword": "Forgot Password?",

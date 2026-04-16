@@ -21,25 +21,6 @@ export const useCourses = () => {
   }
 }
 
-export const useEnrolledCourses = () => {
-  const { user } = useAuth()
-
-  const query = useQuery({
-    queryKey: ['enrolledCourses'],
-    queryFn: coursesAPI.getAllCourses,
-    enabled: !!user,
-    staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-  })
-  return {
-    enrolledCourses: query.data?.all_enrolled_groups || [],
-    isLoading: query.isLoading,
-    isError: query.isError,
-    error: query.error,
-    refetch: query.refetch,
-  }
-}
-
 export const useSingleCourse = (courseId) => {
   const { user } = useAuth()
 

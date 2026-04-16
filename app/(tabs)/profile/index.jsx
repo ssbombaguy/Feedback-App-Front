@@ -1,51 +1,31 @@
 import { useRouter } from 'expo-router'
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, RefreshControl } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native'
 import { logout } from '../../../utils/AsyncStorage'
 import { phoneWidth } from '../../../constants/Dimensions'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { useEffect, useState, useCallback } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '../../../components/LanguageSwitcher'
 import { ConfirmationModal } from '../../../components/ConfirmationModal'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { userAPI } from '../../../api/apiClient'
 import { PersonalInfo } from '../../../components/profile/PersonalInfo'
 import { CoursesSection } from '../../../components/profile/CourseSection'
 import { ProfileHeader } from '../../../components/profile/ProfileHeader'
 import Logo from "../../../assets/MziuriLogo.svg"
 import { useTheme } from '../../../context/ThemeContext'
-import { showErrorToast, showSuccessToast } from '../../../utils/toastUtils'
-
+import { showErrorToast } from '../../../utils/toastUtils'
+import { useCurrentUserProfile } from '../../../api/useUser'
 
 const profile = () => {
   const router = useRouter()
-  const [user, setUser] = useState(null)
-  const [refreshing, setRefreshing] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const { t } = useTranslation()
-  const { theme } = useTheme();
-  const styles = makeStyles(theme);
+  const { theme } = useTheme()
+  const styles = makeStyles(theme)
 
-  const loadUser = useCallback(async () => {
-    try {
-      const response = await userAPI.getCurrentUserProfile()
-      setUser(response)
-    } catch (error) {
-      console.error('Failed to load user:', error)
-    } finally {
-      setRefreshing(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    loadUser()
-  }, [loadUser])
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    loadUser()
-  }, [loadUser])
+  const { userProfile, isLoading, refetch } = useCurrentUserProfile()
+  const refreshing = isLoading
 
   const handleLogoutConfirm = async () => {
     setIsLoggingOut(true)
@@ -65,19 +45,19 @@ const profile = () => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView
         style={styles.scrollContainer}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refetch} />}
       >
         <View style={styles.container}>
-          <Logo style={styles.logo}/>
+          <Logo style={styles.logo} />
           <View style={{ marginTop: 16, marginBottom: 16 }}>
             <LanguageSwitcher />
           </View>
 
-          {user ? (
+          {userProfile ? (
             <View style={{ alignItems: 'flex-start', width: '100%', marginTop: 30 }}>
-              <ProfileHeader user={user} />
-              <PersonalInfo user={user} />
-              <CoursesSection courses={user.all_enrolled_groups} />
+              <ProfileHeader user={userProfile} />
+              <PersonalInfo user={userProfile} />
+              <CoursesSection courses={userProfile.all_enrolled_groups} />
 
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
@@ -108,6 +88,7 @@ const profile = () => {
         isLoading={isLoggingOut}
         isDangerous={true}
       />
+      
     </SafeAreaView>
   )
 }
@@ -118,15 +99,8 @@ const makeStyles = (theme) =>
   StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: theme.background },
     scrollContainer: { flex: 1, backgroundColor: theme.background },
-    container: {
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      width: phoneWidth,
-      paddingBottom: 100,
-      marginTop: 40,
-    },
+    container: { alignItems: 'center', paddingHorizontal: 20, width: phoneWidth, paddingBottom: 100, marginTop: 40 },
     logo: { width: 180, height: 80, resizeMode: 'contain', alignSelf: 'center' },
-    content: { alignItems: 'flex-start', width: '100%', marginTop: 30 },
     emptyText: { fontSize: 16, color: theme.label, marginTop: 40 },
     buttonContainer: { width: '100%', marginTop: 12 },
     logoutButton: {
