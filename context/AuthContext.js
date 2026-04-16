@@ -13,11 +13,11 @@ export const AuthProvider = ({ children }) => {
     const bootstrapAsync = async () => {
       try {
         const userData = await getUser()
-        const token = await getToken()
+        const storedToken = await getToken()
         
-        if (userData && token) {
+        if (userData && storedToken) {
           setUser(userData)
-          setToken(token)
+          setToken(storedToken)
         }
       } catch (e) {
         console.error('Failed to restore session:', e)
@@ -53,7 +53,6 @@ export const AuthProvider = ({ children }) => {
       setUser(null)
       setToken(null)
       await logoutStorage()
-      await authAPI.logout()
     },
   }
 

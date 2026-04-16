@@ -17,9 +17,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../../assets/MziuriLogo.svg";
 import { useTheme } from "../../../context/ThemeContext";
 import { useAuth } from "../../../context/AuthContext";
-import { showErrorToast } from "../../../utils/toastUtils";
+import {showSuccessToast, showErrorToast } from "../../../utils/toastUtils";
 import { getErrorMessage, isUnauthorizedError } from "../../../utils/errorHandler";
-
+import { ConfirmationModal } from "../../../components/ConfirmationModal";
 const feedback = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +32,8 @@ const feedback = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { user, logout } = useAuth();
+  const [showChangeConfirm, setShowChangeConfirm] = useState(false)
+  const [pendingFeedbackPress, setPendingFeedbackPress] = useState(null)
   const styles = makeStyles(theme);
 
   const loadUserCourses = useCallback(async () => {
@@ -72,10 +74,8 @@ const allCourses = userData.all_enrolled_groups
       const errorInfo = getErrorMessage(error);
       setError(errorInfo);
       
-      // Show error toast
       showErrorToast(errorInfo.title, errorInfo.message);
       
-      // If unauthorized, trigger logout
       if (isUnauthorizedError(error)) {
         console.log("Unauthorized access - logging out");
         if (logout) {
@@ -101,20 +101,27 @@ const allCourses = userData.all_enrolled_groups
     loadUserCourses();
   }, [loadUserCourses]);
 
- const handleFeedbackPress = (courseName, groupId, existingFeedback) => {
-  setSelectedCourseName(courseName);
-  setSelectedGroupId(groupId);
-  setSelectedFeedback(existingFeedback || null);
-  setShowFeedbackForm(true);
-};
+  const handleFeedbackPress = (courseName, groupId, existingFeedback) => {
+    if (existingFeedback) {
+    setPendingFeedbackPress({ courseName, groupId, existingFeedback })
+    setShowChangeConfirm(true)
+    } else {
+    setSelectedCourseName(courseName)
+    setSelectedGroupId(groupId)
+    setSelectedFeedback(null)
+    setShowFeedbackForm(true)
+    }
+  }
 
-  const handleCloseFeedbackForm = () => {
-    setShowFeedbackForm(false);
-    setSelectedCourseName(null);
-    setSelectedGroupId(null)
-    setSelectedFeedback(null);
-  };
-
+  const handleCloseFeedbackForm = (success = false) => {
+  setShowFeedbackForm(false)
+  setSelectedCourseName(null)
+  setSelectedGroupId(null)
+  setSelectedFeedback(null)
+  if (success === true) {
+    showSuccessToast(t("common.success"), t("feedback.thankYou"))
+  }
+}
   if (loading) {
     return (
       <SafeAreaView style={styles.centerContainer}>
@@ -191,6 +198,26 @@ const allCourses = userData.all_enrolled_groups
           onClose={handleCloseFeedbackForm}
         />
       </Modal>
+      <ConfirmationModal
+          visible={showChangeConfirm}
+          title={t("feedback.changeFeedback")}
+          message={t("feedback.changeFeedbackMessage")}
+          confirmText={t("common.yes")}
+          cancelText={t("common.cancel")}
+          onConfirm={() => {
+            setShowChangeConfirm(false)
+            setSelectedCourseName(pendingFeedbackPress.courseName)
+            setSelectedGroupId(pendingFeedbackPress.groupId)
+            setSelectedFeedback(pendingFeedbackPress.existingFeedback)
+            setShowFeedbackForm(true)
+            setPendingFeedbackPress(null)
+          }}
+          onCancel={() => {
+            setShowChangeConfirm(false)
+            setPendingFeedbackPress(null)
+          }}
+        />
+      
     </SafeAreaView>
   );
 };

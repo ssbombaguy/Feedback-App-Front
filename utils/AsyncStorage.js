@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authAPI } from "../api/apiClient";
 
 export const setLoggedIn = async (user) => {
-  // await AsyncStorage.setItem("isLoggedIn", "true");
   await AsyncStorage.setItem("user", JSON.stringify(user));
 };
 
