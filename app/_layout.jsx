@@ -12,7 +12,8 @@ import Toast from "react-native-toast-message";
 import { CustomToast } from "../components/CustomToast";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotifications } from "../utils/notifications";
-import { View, Text } from "react-native";  
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { notificationsAPI } from "../api/apiClient";
 
 function RootLayoutContent() {
   const { user, isLoading } = useAuth();
@@ -27,6 +28,21 @@ function RootLayoutContent() {
     }
   }, [user, isLoading]);
 
+  useEffect(() => {
+    if (!user) return
+    const sendToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('pushToken')
+        if (token) {
+          await notificationsAPI.saveToken(token)
+        }
+      } catch (error) {
+        console.error('Failed to save push token:', error)
+      }
+    }
+    sendToken()
+  }, [user])
+
   return <Stack screenOptions={{ headerShown: false }} />;
 }
 
@@ -34,7 +50,6 @@ export default function RootLayout() {
   const [isInitialized, setIsInitialized] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const [pushToken, setPushToken] = useState('')
 
   useEffect(() => {
     const initializeLanguage = async () => {
@@ -47,14 +62,11 @@ export default function RootLayout() {
         setIsInitialized(true);
       }
     };
-
     initializeLanguage();
   }, []);
 
   useEffect(() => {
-    registerForPushNotifications().then(token => {
-      if (token) setPushToken(token)
-    });
+    registerForPushNotifications();
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
@@ -77,30 +89,25 @@ export default function RootLayout() {
   }
 
   return (
-  <SafeAreaProvider>
-    <ThemeProvider>
-      <I18nextProvider i18n={i18n}>
-        <QueryProvider>
-          <AuthProvider>
-            <PaperProvider>
-              <RootLayoutContent />
-              {/* {pushToken ? ( 
-                <View style={{ position: 'absolute', top: 60, left: 10, right: 10, backgroundColor: 'black', padding: 10, zIndex: 9999 }}>
-                  <Text selectable style={{ color: 'white', fontSize: 10 }}>{pushToken}</Text>
-                </View>
-              ) : null} */}
-            </PaperProvider>
-          </AuthProvider>
-        </QueryProvider>
-      </I18nextProvider>
-      <Toast
-        config={{
-          success: (props) => <CustomToast {...props} type="success" />,
-          error: (props) => <CustomToast {...props} type="error" />,
-          info: (props) => <CustomToast {...props} type="info" />,
-        }}
-      />
-    </ThemeProvider>
-  </SafeAreaProvider>
-);
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <I18nextProvider i18n={i18n}>
+          <QueryProvider>
+            <AuthProvider>
+              <PaperProvider>
+                <RootLayoutContent />
+              </PaperProvider>
+            </AuthProvider>
+          </QueryProvider>
+        </I18nextProvider>
+        <Toast
+          config={{
+            success: (props) => <CustomToast {...props} type="success" />,
+            error: (props) => <CustomToast {...props} type="error" />,
+            info: (props) => <CustomToast {...props} type="info" />,
+          }}
+        />
+      </ThemeProvider>
+    </SafeAreaProvider>
+  );
 }

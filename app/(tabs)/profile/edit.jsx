@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useRouter } from "expo-router";
@@ -21,6 +22,7 @@ import { Feather } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../context/ThemeContext";
 import { showSuccessToast, showErrorToast } from "../../../utils/toastUtils";
+import * as ImagePicker from "expo-image-picker";
 
 export default function EditProfile() {
   const { t } = useTranslation();
@@ -35,6 +37,29 @@ export default function EditProfile() {
     linkedinUrl: Yup.string().url(t("profile.invalidUrl")).nullable(),
     githubUrl: Yup.string().url(t("profile.invalidUrl")).nullable(),
   });
+
+  const photoMutation = useMutation({
+    mutationFn: (uri) => userAPI.uploadPhoto(uri),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["currentUserProfile"] });
+      showSuccessToast(t("common.success"), t("profile.photoUpdated"));
+    },
+    onError: () => {
+      showErrorToast(t("common.error"), t("profile.photoError"));
+    },
+  });
+
+  const handlePickPhoto = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaType.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+    if (!result.canceled) {
+      photoMutation.mutate(result.assets[0].uri);
+    }
+  };
 
   const updateMutation = useMutation({
     mutationFn: (data) => userAPI.updateProfile(data),
@@ -54,12 +79,19 @@ export default function EditProfile() {
     { label: t("profile.privateNumber"), value: userProfile?.personalNumber },
     { label: t("profile.email"), value: userProfile?.email },
   ];
-
+  const photoUri = userProfile?.photo
+    ? `${process.env.EXPO_PUBLIC_API_URL.replace(/\/api\/v1\/?$/, "")}${userProfile.photo}`
+    : null;
+  console.log("photoUri:", photoUri);
+  console.log("API_URL:", process.env.EXPO_PUBLIC_API_URL);
+  console.log("photo field:", userProfile?.photo);
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
           <Feather name="chevron-left" size={22} color={theme.textSecondary} />
           <Text style={styles.backText}>{t("edit.back")}</Text>
         </TouchableOpacity>
@@ -77,14 +109,38 @@ export default function EditProfile() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Avatar */}
-          <View style={styles.avatarContainer}>
-            <FontAwesome name="user-circle-o" size={80} color={theme.textSecondary} />
+          <TouchableOpacity
+            onPress={handlePickPhoto}
+            style={styles.avatarContainer}
+          >
+            <View style={styles.avatarWrapper}>
+              {photoMutation.isPending ? (
+                <ActivityIndicator size="large" color={theme.textSecondary} />
+              ) : photoUri ? (
+                <Image
+                  source={{ uri: photoUri }}
+                  style={styles.avatarImage}
+                  onError={(e) =>
+                    console.log("Image error:", e.nativeEvent.error)
+                  }
+                  onLoad={() => console.log("Image loaded successfully")}
+                />
+              ) : (
+                <FontAwesome
+                  name="user-circle-o"
+                  size={80}
+                  color={theme.textSecondary}
+                />
+              )}
+              <View style={styles.editOverlay}>
+                <Feather name="camera" size={14} color="#fff" />
+              </View>
+            </View>
             <Text style={styles.avatarName}>
               {userProfile?.firstName} {userProfile?.lastName}
             </Text>
             <Text style={styles.avatarEmail}>{userProfile?.email}</Text>
-          </View>
+          </TouchableOpacity>
 
           {/* Read-only section */}
           <Text style={styles.sectionTitle}>{t("profile.readOnlyInfo")}</Text>
@@ -94,11 +150,17 @@ export default function EditProfile() {
                 key={item.label}
                 style={[
                   styles.cardRow,
-                  index === readOnlyFields.length - 1 && { borderBottomWidth: 0 },
+                  index === readOnlyFields.length - 1 && {
+                    borderBottomWidth: 0,
+                  },
                 ]}
               >
                 <Text style={styles.cardLabel}>{item.label}</Text>
-                <Text style={styles.cardValue} numberOfLines={1} ellipsizeMode="tail">
+                <Text
+                  style={styles.cardValue}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
                   {item.value}
                 </Text>
               </View>
@@ -129,9 +191,15 @@ export default function EditProfile() {
               });
             }}
           >
-            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
               <View style={styles.card}>
-                {/* Phone */}
                 <View style={styles.editRow}>
                   <Text style={styles.editLabel}>{t("profile.phone")}</Text>
                   <TextInput
@@ -152,7 +220,6 @@ export default function EditProfile() {
 
                 <View style={styles.divider} />
 
-                {/* LinkedIn */}
                 <View style={styles.editRow}>
                   <Text style={styles.editLabel}>LinkedIn</Text>
                   <TextInput
@@ -175,7 +242,6 @@ export default function EditProfile() {
 
                 <View style={styles.divider} />
 
-                {/* GitHub */}
                 <View style={styles.editRow}>
                   <Text style={styles.editLabel}>GitHub</Text>
                   <TextInput
@@ -196,9 +262,11 @@ export default function EditProfile() {
                   <Text style={styles.errorText}>{errors.githubUrl}</Text>
                 )}
 
-                {/* Submit */}
                 <TouchableOpacity
-                  style={[styles.updateButton, updateMutation.isPending && styles.disabled]}
+                  style={[
+                    styles.updateButton,
+                    updateMutation.isPending && styles.disabled,
+                  ]}
                   onPress={handleSubmit}
                   disabled={updateMutation.isPending}
                 >
@@ -220,7 +288,6 @@ export default function EditProfile() {
 const makeStyles = (theme) =>
   StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: theme.background },
-
     header: {
       flexDirection: "row",
       alignItems: "center",
@@ -232,28 +299,43 @@ const makeStyles = (theme) =>
       backgroundColor: theme.background,
     },
     backButton: { flexDirection: "row", alignItems: "center", width: 70 },
-    backText: { color: theme.textSecondary, fontWeight: "600", marginLeft: 2, fontSize: 14 },
-    headerTitle: { fontSize: 17, fontWeight: "700", color: theme.textSecondary },
-
+    backText: {
+      color: theme.textSecondary,
+      fontWeight: "600",
+      marginLeft: 2,
+      fontSize: 14,
+    },
+    headerTitle: {
+      fontSize: 17,
+      fontWeight: "700",
+      color: theme.textSecondary,
+    },
     container: { padding: 20, paddingBottom: 100 },
-
     avatarContainer: {
       alignItems: "center",
       paddingTop: 16,
       paddingBottom: 20,
     },
+    avatarWrapper: { position: "relative", width: 120, height: 120 },
+    avatarImage: { width: 120, height: 120, borderRadius: 60 },
     avatarName: {
       fontSize: 22,
       fontWeight: "700",
       color: theme.textSecondary,
       marginTop: 12,
     },
-    avatarEmail: {
-      fontSize: 13,
-      color: theme.subtext,
-      marginTop: 4,
+    avatarEmail: { fontSize: 13, color: theme.subtext, marginTop: 4 },
+    editOverlay: {
+      position: "absolute",
+      bottom: 0,
+      right: 0,
+      backgroundColor: "#243d4d",
+      borderRadius: 12,
+      width: 24,
+      height: 24,
+      alignItems: "center",
+      justifyContent: "center",
     },
-
     sectionTitle: {
       fontSize: 11,
       fontWeight: "700",
@@ -264,7 +346,6 @@ const makeStyles = (theme) =>
       marginTop: 8,
       paddingHorizontal: 2,
     },
-
     card: {
       backgroundColor: theme.card,
       borderRadius: 16,
@@ -276,7 +357,6 @@ const makeStyles = (theme) =>
       shadowRadius: 8,
       elevation: 3,
     },
-
     cardRow: {
       flexDirection: "row",
       justifyContent: "space-between",
@@ -294,7 +374,6 @@ const makeStyles = (theme) =>
       maxWidth: "55%",
       textAlign: "right",
     },
-
     editRow: {
       flexDirection: "row",
       alignItems: "center",
@@ -317,19 +396,13 @@ const makeStyles = (theme) =>
       height: 56,
       paddingHorizontal: 0,
     },
-    divider: {
-      height: 1,
-      backgroundColor: theme.borderLight,
-      marginLeft: 16,
-    },
-
+    divider: { height: 1, backgroundColor: theme.borderLight, marginLeft: 16 },
     errorText: {
       fontSize: 12,
       color: theme.error,
       paddingHorizontal: 16,
       paddingBottom: 8,
     },
-
     updateButton: {
       backgroundColor: theme.primary || "#243d4d",
       margin: 16,
