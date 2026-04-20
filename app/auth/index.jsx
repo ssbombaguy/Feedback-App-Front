@@ -46,7 +46,8 @@ export default function Authentication() {
   const styles = makeStyles(theme);
 
   const loginMutation = useMutation({
-    mutationFn: (values) => login(values.email, values.password, values.rememberMe),
+    mutationFn: (values) =>
+      login(values.email, values.password, values.rememberMe),
     onSuccess: async (response) => {
       if (response?.user) {
         await setLoggedIn(response.user);
@@ -55,7 +56,9 @@ export default function Authentication() {
     },
     onError: (error) => {
       const message =
-        error.response?.data?.message || error.message || "Something went wrong";
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong";
       showErrorToast(t("common.error"), message);
     },
   });
@@ -172,7 +175,9 @@ export default function Authentication() {
                     </View>
                   </View>
 
-                  <TouchableOpacity onPress={() => router.push("/auth/recovery")}>
+                  <TouchableOpacity
+                    onPress={() => router.push("/auth/recovery")}
+                  >
                     <Text style={styles.recoveryText}>
                       {t("auth.forgotPassword")}
                     </Text>
@@ -189,8 +194,9 @@ export default function Authentication() {
                     if (Object.keys(formErrors).length > 0) {
                       showErrorToast(
                         t("auth.validationError"),
-                        t("auth.fillAllFields")
+                        t("auth.fillAllFields"),
                       );
+                      return; 
                     }
                     handleFormSubmit();
                   }}

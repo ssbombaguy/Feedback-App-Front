@@ -1,6 +1,6 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { Platform } from "react-native";
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const axiosInstance = axios.create({
@@ -69,6 +69,18 @@ export const userAPI = {
     const response = await axiosInstance.put("/user/profile", profileData);
     return response.data;
   },
+  uploadPhoto: async (imageUri) => {
+    const formData = new FormData();
+    formData.append('photo', {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'photo.jpg',
+    });
+    const response = await axiosInstance.post('/user/profile/photo', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
 };
 
 export const coursesAPI = {
@@ -96,7 +108,16 @@ export const feedbackAPI = {
     return response.data;
   },
 };
-
+export const notificationsAPI = {
+  saveToken: async (token) => {
+     console.log('platform being sent:', Platform.OS)
+    const response = await axiosInstance.post('/notifications/token', {
+      token,
+      platform: Platform.OS,
+    })
+    return response.data
+  },
+}
 
 export default {
   authAPI,
@@ -104,4 +125,5 @@ export default {
   coursesAPI,
   feedbackAPI,
   axiosInstance,
+  notificationsAPI,
 };

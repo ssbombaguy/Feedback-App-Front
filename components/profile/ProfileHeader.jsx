@@ -1,44 +1,46 @@
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
-import React from 'react'
-import AntDesign from '@expo/vector-icons/AntDesign'
-import { useRouter } from 'expo-router'
-import { useTheme } from '../../context/ThemeContext'
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import React from "react";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { useRouter } from "expo-router";
+import { useTheme } from "../../context/ThemeContext";
 
 export const ProfileHeader = ({ user }) => {
-  const router = useRouter()
+  const router = useRouter();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-
+  const photoUri = user?.photo
+    ? `${process.env.EXPO_PUBLIC_API_URL.replace(/\/api\/v1\/?$/, "")}${user.photo}`
+    : null;
   return (
     <View style={styles.profileHeader}>
       <Image
         style={styles.profilePicture}
-        source={{ uri: user?.photo || 'https://via.placeholder.com/150' }}
+        source={{ uri: photoUri || "https://via.placeholder.com/150" }}
       />
 
       <View style={styles.userBasicInfo}>
-        <Text style={styles.name}>{user?.firstName  || ''}</Text>
-        <Text style={styles.lastname}>{user?.lastName  || ''}</Text>
-        <Text style={styles.email}>{user?.email || ''}</Text>
+        <Text style={styles.name}>{user?.firstName || ""}</Text>
+        <Text style={styles.lastname}>{user?.lastName || ""}</Text>
+        <Text style={styles.email}>{user?.email || ""}</Text>
       </View>
 
-      <Pressable onPress={() => router.push('/profile/edit')}>
+      <Pressable onPress={() => router.push("/profile/edit")}>
         <AntDesign name="edit" size={25} color="#243E4D" />
       </Pressable>
     </View>
-  )
-}
+  );
+};
 const makeStyles = (theme) =>
   StyleSheet.create({
     profileHeader: {
-      flexDirection: 'row',
-      width: '100%',
+      flexDirection: "row",
+      width: "100%",
       backgroundColor: theme.card,
       borderRadius: 12,
       padding: 16,
       marginBottom: 20,
-      alignItems: 'center',
-      shadowColor: '#000',
+      alignItems: "center",
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
@@ -52,7 +54,12 @@ const makeStyles = (theme) =>
       backgroundColor: theme.disabled,
     },
     userBasicInfo: { flex: 1 },
-    name: { fontSize: 18, fontWeight: '700', color: theme.textSecondary },
-    lastname: { fontSize: 16, fontWeight: '600', color: theme.subtext, marginBottom: 4 },
+    name: { fontSize: 18, fontWeight: "700", color: theme.textSecondary },
+    lastname: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: theme.subtext,
+      marginBottom: 4,
+    },
     email: { fontSize: 12, color: theme.label },
-  })
+  });
