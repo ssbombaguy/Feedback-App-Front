@@ -110,6 +110,7 @@ export const feedbackAPI = {
 };
 export const notificationsAPI = {
   saveToken: async (token) => {
+     console.log('platform being sent:', Platform.OS)
     const response = await axiosInstance.post('/notifications/token', {
       token,
       platform: Platform.OS,

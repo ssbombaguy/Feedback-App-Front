@@ -1,4 +1,4 @@
-import '../utils/firebase'; 
+import "../utils/firebase";
 import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -29,19 +29,23 @@ function RootLayoutContent() {
   }, [user, isLoading]);
 
   useEffect(() => {
-    if (!user) return
+    if (!user) return;
     const sendToken = async () => {
       try {
-        const token = await AsyncStorage.getItem('pushToken')
+        const token = await AsyncStorage.getItem("pushToken");
+        console.log("user logged in, pushToken found:", token);
         if (token) {
-          await notificationsAPI.saveToken(token)
+          const result = await notificationsAPI.saveToken(token);
+          console.log('token saved to backend:', result)
+        } else {
+          console.log("no pushToken in AsyncStorage");
         }
       } catch (error) {
-        console.error('Failed to save push token:', error)
+        console.error("Failed to save push token:", error);
       }
-    }
-    sendToken()
-  }, [user])
+    };
+    sendToken();
+  }, [user]);
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }
