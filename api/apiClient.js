@@ -104,7 +104,7 @@ export const feedbackAPI = {
     return response.data;
   },
   getUserFeedback: async () => {
-    const response = await axiosInstance.get(`/feedbacks`);
+    const response = await axiosInstance.get(`user/feedbacks`);
     return response.data;
   },
 };

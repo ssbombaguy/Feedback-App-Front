@@ -18,9 +18,8 @@ import { ConfirmationModal } from "../ConfirmationModal";
 import { useTheme } from "../../context/ThemeContext";
 import { showErrorToast } from "../../utils/toastUtils";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import { CustomToast } from "../CustomToast";
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from "../../context/AuthContext";
 const FEEDBACK_FIELDS_CONFIG = [
   {
     name: "teacher_evaluation_form",
@@ -64,43 +63,61 @@ const createFeedbackValidationSchema = (t) => {
   return Yup.object().shape(shape);
 };
 
-
-
-export const FeedbackForm = ({ courseName, groupId, existingFeedback, onClose }) => {
-  const { user } = useAuth()
+export const FeedbackForm = ({
+  courseName,
+  groupId,
+  existingFeedback,
+  onClose,
+}) => {
+  const { user } = useAuth();
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showConflictWarning, setShowConflictWarning] = useState(false);
   const [pendingValues, setPendingValues] = useState(null);
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-  const { submitFeedback, updateFeedback, isSubmitting } = useFeedback();
+  const [showAnonymousConfirm, setShowAnonymousConfirm] = useState(false);
+  const { submitFeedback, updateFeedback, isSubmitting, refetch } =
+    useFeedback();
 
   const getInitialValues = () => ({
-  wants_to_return_as_teacher: existingFeedback?.wants_to_return_as_teacher || false,
-  teacher_evaluation_form: existingFeedback?.teacher_evaluation_form || "",
-  course_evaluation_form: existingFeedback?.course_evaluation_form || "",
-  career_impact: existingFeedback?.career_impact || "",
-  subject_wishes: existingFeedback?.subject_wishes || "",
-  ideal_learning_environment: existingFeedback?.ideal_learning_environment || "",
-})
+    wants_to_return_as_teacher:
+      existingFeedback?.wants_to_return_as_teacher || false,
+    teacher_evaluation_form: existingFeedback?.teacher_evaluation_form || "",
+    course_evaluation_form: existingFeedback?.course_evaluation_form || "",
+    career_impact: existingFeedback?.career_impact || "",
+    subject_wishes: existingFeedback?.subject_wishes || "",
+    ideal_learning_environment:
+      existingFeedback?.ideal_learning_environment || "",
+    is_anonymous: existingFeedback?.is_anonymous || false,
+  });
 
- const handleReturnAsTeacherToggle = (value, setFieldValue) => {
-  setFieldValue("wants_to_return_as_teacher", value)
-}
+  const handleReturnAsTeacherToggle = (value, setFieldValue) => {
+    setFieldValue("wants_to_return_as_teacher", value);
+  };
+  const handleAnonymousToggle = (value, setFieldValue, currentValues) => {
+    if (value && currentValues.wants_to_return_as_teacher) {
+      setShowConflictWarning(true);
+      return;
+    }
+    setFieldValue("is_anonymous", value);
+    if (value) {
+      setShowAnonymousConfirm(true);
+    }
+  };
 
-  
   const buildFeedbackData = useCallback(
     (values) => ({
-    group_id: groupId,                                         
-    teacher_evaluation_form: values.teacher_evaluation_form,
-    course_evaluation_form: values.course_evaluation_form,
-    career_impact: values.career_impact,
-    subject_wishes: values.subject_wishes,
-    ideal_learning_environment: values.ideal_learning_environment,
-    wants_to_return_as_teacher: values.wants_to_return_as_teacher,
-    is_anonymous: false,
-  }),
-  [groupId],
+      group_id: groupId,
+      teacher_evaluation_form: values.teacher_evaluation_form,
+      course_evaluation_form: values.course_evaluation_form,
+      career_impact: values.career_impact,
+      subject_wishes: values.subject_wishes,
+      ideal_learning_environment: values.ideal_learning_environment,
+      wants_to_return_as_teacher: values.wants_to_return_as_teacher,
+      is_anonymous: existingFeedback?.id ? false : values.is_anonymous,
+    }),
+    [groupId],
   );
 
   const handleSubmit = useCallback(
@@ -117,39 +134,55 @@ export const FeedbackForm = ({ courseName, groupId, existingFeedback, onClose })
   );
 
   const handleConfirmSubmit = useCallback(async () => {
-    console.log("existingFeedback:", existingFeedback)
-    console.log("feedbackId being sent:", existingFeedback?.id)
-    console.log("url:", `/feedbacks/${existingFeedback.id}`)
-    console.log("typeof id:", typeof existingFeedback.id)
+    console.log("existingFeedback:", existingFeedback);
+    console.log("feedbackId being sent:", existingFeedback?.id);
+    console.log("url:", `/feedbacks/${existingFeedback?.id}`); // ← Use optional chaining
+    console.log("typeof id:", typeof existingFeedback?.id);
     if (!pendingValues || !user) return;
 
-  setShowConfirmation(false);
-  const feedbackData = buildFeedbackData(pendingValues);
+    setShowConfirmation(false);
+    const feedbackData = buildFeedbackData(pendingValues);
 
-  if (existingFeedback?.id) {
-    updateFeedback({ feedbackId: existingFeedback.id, feedbackData }, {
-      onSuccess: () => {
-        onClose(true);
-      },
-      onError: (error) => {
-    console.log("feedback error:", JSON.stringify(error?.response?.data, null, 2))
-    console.log("status:", error?.response?.status)
-    showErrorToast(t("common.error"), t("feedback.error"));
-    },
-    });
-  } else {
-    submitFeedback(feedbackData, {
-      onSuccess: () => {
-    onClose(true)  
-   },
-  onError: () => {
-    showErrorToast(t("common.error"), t("feedback.error"))
-    },
-    });
-  }
+    if (existingFeedback?.id) {
+      updateFeedback(
+        { feedbackId: existingFeedback.id, feedbackData },
+        {
+          onSuccess: async () => {
+            await refetch();
+            onClose(true);
+          },
+          onError: (error) => {
+            console.log(
+              "feedback error:",
+              JSON.stringify(error?.response?.data, null, 2),
+            );
+            showErrorToast(t("common.error"), t("feedback.error"));
+          },
+        },
+      );
+    } else {
+      submitFeedback(feedbackData, {
+        onSuccess: async () => {
+          await refetch();
+          onClose(true);
+        },
+        onError: () => {
+          showErrorToast(t("common.error"), t("feedback.error"));
+        },
+      });
+    }
 
-  setPendingValues(null);
-}, [pendingValues, user, existingFeedback, buildFeedbackData, submitFeedback, updateFeedback, onClose, t]);
+    setPendingValues(null);
+  }, [
+    pendingValues,
+    user,
+    existingFeedback,
+    buildFeedbackData,
+    submitFeedback,
+    updateFeedback,
+    onClose,
+    t,
+  ]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -158,14 +191,17 @@ export const FeedbackForm = ({ courseName, groupId, existingFeedback, onClose })
           <Text style={styles.title}>
             {t("feedback.feedbackFor", { courseName })}
           </Text>
-          <TouchableOpacity onPress={() => onClose()} style={styles.closeButton}>
+          <TouchableOpacity
+            onPress={() => onClose()}
+            style={styles.closeButton}
+          >
             <Text style={styles.closeText}>✕</Text>
           </TouchableOpacity>
         </View>
 
         <Formik
-           initialValues={getInitialValues()}   
-          enableReinitialize                   
+          initialValues={getInitialValues()}
+          enableReinitialize
           validationSchema={createFeedbackValidationSchema(t)}
           onSubmit={handleSubmit}
         >
@@ -203,25 +239,29 @@ export const FeedbackForm = ({ courseName, groupId, existingFeedback, onClose })
                   <Switch
                     value={values.wants_to_return_as_teacher}
                     trackColor={{ false: "#E0E0E0", true: "#F9C94D" }}
-                    thumbColor={values.wants_to_return_as_teacher ? "#243d4d" : "#f4f3f4"}
-                   onValueChange={(value) => handleReturnAsTeacherToggle(value, setFieldValue)}
-                    disabled={isSubmitting}
+                    thumbColor={
+                      values.wants_to_return_as_teacher ? "#243d4d" : "#f4f3f4"
+                    }
+                    onValueChange={(value) =>
+                      handleReturnAsTeacherToggle(value, setFieldValue)
+                    }
+                    disabled={isSubmitting || values.is_anonymous}
                   />
                 </View>
-                {/* <View style={styles.switchContainer}>
+                <View style={styles.switchContainer}>
                   <Text style={styles.switchLabel}>
                     {t("feedback.submitAnonymously") || "Submit Anonymously"}
                   </Text>
                   <Switch
-                    value={values.anonymous}
+                    value={values.is_anonymous}
                     onValueChange={(value) =>
                       handleAnonymousToggle(value, setFieldValue, values)
                     }
-                    trackColor={{ false: theme.disabled, true: theme.accent }}
-                    thumbColor={values.anonymous ? theme.primary : theme.label}
-                    disabled={isSubmitting || values.returnAsTeacher}
+                    trackColor={{ false: "#E0E0E0", true: "#F9C94D" }}
+                    thumbColor={values.is_anonymous ? "#243d4d" : "#f4f3f4"}
+                    disabled={isSubmitting || values.wants_to_return_as_teacher}
                   />
-                </View> */}
+                </View>
 
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
@@ -242,9 +282,9 @@ export const FeedbackForm = ({ courseName, groupId, existingFeedback, onClose })
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                  style={styles.clearButton}
-                  onPress={() => onClose()}
-                  disabled={isSubmitting}
+                    style={styles.clearButton}
+                    onPress={() => onClose()}
+                    disabled={isSubmitting}
                   >
                     <Text style={styles.clearButtonText}>
                       {t("common.cancel")}
@@ -255,7 +295,7 @@ export const FeedbackForm = ({ courseName, groupId, existingFeedback, onClose })
                 <View style={styles.spacer} />
               </View>
 
-              {/* <ConfirmationModal
+              <ConfirmationModal
                 visible={showAnonymousConfirm}
                 title={t("feedback.submitAnonymously?")}
                 message={
@@ -266,14 +306,14 @@ export const FeedbackForm = ({ courseName, groupId, existingFeedback, onClose })
                 confirmText={t("feedback.yesSubmitAnonymously")}
                 cancelText={t("feedback.noSubmitAnonymously")}
                 onConfirm={() => {
-                  setFieldValue("anonymous", true);
-                  setFieldValue("returnAsTeacher", false);
+                  setFieldValue("is_anonymous", true);
                   setShowAnonymousConfirm(false);
                 }}
                 onCancel={() => {
+                  setFieldValue("is_anonymous", false);
                   setShowAnonymousConfirm(false);
                 }}
-              /> */}
+              />
             </>
           )}
         </Formik>
@@ -291,15 +331,15 @@ export const FeedbackForm = ({ courseName, groupId, existingFeedback, onClose })
           }}
           isLoading={isSubmitting}
         />
+        <ConfirmationModal
+          visible={showConflictWarning}
+          title={t("feedback.conflict")}
+          message={t("feedback.disableReturnAsTeacherFirst")}
+          confirmText={t("common.ok")}
+          onConfirm={() => setShowConflictWarning(false)}
+          onCancel={() => setShowConflictWarning(false)}
+        />
       </ScrollView>
-
-      <Toast
-        config={{
-          success: (props) => <CustomToast {...props} type="success" />,
-          error: (props) => <CustomToast {...props} type="error" />,
-          info: (props) => <CustomToast {...props} type="info" />,
-        }}
-      />
     </SafeAreaView>
   );
 };
