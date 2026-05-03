@@ -93,6 +93,7 @@
     "updateSuccess": "პროფილი წარმატებით განახლდა",
     "updateError": "პროფილის განახლება ჩავარდა",
     "phoneRequired": "ტელეფონის ნომერი აუცილებელია",
+    "emailRequired": "ელ-ფოსტა აუცილებელია",
     "invalidUrl": "გთხოვთ შეიყვანოთ სწორი URL",
     "editProfile": "პროფილის რედაქტირება"
   },
@@ -141,6 +142,22 @@
     "setNewPassword": "შეადგინეთ ახალი პაროლი",
     "createPasswordInstruction": "შექმენით ძლიერი პაროლი თქვენი ანგარიშისთვის",
     "resetPassword": "პაროლის აღდგენა"
+  },
+  "verification": {
+    "verificationSentTo": "დადასტურება გაიგზავნა:",
+    "sendCodeDescription": "ჩვენ გამოგვიგზავნით დადასტურების კოდს თქვენი {{type}}-ის დასადასტურებლად.",
+    "sendCode": "კოდის გაგზავნა",
+    "enterCodeDescription": "შეიყვანეთ თქვენი {{type}}-ზე გაგზავნილი კოდი",
+    "verificationCode": "დადასტურების კოდი",
+    "resendIn": "კოდის ხელახლა გაგზავნა {{seconds}}s-ში",
+    "didntReceiveCode": "კოდი ვერ მიიღეთ? ხელახლა გაგზავნა",
+    "verifyCode": "კოდის დადასტურება",
+    "change": "შეცვალე {{type}}",
+    "codeSent": "დადასტურების კოდი გაიგზავნა თქვენი {{type}}-ზე",
+    "failedToSend": "კოდის გაგზავნა ვერ მოხერხდა",
+    "invalidCode": "გთხოვთ შეიყვანოთ სწორი კოდი",
+    "verificationFailed": "დადასტურება ვერ მოხერხდა",
+    "verified": "თქვენი {{type}} წარმატებით განახლდა"
   },
   "notfound": {
     "title": "404",

@@ -93,6 +93,7 @@
     "updateSuccess": "Profile updated successfully",
     "updateError": "Failed to update profile",
     "phoneRequired": "Phone number is required",
+    "emailRequired": "Email is required",
     "invalidUrl": "Please enter a valid URL",
     "editProfile": "Edit Profile"
   },
@@ -126,7 +127,6 @@
     "ka": "KA",
     "yes": "Yes",
     "no": "No"
-
   },
   "recovery": {
     "forgotPassword": "Forgot Password?",
@@ -142,6 +142,22 @@
     "setNewPassword": "Set New Password",
     "createPasswordInstruction": "Create a strong password for your account",
     "resetPassword": "Reset Password"
+  },
+  "verification": {
+    "verificationSentTo": "Verification sent to:",
+    "sendCodeDescription": "We'll send you a verification code to confirm your {{type}}.",
+    "sendCode": "Send Code",
+    "enterCodeDescription": "Enter the code sent to your {{type}}",
+    "verificationCode": "Verification Code",
+    "resendIn": "Resend code in {{seconds}}s",
+    "didntReceiveCode": "Didn't receive code? Resend",
+    "verifyCode": "Verify Code",
+    "change": "Change {{type}}",
+    "codeSent": "Verification code sent to your {{type}}",
+    "failedToSend": "Failed to send code",
+    "invalidCode": "Please enter a valid code",
+    "verificationFailed": "Verification Failed",
+    "verified": "Your {{type}} has been updated successfully"
   },
   "notfound": {
     "title": "404",

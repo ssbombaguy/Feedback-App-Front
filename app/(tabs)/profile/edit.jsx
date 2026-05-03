@@ -13,7 +13,7 @@ import { TextInput } from "react-native-paper";
 import { useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useCurrentUserProfile } from "../../../api/useUser";
-import { userAPI } from "../../../api/apiClient";
+import { userAPI, verificationAPI } from "../../../api/apiClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Formik } from "formik";
@@ -23,6 +23,8 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../context/ThemeContext";
 import { showSuccessToast, showErrorToast } from "../../../utils/toastUtils";
 import * as ImagePicker from "expo-image-picker";
+import { VerificationModal } from "../../../components/VerificationModal";
+import { useState } from "react";
 
 export default function EditProfile() {
   const { t } = useTranslation();
@@ -32,8 +34,17 @@ export default function EditProfile() {
   const styles = makeStyles(theme);
   const { userProfile } = useCurrentUserProfile();
 
+  // Verification modal states
+  const [verificationModal, setVerificationModal] = useState({
+    visible: false,
+    type: null, // 'phone' or 'email'
+    contact: null,
+    pendingValue: null, // stores the new value being verified
+  });
+
   const validationSchema = Yup.object().shape({
     phoneNumber: Yup.string().required(t("profile.phoneRequired")),
+    email: Yup.string().email(t("profile.invalidEmail")).required(t("profile.emailRequired")),
     linkedinUrl: Yup.string().url(t("profile.invalidUrl")).nullable(),
     githubUrl: Yup.string().url(t("profile.invalidUrl")).nullable(),
   });
@@ -51,7 +62,7 @@ export default function EditProfile() {
 
   const handlePickPhoto = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
@@ -61,30 +72,105 @@ export default function EditProfile() {
     }
   };
 
+  // Send verification code (phone or email)
+  const handleSendVerificationCode = async (contact) => {
+    try {
+      if (verificationModal.type === "phone") {
+        await verificationAPI.sendPhoneCode(contact);
+      } else if (verificationModal.type === "email") {
+        await verificationAPI.sendEmailCode(contact);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        `Failed to send ${verificationModal.type} code`;
+      throw new Error(errorMessage);
+    }
+  };
+
+  // Verify the code and update profile
+  const handleVerifyCode = async (contact, code) => {
+    try {
+      if (verificationModal.type === "phone") {
+        await verificationAPI.verifyPhoneCode(contact, code);
+      } else if (verificationModal.type === "email") {
+        await verificationAPI.verifyEmailCode(contact, code);
+      }
+
+      // After verification succeeds, update the profile
+      await updateMutation.mutateAsync({
+        firstName: userProfile?.firstName,
+        lastName: userProfile?.lastName,
+        personalNumber: userProfile?.personalNumber,
+        email:
+          verificationModal.type === "email"
+            ? verificationModal.pendingValue
+            : userProfile?.email,
+        city: userProfile?.city_id,
+        school: userProfile?.school_id,
+        phoneNumber:
+          verificationModal.type === "phone"
+            ? verificationModal.pendingValue
+            : userProfile?.phoneNumber,
+        linkedinUrl: userProfile?.linkedinUrl || null,
+        githubUrl: userProfile?.githubUrl || null,
+      });
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Verification failed";
+      throw new Error(errorMessage);
+    }
+  };
+
   const updateMutation = useMutation({
     mutationFn: (data) => userAPI.updateProfile(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUserProfile"] });
       showSuccessToast(t("common.success"), t("profile.updateSuccess"));
+      closeVerificationModal();
       router.back();
     },
-    onError: () => {
-      showErrorToast(t("common.error"), t("profile.updateError"));
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        t("profile.updateError");
+      showErrorToast(t("common.error"), errorMessage);
     },
   });
+
+  // Open verification modal for phone or email
+  const openVerificationModal = (type, newValue) => {
+    setVerificationModal({
+      visible: true,
+      type,
+      contact: newValue,
+      pendingValue: newValue,
+    });
+  };
+
+  const closeVerificationModal = () => {
+    setVerificationModal({
+      visible: false,
+      type: null,
+      contact: null,
+      pendingValue: null,
+    });
+  };
 
   const readOnlyFields = [
     { label: t("profile.firstName"), value: userProfile?.firstName },
     { label: t("profile.lastName"), value: userProfile?.lastName },
     { label: t("profile.privateNumber"), value: userProfile?.personalNumber },
-    { label: t("profile.email"), value: userProfile?.email },
   ];
+
   const photoUri = userProfile?.photo
     ? `${process.env.EXPO_PUBLIC_API_URL.replace(/\/api\/v1\/?$/, "")}${userProfile.photo}`
     : null;
-  console.log("photoUri:", photoUri);
-  console.log("API_URL:", process.env.EXPO_PUBLIC_API_URL);
-  console.log("photo field:", userProfile?.photo);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
@@ -173,22 +259,32 @@ export default function EditProfile() {
             validationSchema={validationSchema}
             initialValues={{
               phoneNumber: userProfile?.phoneNumber || "",
+              email: userProfile?.email || "",
               linkedinUrl: userProfile?.linkedinUrl || "",
               githubUrl: userProfile?.githubUrl || "",
             }}
             enableReinitialize
             onSubmit={(values) => {
-              updateMutation.mutate({
-                firstName: userProfile?.firstName,
-                lastName: userProfile?.lastName,
-                personalNumber: userProfile?.personalNumber,
-                email: userProfile?.email,
-                city: userProfile?.city_id,
-                school: userProfile?.school_id,
-                phoneNumber: values.phoneNumber,
-                linkedinUrl: values.linkedinUrl || null,
-                githubUrl: values.githubUrl || null,
-              });
+              const phoneChanged = values.phoneNumber !== userProfile?.phoneNumber;
+              const emailChanged = values.email !== userProfile?.email;
+
+              if (phoneChanged) {
+                openVerificationModal("phone", values.phoneNumber);
+              } else if (emailChanged) {
+                openVerificationModal("email", values.email);
+              } else {
+                updateMutation.mutate({
+                  firstName: userProfile?.firstName,
+                  lastName: userProfile?.lastName,
+                  personalNumber: userProfile?.personalNumber,
+                  email: userProfile?.email,
+                  city: userProfile?.city_id,
+                  school: userProfile?.school_id,
+                  phoneNumber: values.phoneNumber,
+                  linkedinUrl: values.linkedinUrl || null,
+                  githubUrl: values.githubUrl || null,
+                });
+              }
             }}
           >
             {({
@@ -216,6 +312,27 @@ export default function EditProfile() {
                 </View>
                 {touched.phoneNumber && errors.phoneNumber && (
                   <Text style={styles.errorText}>{errors.phoneNumber}</Text>
+                )}
+
+                <View style={styles.divider} />
+
+                <View style={styles.editRow}>
+                  <Text style={styles.editLabel}>{t("profile.email")}</Text>
+                  <TextInput
+                    mode="flat"
+                    value={values.email}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    style={styles.flatInput}
+                    underlineColor="transparent"
+                    activeUnderlineColor="transparent"
+                    error={touched.email && !!errors.email}
+                  />
+                </View>
+                {touched.email && errors.email && (
+                  <Text style={styles.errorText}>{errors.email}</Text>
                 )}
 
                 <View style={styles.divider} />
@@ -265,12 +382,13 @@ export default function EditProfile() {
                 <TouchableOpacity
                   style={[
                     styles.updateButton,
-                    updateMutation.isPending && styles.disabled,
+                    (updateMutation.isPending || photoMutation.isPending) &&
+                      styles.disabled,
                   ]}
                   onPress={handleSubmit}
-                  disabled={updateMutation.isPending}
+                  disabled={updateMutation.isPending || photoMutation.isPending}
                 >
-                  {updateMutation.isPending ? (
+                  {updateMutation.isPending || photoMutation.isPending ? (
                     <ActivityIndicator color="#fff" />
                   ) : (
                     <Text style={styles.buttonText}>{t("edit.update")}</Text>
@@ -281,6 +399,28 @@ export default function EditProfile() {
           </Formik>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Verification Modal */}
+      <VerificationModal
+        visible={verificationModal.visible}
+        title={
+          verificationModal.type === "phone"
+            ? "Verify Your Phone Number"
+            : "Verify Your Email"
+        }
+        message={
+          verificationModal.type === "phone"
+            ? "We'll send a verification code to your phone number to confirm the change."
+            : "We'll send a verification code to your email to confirm the change."
+        }
+        verificationType={verificationModal.type}
+        contact={verificationModal.contact}
+        onSendCode={handleSendVerificationCode}
+        onVerifyCode={handleVerifyCode}
+        onSuccess={closeVerificationModal}
+        onCancel={closeVerificationModal}
+        isLoading={updateMutation.isPending}
+      />
     </SafeAreaView>
   );
 }
