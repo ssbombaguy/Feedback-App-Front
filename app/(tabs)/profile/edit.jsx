@@ -34,12 +34,11 @@ export default function EditProfile() {
   const styles = makeStyles(theme);
   const { userProfile } = useCurrentUserProfile();
 
-  // Verification modal states
   const [verificationModal, setVerificationModal] = useState({
     visible: false,
-    type: null, // 'phone' or 'email'
+    type: null, 
     contact: null,
-    pendingValue: null, // stores the new value being verified
+    pendingValue: null, 
   });
 
   const validationSchema = Yup.object().shape({
@@ -72,7 +71,6 @@ export default function EditProfile() {
     }
   };
 
-  // Send verification code (phone or email)
   const handleSendVerificationCode = async (contact) => {
     try {
       if (verificationModal.type === "phone") {
@@ -89,7 +87,6 @@ export default function EditProfile() {
     }
   };
 
-  // Verify the code and update profile
   const handleVerifyCode = async (contact, code) => {
     try {
       if (verificationModal.type === "phone") {
@@ -98,7 +95,6 @@ export default function EditProfile() {
         await verificationAPI.verifyEmailCode(contact, code);
       }
 
-      // After verification succeeds, update the profile
       await updateMutation.mutateAsync({
         firstName: userProfile?.firstName,
         lastName: userProfile?.lastName,
@@ -142,7 +138,6 @@ export default function EditProfile() {
     },
   });
 
-  // Open verification modal for phone or email
   const openVerificationModal = (type, newValue) => {
     setVerificationModal({
       visible: true,
@@ -228,7 +223,6 @@ export default function EditProfile() {
             <Text style={styles.avatarEmail}>{userProfile?.email}</Text>
           </TouchableOpacity>
 
-          {/* Read-only section */}
           <Text style={styles.sectionTitle}>{t("profile.readOnlyInfo")}</Text>
           <View style={styles.card}>
             {readOnlyFields.map((item, index) => (
@@ -253,7 +247,6 @@ export default function EditProfile() {
             ))}
           </View>
 
-          {/* Editable section */}
           <Text style={styles.sectionTitle}>{t("profile.editableInfo")}</Text>
           <Formik
             validationSchema={validationSchema}
@@ -400,7 +393,6 @@ export default function EditProfile() {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* Verification Modal */}
       <VerificationModal
         visible={verificationModal.visible}
         title={

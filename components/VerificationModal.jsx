@@ -19,8 +19,8 @@ export const VerificationModal = ({
   visible,
   title,
   message,
-  verificationType, // 'phone' or 'email'
-  contact, // phone number or email
+  verificationType,  
+  contact, 
   onSuccess,
   onCancel,
   isLoading = false,
@@ -31,12 +31,11 @@ export const VerificationModal = ({
   const { theme } = useTheme();
   const styles = makeStyles(theme);
   const [code, setCode] = useState("");
-  const [step, setStep] = useState("send"); // 'send', 'verify'
+  const [step, setStep] = useState("send"); 
   const [timer, setTimer] = useState(0);
   const [isVerifying, setIsVerifying] = useState(false);
   const timerIntervalRef = useRef(null);
 
-  // Handle countdown timer
   useEffect(() => {
     if (timer > 0) {
       timerIntervalRef.current = setInterval(() => {
@@ -48,7 +47,6 @@ export const VerificationModal = ({
     return () => clearInterval(timerIntervalRef.current);
   }, [timer]);
 
-  // Reset state when modal closes
   useEffect(() => {
     if (!visible) {
       setCode("");
@@ -118,7 +116,6 @@ export const VerificationModal = ({
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.modalContainer}>
-            {/* Header */}
             <TouchableOpacity
               style={styles.closeButton}
               onPress={handleCancel}
@@ -131,7 +128,6 @@ export const VerificationModal = ({
               />
             </TouchableOpacity>
 
-            {/* Icon */}
             <View style={styles.iconContainer}>
               <Feather
                 name={verificationType === "phone" ? "smartphone" : "mail"}
@@ -140,7 +136,6 @@ export const VerificationModal = ({
               />
             </View>
 
-            {/* Content */}
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.subtitle}>{message}</Text>
 
@@ -149,7 +144,6 @@ export const VerificationModal = ({
               <Text style={styles.contactValue}>{contact}</Text>
             </View>
 
-            {/* Step: Send Code */}
             {step === "send" && (
               <View style={styles.content}>
                 <Text style={styles.stepDescription}>
@@ -181,14 +175,12 @@ export const VerificationModal = ({
               </View>
             )}
 
-            {/* Step: Verify Code */}
             {step === "verify" && (
               <View style={styles.content}>
                 <Text style={styles.stepDescription}>
                   {t("verification.enterCodeDescription", { type: verificationType })}
                 </Text>
 
-                {/* Code Input */}
                 <View style={styles.codeInputContainer}>
                   <TextInput
                     mode="outlined"
@@ -207,7 +199,6 @@ export const VerificationModal = ({
                   />
                 </View>
 
-                {/* Timer and Resend */}
                 <View style={styles.timerContainer}>
                   {timer > 0 ? (
                     <Text style={styles.timerText}>
@@ -225,7 +216,6 @@ export const VerificationModal = ({
                   )}
                 </View>
 
-                {/* Verify Button */}
                 <TouchableOpacity
                   style={[
                     styles.primaryButton,
@@ -244,7 +234,6 @@ export const VerificationModal = ({
                   )}
                 </TouchableOpacity>
 
-                {/* Back Button */}
                 <TouchableOpacity
                   style={styles.secondaryButton}
                   onPress={() => {
