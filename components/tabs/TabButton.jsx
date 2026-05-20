@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Image } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 export default function TabButton({
   Icon,
@@ -30,5 +30,4 @@ const makeStyles = (theme) =>
       borderRadius: 25,
     },
     activeButton: { backgroundColor: theme.tabBarActive },
-    icon: { width: 24, height: 24 },
-});
+  });

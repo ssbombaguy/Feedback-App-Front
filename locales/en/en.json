@@ -62,7 +62,9 @@
     "noSubmitAnonymously": "No, Submit with Name",
     "teacherRequiresName": "To return as a teacher, you must submit feedback with your name. Please choose 'No, Submit with Name'.",
     "changeFeedback": "Change Feedback",
-    "changeFeedbackMessage": "You have already submitted feedback for this course. Do you want to change it?"
+    "changeFeedbackMessage": "You have already submitted feedback for this course. Do you want to change it?",
+    "anonymousConflictMessage": "An anonymous submission cannot request returning as a teacher. Toggling this will automatically turn off the 'Return as Teacher' option. Do you want to proceed?",
+    "teacherConflictMessage": "You cannot request to 'Return as Teacher' while submitting anonymously. Would you like to turn off anonymity?"
   },
   "profile": {
     "title": "Profile",
@@ -95,7 +97,15 @@
     "phoneRequired": "Phone number is required",
     "emailRequired": "Email is required",
     "invalidUrl": "Please enter a valid URL",
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+    "displaySettings": "DISPLAY SETTINGS",
+    "theme": "Theme",
+    "language": "Language",
+    "systemMode": "System",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "selectTheme": "Select Theme",
+    "selectLanguage": "Select Language"
   },
   "edit":{
    "back": "Back",

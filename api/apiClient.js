@@ -52,11 +52,27 @@ export const authAPI = {
     return response.data;
   },
 
-  
   logout: async () => {
     await AsyncStorage.removeItem("authToken");
     await AsyncStorage.removeItem("user");
     await AsyncStorage.removeItem("isLoggedIn");
+  },
+
+  forgotPassword: async (email) => {
+    const response = await axiosInstance.post("/password/forgot", {
+      email,
+    });
+    return response.data;
+  },
+
+  resetPassword: async (email, token, password, passwordConfirmation) => {
+    const response = await axiosInstance.post("/password/reset", {
+      email,
+      token,
+      password,
+      password_confirmation: passwordConfirmation,
+    });
+    return response.data;
   },
 };
 

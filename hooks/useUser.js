@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { userAPI } from './apiClient'
+import { userAPI } from '../api/apiClient'
 import { useAuth } from '../context/AuthContext'
 
 export const useCurrentUserProfile = () => {
