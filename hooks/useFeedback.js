@@ -27,24 +27,29 @@ export const useFeedback = () => {
       queryClient.invalidateQueries({ queryKey: ['userFeedback'] })
     },
   })
+
   const updateMutation = useMutation({
-  mutationFn: async ({ feedbackId, feedbackData }) => {
-    return await feedbackAPI.update(feedbackId, feedbackData)
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['userFeedback'] })
-  },
-})
+    mutationFn: async ({ feedbackId, feedbackData }) => {
+      return await feedbackAPI.update(feedbackId, feedbackData)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userFeedback'] })
+    },
+  })
 
   return {
     feedback: query.data || [],
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
-    submitFeedback: submitMutation.mutate,
-    updateFeedback: updateMutation.mutate,
-    isSubmitting: submitMutation.isPending,
-    submitError: submitMutation.error,
+    submitFeedback: (feedbackData, options) => {
+      return submitMutation.mutate(feedbackData, options)
+    },
+    updateFeedback: (data, options) => {
+      return updateMutation.mutate(data, options)
+    },
+    isSubmitting: submitMutation.isPending || updateMutation.isPending,
+    submitError: submitMutation.error || updateMutation.error,
     refetch: query.refetch,
   }
 }

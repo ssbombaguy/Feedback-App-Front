@@ -11,15 +11,19 @@ import {
 import { useEffect, useState, useCallback } from "react";
 import CourseLister from "../../../components/feedback/courseLister";
 import { FeedbackForm } from "../../../components/feedback/FeedbackForm";
-import { userAPI, coursesAPI } from "../../../api/apiClient";
+import { userAPI, coursesAPI,feedbackAPI} from "../../../api/apiClient";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../../assets/MziuriLogo.svg";
 import { useTheme } from "../../../context/ThemeContext";
 import { useAuth } from "../../../context/AuthContext";
-import {showSuccessToast, showErrorToast } from "../../../utils/toastUtils";
-import { getErrorMessage, isUnauthorizedError } from "../../../utils/errorHandler";
+import { showSuccessToast, showErrorToast } from "../../../utils/toastUtils";
+import {
+  getErrorMessage,
+  isUnauthorizedError,
+} from "../../../utils/errorHandler";
 import { ConfirmationModal } from "../../../components/ConfirmationModal";
+
 const feedback = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,67 +33,70 @@ const feedback = () => {
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [selectedCourseName, setSelectedCourseName] = useState(null);
   const [selectedGroupId, setSelectedGroupId] = useState(null);
+  const [feedbackMap, setFeedbackMap] = useState({});
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { user, logout } = useAuth();
-  const [showChangeConfirm, setShowChangeConfirm] = useState(false)
-  const [pendingFeedbackPress, setPendingFeedbackPress] = useState(null)
+  const [showChangeConfirm, setShowChangeConfirm] = useState(false);
+  const [pendingFeedbackPress, setPendingFeedbackPress] = useState(null);
   const styles = makeStyles(theme);
 
   const loadUserCourses = useCallback(async () => {
     try {
       setError(null);
-      const [profileResponse, coursesResponse] = await Promise.all([
+      const [profileResponse, feedbackResponse] = await Promise.all([
         userAPI.getCurrentUserProfile(),
-        coursesAPI.getAllCourses(),
+        feedbackAPI.getUserFeedback(),
       ]);
 
+      // Map feedback by groupId
+      const fbMap = {};
+      if (Array.isArray(feedbackResponse)) {
+        feedbackResponse.forEach((fb) => {
+          fbMap[fb.group_id] = fb;
+        });
+      }
+      setFeedbackMap(fbMap);
 
-const userData = profileResponse;           
+      const userData = profileResponse;
 
-if (!userData?.all_enrolled_groups?.length) {
-  setCourses([]);
-  return;
-}
+      if (!userData?.all_enrolled_groups?.length) {
+        setCourses([]);
+        return;
+      }
 
-const allCourses = userData.all_enrolled_groups
-  .filter((enrollment) => enrollment.course_id != null)
-  .map((enrollment) => {
-    const course = enrollment.course;         
-    const teacher = course?.groups?.[0]?.teachers?.[0]?.fullName || "";
-    return {
-      courseName: course?.course_name || "Unknown",
-      focusArea: course?.focus_area || "",
-      teacher,
-      isActive: enrollment.is_active,
-      groupId: course?.groups?.[0]?.id,
-    };
-  });
-     
+      const allCourses = userData.all_enrolled_groups
+        .filter((enrollment) => enrollment.course_id != null)
+        .map((enrollment) => {
+          const course = enrollment.course;
+          const groupId = course?.groups?.[0]?.id;
+          return {
+            courseName: course?.course_name || "Unknown",
+            focusArea: course?.focus_area || "",
+            teacher: course?.groups?.[0]?.teachers?.[0]?.fullName || "",
+            isActive: enrollment.is_active,
+            groupId,
+            feedback: fbMap[groupId] || null,
+          };
+        });
 
       setCourses(allCourses);
     } catch (error) {
       console.error("Error loading courses:", error);
-      
       const errorInfo = getErrorMessage(error);
       setError(errorInfo);
-      
       showErrorToast(errorInfo.title, errorInfo.message);
-      
       if (isUnauthorizedError(error)) {
-        console.log("Unauthorized access - logging out");
         if (logout) {
           await logout();
         }
       }
-      
       setCourses([]);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   }, [logout]);
-
   useEffect(() => {
     if (user) {
       loadUserCourses();
@@ -103,25 +110,25 @@ const allCourses = userData.all_enrolled_groups
 
   const handleFeedbackPress = (courseName, groupId, existingFeedback) => {
     if (existingFeedback) {
-    setPendingFeedbackPress({ courseName, groupId, existingFeedback })
-    setShowChangeConfirm(true)
+      setPendingFeedbackPress({ courseName, groupId, existingFeedback });
+      setShowChangeConfirm(true);
     } else {
-    setSelectedCourseName(courseName)
-    setSelectedGroupId(groupId)
-    setSelectedFeedback(null)
-    setShowFeedbackForm(true)
+      setSelectedCourseName(courseName);
+      setSelectedGroupId(groupId);
+      setSelectedFeedback(null);
+      setShowFeedbackForm(true);
     }
-  }
+  };
 
   const handleCloseFeedbackForm = (success = false) => {
-  setShowFeedbackForm(false)
-  setSelectedCourseName(null)
-  setSelectedGroupId(null)
-  setSelectedFeedback(null)
-  if (success === true) {
-    showSuccessToast(t("common.success"), t("feedback.thankYou"))
-  }
-}
+    setShowFeedbackForm(false);
+    setSelectedCourseName(null);
+    setSelectedGroupId(null);
+    setSelectedFeedback(null);
+    if (success === true) {
+      showSuccessToast(t("common.success"), t("feedback.thankYou"));
+    }
+  };
   if (loading) {
     return (
       <SafeAreaView style={styles.centerContainer}>
@@ -142,14 +149,16 @@ const allCourses = userData.all_enrolled_groups
           <Logo style={styles.logo} />
           <Text style={styles.errorTitle}>{error.title}</Text>
           <Text style={styles.errorMessage}>{error.message}</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.retryButton}
             onPress={() => {
               setLoading(true);
               loadUserCourses();
             }}
           >
-            <Text style={styles.retryButtonText}>{t("common.retry") || "Retry"}</Text>
+            <Text style={styles.retryButtonText}>
+              {t("common.retry") || "Retry"}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
@@ -199,25 +208,24 @@ const allCourses = userData.all_enrolled_groups
         />
       </Modal>
       <ConfirmationModal
-          visible={showChangeConfirm}
-          title={t("feedback.changeFeedback")}
-          message={t("feedback.changeFeedbackMessage")}
-          confirmText={t("common.yes")}
-          cancelText={t("common.cancel")}
-          onConfirm={() => {
-            setShowChangeConfirm(false)
-            setSelectedCourseName(pendingFeedbackPress.courseName)
-            setSelectedGroupId(pendingFeedbackPress.groupId)
-            setSelectedFeedback(pendingFeedbackPress.existingFeedback)
-            setShowFeedbackForm(true)
-            setPendingFeedbackPress(null)
-          }}
-          onCancel={() => {
-            setShowChangeConfirm(false)
-            setPendingFeedbackPress(null)
-          }}
-        />
-      
+        visible={showChangeConfirm}
+        title={t("feedback.changeFeedback")}
+        message={t("feedback.changeFeedbackMessage")}
+        confirmText={t("common.yes")}
+        cancelText={t("common.cancel")}
+        onConfirm={() => {
+          setShowChangeConfirm(false);
+          setSelectedCourseName(pendingFeedbackPress.courseName);
+          setSelectedGroupId(pendingFeedbackPress.groupId);
+          setSelectedFeedback(pendingFeedbackPress.existingFeedback);
+          setShowFeedbackForm(true);
+          setPendingFeedbackPress(null);
+        }}
+        onCancel={() => {
+          setShowChangeConfirm(false);
+          setPendingFeedbackPress(null);
+        }}
+      />
     </SafeAreaView>
   );
 };
