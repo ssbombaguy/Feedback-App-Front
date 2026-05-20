@@ -243,7 +243,7 @@ const makeStyles = (theme) =>
       width: 40,
       height: 40,
       borderRadius: 10,
-      backgroundColor: 'rgba(5, 150, 105, 0.12)', // Minty HSL vibe
+      backgroundColor: 'rgba(5, 150, 105, 0.12)', 
       justifyContent: 'center',
       alignItems: 'center',
       marginRight: 14,
