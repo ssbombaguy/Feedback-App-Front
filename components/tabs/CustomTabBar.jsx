@@ -1,32 +1,56 @@
+import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Tabs, TabSlot, TabList, TabTrigger } from "expo-router/ui";
 import TabButton from "./TabButton";
 import Home from "../../assets/home.svg";
 import Profile from "../../assets/profile.svg";
 import { useTheme } from "../../context/ThemeContext";
-export default function CustomTabBar() {
+
+export default function CustomTabBar({ state, navigation }) {
   const { theme } = useTheme();
   const styles = makeStyles(theme);
+
   return (
-    <Tabs>
-      <TabSlot />
+    <View style={styles.container}>
+      {state.routes.map((route, index) => {
+        const isFocused = state.index === index;
 
-      <TabList asChild>
-        <View style={styles.container}>
-          <TabTrigger name="(feedback)" href="/(tabs)/(feedback)" asChild>
-            <TabButton Icon={Home} />
-          </TabTrigger>
+        const onPress = () => {
+          const event = navigation.emit({
+            type: "tabPress",
+            target: route.key,
+            canPreventDefault: true,
+          });
 
-          <TabTrigger name="profile" href="/(tabs)/profile" asChild>
-            <TabButton Icon={Profile} />
-          </TabTrigger>
-        </View>
-      </TabList>
-    </Tabs>
+          if (!isFocused && !event.defaultPrevented) {
+            navigation.navigate(route.name);
+          }
+        };
+
+        const onLongPress = () => {
+          navigation.emit({
+            type: "tabLongPress",
+            target: route.key,
+          });
+        };
+
+        const Icon = route.name === "(feedback)" ? Home : Profile;
+
+        return (
+          <TabButton
+            key={route.key}
+            Icon={Icon}
+            isFocused={isFocused}
+            onPress={onPress}
+            onLongPress={onLongPress}
+          />
+        );
+      })}
+    </View>
   );
 }
 
-const makeStyles = (theme) => StyleSheet.create({
+const makeStyles = (theme) =>
+  StyleSheet.create({
     container: {
       flexDirection: "row",
       backgroundColor: theme.tabBar,

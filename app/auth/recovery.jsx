@@ -1,50 +1,25 @@
 import {
   View,
-  Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Formik } from "formik";
-import * as Yup from "yup";
+import React, { useState } from "react";
 import { router } from "expo-router";
 import { phoneWidth } from "../../constants/Dimensions";
-import { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import Question from "../../assets/question.svg";
 import Logo from "../../assets/MziuriLogo.svg";
 import GreyBg from "../../assets/greyBg.svg";
 import { useTheme } from "../../context/ThemeContext";
 import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
-
-const EmailSchema = Yup.object().shape({
-  email: Yup.string()
-    .required("Email is required")
-    .email("Enter a valid email"),
-});
-
-const CodeSchema = Yup.object().shape({
-  code: Yup.string()
-    .required("Code is required")
-    .length(6, "Code must be 6 characters"),
-});
-
-const PasswordSchema = Yup.object().shape({
-  password: Yup.string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters")
-    .matches(/[A-Z]/, "Must contain at least one capital letter")
-    .matches(/[0-9]/, "Must contain at least one number")
-    .matches(/[^A-Za-z0-9]/, "Must contain at least one symbol"),
-  confirmPassword: Yup.string()
-    .required("Confirm password is required")
-    .oneOf([Yup.ref("password")], "Passwords must match"),
-});
+import { useMutation } from "@tanstack/react-query";
+import { authAPI } from "../../api/apiClient";
+import { RecoveryEmailStep } from "../../components/auth/RecoveryEmailStep";
+import { RecoveryCodeStep } from "../../components/auth/RecoveryCodeStep";
+import { RecoveryPasswordStep } from "../../components/auth/RecoveryPasswordStep";
 
 export default function PasswordRecovery() {
   const { t } = useTranslation();
@@ -52,36 +27,57 @@ export default function PasswordRecovery() {
   const styles = makeStyles(theme);
   const [step, setStep] = useState("email");
   const [userEmail, setUserEmail] = useState("");
-  const [generatedCode] = useState("123456");
+  const [resetToken, setResetToken] = useState("");
+
+  const forgotPasswordMutation = useMutation({
+    mutationFn: (email) => authAPI.forgotPassword(email),
+    onSuccess: () => {
+      showSuccessToast(t("common.success"), t("recovery.codeSent"));
+      setStep("code");
+    },
+    onError: (error) => {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        t("recovery.emailNotFound");
+      showErrorToast(t("common.error"), message);
+    },
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: ({ email, token, password, confirmPassword }) =>
+      authAPI.resetPassword(email, token, password, confirmPassword),
+    onSuccess: () => {
+      showSuccessToast(t("common.success"), t("recovery.passwordResetSuccess"));
+      setTimeout(() => router.replace("/auth"), 1500);
+    },
+    onError: (error) => {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong";
+      showErrorToast(t("common.error"), message);
+    },
+  });
 
   const handleEmailSubmit = (values) => {
-    const foundUser = users.find(
-      (user) => user.email.toLowerCase() === values.email.toLowerCase()
-    );
-
-    if (!foundUser) {
-      showErrorToast(t("common.error"), t("recovery.emailNotFound"));
-      return;
-    }
-
     setUserEmail(values.email);
-    showSuccessToast(t("common.success"), t("recovery.codeSent"));
-    setStep("code");
+    forgotPasswordMutation.mutate(values.email);
   };
 
   const handleCodeSubmit = (values) => {
-    if (values.code !== generatedCode) {
-      showErrorToast(t("common.error"), t("recovery.invalidCode"));
-      return;
-    }
-
+    setResetToken(values.code);
     showSuccessToast(t("common.success"), t("recovery.verifySuccess"));
     setStep("password");
   };
 
   const handlePasswordSubmit = (values) => {
-    showSuccessToast(t("common.success"), t("recovery.passwordResetSuccess"));
-    setTimeout(() => router.replace("/auth"), 1500);
+    resetPasswordMutation.mutate({
+      email: userEmail,
+      token: resetToken,
+      password: values.password,
+      confirmPassword: values.confirmPassword,
+    });
   };
 
   return (
@@ -97,9 +93,11 @@ export default function PasswordRecovery() {
             onPress={() => {
               if (step === "email") {
                 router.back();
-              } else {
+              } else if (step === "code") {
                 setStep("email");
                 setUserEmail("");
+              } else {
+                setStep("code");
               }
             }}
           >
@@ -109,176 +107,27 @@ export default function PasswordRecovery() {
           <Logo style={styles.logo} />
 
           {step === "email" && (
-            <Formik
-              initialValues={{ email: "" }}
-              validationSchema={EmailSchema}
+            <RecoveryEmailStep
               onSubmit={handleEmailSubmit}
-            >
-              {({
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                values,
-                errors,
-                touched,
-              }) => (
-                <>
-                  <Question style={styles.roundedImage} />
-                  <Text style={styles.title}>
-                    {t("recovery.forgotPassword")}
-                  </Text>
-                  <Text style={styles.subtitle}>
-                    {t("recovery.resetPasswordInstruction")}
-                  </Text>
-
-                  <TextInput
-                    placeholder={t("recovery.enterEmail")}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    value={values.email}
-                    onChangeText={handleChange("email")}
-                    onBlur={handleBlur("email")}
-                    style={[
-                      styles.input,
-                      touched.email && errors.email && styles.inputError,
-                    ]}
-                  />
-
-                  {touched.email && errors.email && (
-                    <Text style={styles.error}>{errors.email}</Text>
-                  )}
-
-                  <TouchableOpacity
-                    onPress={handleSubmit}
-                    style={styles.button}
-                  >
-                    <Text style={styles.buttonText}>
-                      {t("recovery.confirm")}
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </Formik>
+              isPending={forgotPasswordMutation.isPending}
+              theme={theme}
+            />
           )}
 
           {step === "code" && (
-            <Formik
-              initialValues={{ code: "" }}
-              validationSchema={CodeSchema}
+            <RecoveryCodeStep
               onSubmit={handleCodeSubmit}
-            >
-              {({
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                values,
-                errors,
-                touched,
-              }) => (
-                <>
-                  <Text style={styles.title}>{t("recovery.verifyCode")}</Text>
-                  <Text style={styles.subtitle}>
-                    {t("recovery.codeSent", { email: userEmail })}
-                  </Text>
-
-                  <TextInput
-                    placeholder="000000"
-                    keyboardType="number-pad"
-                    maxLength={6}
-                    value={values.code}
-                    onChangeText={handleChange("code")}
-                    onBlur={handleBlur("code")}
-                    style={[
-                      styles.input,
-                      styles.codeInput,
-                      touched.code && errors.code && styles.inputError,
-                    ]}
-                  />
-
-                  {touched.code && errors.code && (
-                    <Text style={styles.error}>{errors.code}</Text>
-                  )}
-
-                  <TouchableOpacity
-                    onPress={handleSubmit}
-                    style={styles.button}
-                  >
-                    <Text style={styles.buttonText}>
-                      {t("recovery.verifyCode")}
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </Formik>
+              userEmail={userEmail}
+              theme={theme}
+            />
           )}
 
           {step === "password" && (
-            <Formik
-              initialValues={{ password: "", confirmPassword: "" }}
-              validationSchema={PasswordSchema}
+            <RecoveryPasswordStep
               onSubmit={handlePasswordSubmit}
-            >
-              {({
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                values,
-                errors,
-                touched,
-              }) => (
-                <>
-                  <Text style={styles.title}>
-                    {t("recovery.setNewPassword")}
-                  </Text>
-                  <Text style={styles.subtitle}>
-                    {t("recovery.createPasswordInstruction")}
-                  </Text>
-
-                  <TextInput
-                    placeholder="New Password"
-                    secureTextEntry
-                    value={values.password}
-                    onChangeText={handleChange("password")}
-                    onBlur={handleBlur("password")}
-                    style={[
-                      styles.input,
-                      touched.password && errors.password && styles.inputError,
-                    ]}
-                  />
-
-                  {touched.password && errors.password && (
-                    <Text style={styles.error}>{errors.password}</Text>
-                  )}
-
-                  <TextInput
-                    placeholder="Confirm Password"
-                    secureTextEntry
-                    value={values.confirmPassword}
-                    onChangeText={handleChange("confirmPassword")}
-                    onBlur={handleBlur("confirmPassword")}
-                    style={[
-                      styles.input,
-                      touched.confirmPassword &&
-                        errors.confirmPassword &&
-                        styles.inputError,
-                    ]}
-                  />
-
-                  {touched.confirmPassword && errors.confirmPassword && (
-                    <Text style={styles.error}>{errors.confirmPassword}</Text>
-                  )}
-
-                  <TouchableOpacity
-                    onPress={handleSubmit}
-                    style={styles.button}
-                  >
-                    <Text style={styles.buttonText}>
-                      {t("recovery.resetPassword")}
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </Formik>
+              isPending={resetPasswordMutation.isPending}
+              theme={theme}
+            />
           )}
         </View>
       </KeyboardAvoidingView>
@@ -290,7 +139,6 @@ export default function PasswordRecovery() {
 const makeStyles = (theme) =>
   StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: theme.background },
-    keyboardView: { flex: 1 },
     container: {
       flex: 1,
       justifyContent: "flex-start",
@@ -306,41 +154,6 @@ const makeStyles = (theme) =>
       alignSelf: "center",
       marginBottom: 24,
     },
-    title: {
-      fontSize: 30,
-      fontWeight: "700",
-      color: theme.textSecondary,
-      marginBottom: 8,
-      textAlign: "center",
-    },
-    subtitle: {
-      fontSize: 14,
-      color: theme.hint,
-      marginBottom: 24,
-      textAlign: "center",
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: theme.borderInput,
-      borderRadius: 15,
-      padding: 14,
-      marginBottom: 6,
-      fontSize: 16,
-      color: theme.text,
-      backgroundColor: theme.inputBg,
-    },
-    codeInput: { letterSpacing: 8, fontSize: 24, textAlign: "center" },
-    inputError: { borderColor: theme.error },
-    error: { color: theme.error, marginBottom: 12, fontSize: 12 },
-    button: {
-      backgroundColor: theme.accent,
-      padding: 16,
-      borderRadius: 15,
-      alignItems: "center",
-      marginTop: 16,
-    },
-    buttonText: { color: theme.textSecondary, fontSize: 17, fontWeight: "600" },
-    roundedImage: { marginBottom: 15, alignSelf: "center", marginTop: 80 },
     background: {
       position: "absolute",
       bottom: 0,

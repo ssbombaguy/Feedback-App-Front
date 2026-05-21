@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import { CourseCard } from './courseCard'
+import { CourseCard } from './CourseCard'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../context/ThemeContext'
 

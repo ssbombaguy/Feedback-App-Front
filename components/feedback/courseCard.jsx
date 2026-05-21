@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { useFeedback } from '../../api/useFeedback'
+import { useFeedback } from '../../hooks/useFeedback'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../context/ThemeContext'
 import { showErrorToast } from '../../utils/toastUtils'

@@ -5,21 +5,21 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  Switch,
 } from "react-native";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useFeedback } from "../../api/useFeedback";
+import { useFeedback } from "../../hooks/useFeedback";
 import { useTranslation } from "react-i18next";
 import { FeedbackField } from "./FeedbackField";
 import { ConfirmationModal } from "../ConfirmationModal";
 import { useTheme } from "../../context/ThemeContext";
 import { showErrorToast } from "../../utils/toastUtils";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CustomToast } from "../CustomToast";
+import { FeedbackSwitches } from "./FeedbackSwitches";
 import { useAuth } from "../../context/AuthContext";
+
 const FEEDBACK_FIELDS_CONFIG = [
   {
     name: "teacher_evaluation_form",
@@ -69,14 +69,15 @@ export const FeedbackForm = ({
   existingFeedback,
   onClose,
 }) => {
-  const { user } = useAuth();
+  const [showAnonymousConflictModal, setShowAnonymousConflictModal] = useState(false);
+  const [showTeacherConflictModal, setShowTeacherConflictModal] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showConflictWarning, setShowConflictWarning] = useState(false);
   const [pendingValues, setPendingValues] = useState(null);
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
   const [showAnonymousConfirm, setShowAnonymousConfirm] = useState(false);
+  const { user } = useAuth();
   const { submitFeedback, updateFeedback, isSubmitting, refetch } =
     useFeedback();
 
@@ -92,12 +93,17 @@ export const FeedbackForm = ({
     is_anonymous: existingFeedback?.is_anonymous || false,
   });
 
-  const handleReturnAsTeacherToggle = (value, setFieldValue) => {
+  const handleReturnAsTeacherToggle = (value, setFieldValue, currentValues) => {
+    if (value && currentValues.is_anonymous) {
+      setShowTeacherConflictModal(true);
+      return;
+    }
     setFieldValue("wants_to_return_as_teacher", value);
   };
+
   const handleAnonymousToggle = (value, setFieldValue, currentValues) => {
     if (value && currentValues.wants_to_return_as_teacher) {
-      setShowConflictWarning(true);
+      setShowAnonymousConflictModal(true);
       return;
     }
     setFieldValue("is_anonymous", value);
@@ -117,7 +123,7 @@ export const FeedbackForm = ({
       wants_to_return_as_teacher: values.wants_to_return_as_teacher,
       is_anonymous: existingFeedback?.id ? false : values.is_anonymous,
     }),
-    [groupId],
+    [groupId, existingFeedback],
   );
 
   const handleSubmit = useCallback(
@@ -134,10 +140,6 @@ export const FeedbackForm = ({
   );
 
   const handleConfirmSubmit = useCallback(async () => {
-    console.log("existingFeedback:", existingFeedback);
-    console.log("feedbackId being sent:", existingFeedback?.id);
-    console.log("url:", `/feedbacks/${existingFeedback?.id}`); // ← Use optional chaining
-    console.log("typeof id:", typeof existingFeedback?.id);
     if (!pendingValues || !user) return;
 
     setShowConfirmation(false);
@@ -182,6 +184,7 @@ export const FeedbackForm = ({
     updateFeedback,
     onClose,
     t,
+    refetch,
   ]);
 
   return (
@@ -232,36 +235,14 @@ export const FeedbackForm = ({
                   />
                 ))}
 
-                <View style={styles.switchContainer}>
-                  <Text style={styles.switchLabel}>
-                    {t("feedback.returnAsTeacher")}
-                  </Text>
-                  <Switch
-                    value={values.wants_to_return_as_teacher}
-                    trackColor={{ false: "#E0E0E0", true: "#F9C94D" }}
-                    thumbColor={
-                      values.wants_to_return_as_teacher ? "#243d4d" : "#f4f3f4"
-                    }
-                    onValueChange={(value) =>
-                      handleReturnAsTeacherToggle(value, setFieldValue)
-                    }
-                    disabled={isSubmitting || values.is_anonymous}
-                  />
-                </View>
-                <View style={styles.switchContainer}>
-                  <Text style={styles.switchLabel}>
-                    {t("feedback.submitAnonymously") || "Submit Anonymously"}
-                  </Text>
-                  <Switch
-                    value={values.is_anonymous}
-                    onValueChange={(value) =>
-                      handleAnonymousToggle(value, setFieldValue, values)
-                    }
-                    trackColor={{ false: "#E0E0E0", true: "#F9C94D" }}
-                    thumbColor={values.is_anonymous ? "#243d4d" : "#f4f3f4"}
-                    disabled={isSubmitting || values.wants_to_return_as_teacher}
-                  />
-                </View>
+                <FeedbackSwitches
+                  values={values}
+                  setFieldValue={setFieldValue}
+                  isSubmitting={isSubmitting}
+                  onReturnAsTeacherToggle={handleReturnAsTeacherToggle}
+                  onAnonymousToggle={handleAnonymousToggle}
+                  theme={theme}
+                />
 
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
@@ -314,6 +295,40 @@ export const FeedbackForm = ({
                   setShowAnonymousConfirm(false);
                 }}
               />
+
+              <ConfirmationModal
+                visible={showAnonymousConflictModal}
+                title={t("feedback.conflict") || "Conflict"}
+                message={t("feedback.anonymousConflictMessage") || "An anonymous submission cannot request returning as a teacher. Toggling this will automatically turn off the 'Return as Teacher' option. Do you want to proceed?"}
+                confirmText={t("common.yes") || "Yes"}
+                cancelText={t("common.cancel") || "Cancel"}
+                onConfirm={() => {
+                  setFieldValue("is_anonymous", true);
+                  setFieldValue("wants_to_return_as_teacher", false);
+                  setShowAnonymousConflictModal(false);
+                }}
+                onCancel={() => {
+                  setFieldValue("is_anonymous", false);
+                  setShowAnonymousConflictModal(false);
+                }}
+              />
+
+              <ConfirmationModal
+                visible={showTeacherConflictModal}
+                title={t("feedback.conflict") || "Conflict"}
+                message={t("feedback.teacherConflictMessage") || "You cannot request to 'Return as Teacher' while submitting anonymously. Would you like to turn off anonymity?"}
+                confirmText={t("common.yes") || "Yes"}
+                cancelText={t("common.cancel") || "Cancel"}
+                onConfirm={() => {
+                  setFieldValue("wants_to_return_as_teacher", true);
+                  setFieldValue("is_anonymous", false);
+                  setShowTeacherConflictModal(false);
+                }}
+                onCancel={() => {
+                  setFieldValue("wants_to_return_as_teacher", false);
+                  setShowTeacherConflictModal(false);
+                }}
+              />
             </>
           )}
         </Formik>
@@ -330,14 +345,6 @@ export const FeedbackForm = ({
             setPendingValues(null);
           }}
           isLoading={isSubmitting}
-        />
-        <ConfirmationModal
-          visible={showConflictWarning}
-          title={t("feedback.conflict")}
-          message={t("feedback.disableReturnAsTeacherFirst")}
-          confirmText={t("common.ok")}
-          onConfirm={() => setShowConflictWarning(false)}
-          onCancel={() => setShowConflictWarning(false)}
         />
       </ScrollView>
     </SafeAreaView>
@@ -365,24 +372,6 @@ const makeStyles = (theme) =>
     closeButton: { padding: 8 },
     closeText: { fontSize: 24, color: theme.subtext, fontWeight: "600" },
     formContainer: { padding: 16 },
-    switchContainer: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      backgroundColor: theme.card,
-      padding: 16,
-      borderRadius: 8,
-      marginBottom: 20,
-      borderWidth: 1,
-      borderColor: theme.border,
-    },
-    switchLabel: {
-      fontSize: 14,
-      color: theme.text,
-      fontWeight: "600",
-      flex: 1,
-      marginRight: 12,
-    },
     buttonContainer: { gap: 12 },
     submitButton: {
       backgroundColor: theme.accent,

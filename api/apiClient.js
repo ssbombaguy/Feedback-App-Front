@@ -52,11 +52,27 @@ export const authAPI = {
     return response.data;
   },
 
-  
   logout: async () => {
     await AsyncStorage.removeItem("authToken");
     await AsyncStorage.removeItem("user");
     await AsyncStorage.removeItem("isLoggedIn");
+  },
+
+  forgotPassword: async (email) => {
+    const response = await axiosInstance.post("/password/forgot", {
+      email,
+    });
+    return response.data;
+  },
+
+  resetPassword: async (email, token, password, passwordConfirmation) => {
+    const response = await axiosInstance.post("/password/reset", {
+      email,
+      token,
+      password,
+      password_confirmation: passwordConfirmation,
+    });
+    return response.data;
   },
 };
 
@@ -110,7 +126,7 @@ export const feedbackAPI = {
 };
 export const notificationsAPI = {
   saveToken: async (token) => {
-     console.log('platform being sent:', Platform.OS)
+    console.log('platform being sent:', Platform.OS)
     const response = await axiosInstance.post('/notifications/token', {
       token,
       platform: Platform.OS,
@@ -118,6 +134,37 @@ export const notificationsAPI = {
     return response.data
   },
 }
+export const verificationAPI = {
+  sendPhoneCode: async (phone) => {
+    const response = await axiosInstance.post("/verification/sms/send", {
+      phone,
+    });
+    return response.data;
+  },
+
+  verifyPhoneCode: async (phone, smsCode) => {
+    const response = await axiosInstance.post("/verification/sms/check-code", {
+      phone,
+      sms_code: smsCode,
+    });
+    return response.data;
+  },
+
+  sendEmailCode: async (email) => {
+    const response = await axiosInstance.post("/verification/email/send", {
+      email,
+    });
+    return response.data;
+  },
+
+  verifyEmailCode: async (email, emailCode) => {
+    const response = await axiosInstance.post("/verification/email/check-code", {
+      email,
+      email_code: emailCode,
+    });
+    return response.data;
+  },
+};
 
 export default {
   authAPI,
@@ -126,4 +173,5 @@ export default {
   feedbackAPI,
   axiosInstance,
   notificationsAPI,
+  verificationAPI,
 };
