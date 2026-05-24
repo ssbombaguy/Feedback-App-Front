@@ -1,12 +1,13 @@
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
 } from "react-native";
 import React, { useState, useCallback } from "react";
+import {} from "./FeedbackForm.styles";
+
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -69,8 +70,10 @@ export const FeedbackForm = ({
   existingFeedback,
   onClose,
 }) => {
-  const [showAnonymousConflictModal, setShowAnonymousConflictModal] = useState(false);
-  const [showTeacherConflictModal, setShowTeacherConflictModal] = useState(false);
+  const [showAnonymousConflictModal, setShowAnonymousConflictModal] =
+    useState(false);
+  const [showTeacherConflictModal, setShowTeacherConflictModal] =
+    useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pendingValues, setPendingValues] = useState(null);
   const { t } = useTranslation();
@@ -299,7 +302,10 @@ export const FeedbackForm = ({
               <ConfirmationModal
                 visible={showAnonymousConflictModal}
                 title={t("feedback.conflict") || "Conflict"}
-                message={t("feedback.anonymousConflictMessage") || "An anonymous submission cannot request returning as a teacher. Toggling this will automatically turn off the 'Return as Teacher' option. Do you want to proceed?"}
+                message={
+                  t("feedback.anonymousConflictMessage") ||
+                  "An anonymous submission cannot request returning as a teacher. Toggling this will automatically turn off the 'Return as Teacher' option. Do you want to proceed?"
+                }
                 confirmText={t("common.yes") || "Yes"}
                 cancelText={t("common.cancel") || "Cancel"}
                 onConfirm={() => {
@@ -316,7 +322,10 @@ export const FeedbackForm = ({
               <ConfirmationModal
                 visible={showTeacherConflictModal}
                 title={t("feedback.conflict") || "Conflict"}
-                message={t("feedback.teacherConflictMessage") || "You cannot request to 'Return as Teacher' while submitting anonymously. Would you like to turn off anonymity?"}
+                message={
+                  t("feedback.teacherConflictMessage") ||
+                  "You cannot request to 'Return as Teacher' while submitting anonymously. Would you like to turn off anonymity?"
+                }
                 confirmText={t("common.yes") || "Yes"}
                 cancelText={t("common.cancel") || "Cancel"}
                 onConfirm={() => {
@@ -349,57 +358,4 @@ export const FeedbackForm = ({
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-const makeStyles = (theme) =>
-  StyleSheet.create({
-    safeArea: {
-      flex: 1,
-      backgroundColor: theme.background,
-    },
-    header: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      paddingHorizontal: 16,
-      paddingTop: 16,
-      paddingBottom: 12,
-      backgroundColor: theme.card,
-      borderBottomWidth: 1,
-      borderBottomColor: theme.border,
-    },
-    title: { fontSize: 18, fontWeight: "700", color: theme.text, flex: 1 },
-    closeButton: { padding: 8 },
-    closeText: { fontSize: 24, color: theme.subtext, fontWeight: "600" },
-    formContainer: { padding: 16 },
-    buttonContainer: { gap: 12 },
-    submitButton: {
-      backgroundColor: theme.accent,
-      paddingVertical: 14,
-      paddingHorizontal: 16,
-      borderRadius: 8,
-      alignItems: "center",
-      marginBottom: 8,
-    },
-    submitButtonDisabled: { opacity: 0.6 },
-    submitButtonText: {
-      color: theme.text,
-      fontSize: 15,
-      fontWeight: "700",
-      letterSpacing: 0.5,
-    },
-    clearButton: {
-      backgroundColor: theme.disabled,
-      paddingVertical: 14,
-      paddingHorizontal: 16,
-      borderRadius: 8,
-      alignItems: "center",
-    },
-    clearButtonText: { color: theme.text, fontSize: 15, fontWeight: "600" },
-    spacer: { height: 40 },
-  });
-
-FeedbackForm.propTypes = {
-  courseName: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
 };

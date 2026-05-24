@@ -1,33 +1,15 @@
-import { Pressable, StyleSheet } from "react-native";
+import { makeStyles } from "./TabButton.styles";
+import { Pressable } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-export default function TabButton({
-  Icon,
-  isFocused,
-  ...props
-}) {
+export default function TabButton({ Icon, isFocused, ...props }) {
   const { theme } = useTheme();
   const styles = makeStyles(theme);
   return (
     <Pressable
       {...props}
-      style={[
-        styles.button,
-        isFocused && styles.activeButton
-      ]}
+      style={[styles.button, isFocused && styles.activeButton]}
     >
-      <Icon width={24} height={24}/>
+      <Icon width={24} height={24} />
     </Pressable>
   );
 }
-
-const makeStyles = (theme) =>
-  StyleSheet.create({
-    button: {
-      flex: 1,
-      paddingVertical: 12,
-      alignItems: "center",
-      justifyContent: "center",
-      borderRadius: 25,
-    },
-    activeButton: { backgroundColor: theme.tabBarActive },
-  });

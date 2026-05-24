@@ -1,0 +1,98 @@
+import { StyleSheet } from "react-native";
+
+export const makeStyles = (theme) =>
+  StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: theme.background },
+    scrollContainer: { flex: 1, backgroundColor: theme.background },
+    container: {
+      alignItems: "center",
+      paddingHorizontal: 20,
+      width: phoneWidth,
+      paddingBottom: 100,
+      marginTop: 40,
+    },
+    logo: {
+      width: 180,
+      height: 80,
+      resizeMode: "contain",
+      alignSelf: "center",
+    },
+    emptyText: { fontSize: 16, color: theme.label, marginTop: 40 },
+    buttonContainer: { width: "100%", marginTop: 12 },
+    logoutButton: {
+      backgroundColor: theme.accent,
+      borderRadius: 10,
+      padding: 14,
+      justifyContent: "center",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+      marginBottom: 50,
+    },
+    logoutText: { fontSize: 16, color: theme.textSecondary, fontWeight: "700" },
+    sectionHeader: {
+      width: "100%",
+      marginTop: 24,
+      marginBottom: 8,
+      alignItems: "flex-start",
+    },
+    sectionTitle: {
+      fontSize: 13,
+      fontWeight: "700",
+      color: theme.subtext || "#546E7A",
+      textTransform: "uppercase",
+      letterSpacing: 1.2,
+    },
+    settingsCard: {
+      width: "100%",
+      backgroundColor: theme.card || "#ffffff",
+      borderRadius: 12,
+      paddingVertical: 4,
+      marginBottom: 16,
+      borderWidth: 1,
+      borderColor: theme.border || "#E0E0E0",
+    },
+    settingsRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingVertical: 14,
+      paddingHorizontal: 16,
+    },
+    settingsRowLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    iconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 10,
+      backgroundColor: "rgba(5, 150, 105, 0.12)",
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 14,
+    },
+    textContainer: {
+      justifyContent: "center",
+    },
+    rowTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: theme.text || "#2C3E50",
+    },
+    rowSubtitle: {
+      fontSize: 13,
+      color: theme.subtext || "#546E7A",
+      marginTop: 2,
+    },
+    rowDivider: {
+      height: 1,
+      backgroundColor: theme.borderLight || "#f0f0f0",
+      marginHorizontal: 16,
+    },
+  });

@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
+import {} from "./LoginForm.styles";
+
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
@@ -101,9 +109,7 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
                 >
                   {rememberMe && <Text style={styles.checkmark}>✓</Text>}
                 </TouchableOpacity>
-                <Text style={styles.rememberText}>
-                  {t("auth.rememberMe")}
-                </Text>
+                <Text style={styles.rememberText}>{t("auth.rememberMe")}</Text>
               </View>
             </View>
 
@@ -150,7 +156,8 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
               if (Object.keys(formErrors).length > 0) {
                 showErrorToast(
                   t("auth.validationError") || "Validation Error",
-                  t("auth.fillAllFields") || "Please fill in all fields correctly"
+                  t("auth.fillAllFields") ||
+                    "Please fill in all fields correctly",
                 );
                 return;
               }
@@ -170,87 +177,3 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
     </Formik>
   );
 };
-
-const makeStyles = (theme) =>
-  StyleSheet.create({
-    input: {
-      borderWidth: 1,
-      borderColor: theme.borderInput || "#ddd",
-      borderRadius: 15,
-      padding: 14,
-      marginBottom: 6,
-      fontSize: 16,
-      color: theme.text,
-      backgroundColor: theme.inputBg || "#fff",
-      width: "100%",
-    },
-    inputError: { borderColor: theme.error },
-    error: { color: theme.error, marginBottom: 12, fontSize: 12, alignSelf: "flex-start" },
-    passwordContainer: {
-      position: "relative",
-      flexDirection: "row",
-      alignItems: "center",
-      width: "100%",
-    },
-    passwordInput: { paddingRight: 50 },
-    eyeIcon: { position: "absolute", right: 16, zIndex: 10, padding: 4 },
-    eye: { color: theme.textSecondary || "#666" },
-    optionsRow: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      width: "100%",
-      marginTop: 8,
-      marginBottom: 20,
-    },
-    rememberRow: { flexDirection: "row", alignItems: "center" },
-    checkbox: {
-      width: 20,
-      height: 20,
-      borderWidth: 2,
-      borderColor: theme.checkboxBorder || "#243d4d",
-      borderRadius: 4,
-      marginRight: 8,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    checkboxChecked: { backgroundColor: theme.accent || "#243d4d" },
-    checkmark: { color: "#fff", fontSize: 12, fontWeight: "bold" },
-    rememberText: { color: theme.textSecondary || "#666", fontSize: 14 },
-    recoveryText: { color: theme.accent || "#243d4d", fontSize: 14, fontWeight: "600" },
-    languageContainer: { marginBottom: 20, alignSelf: "center" },
-    submitButton: {
-      backgroundColor: theme.accent || "#243d4d",
-      padding: 16,
-      borderRadius: 15,
-      alignItems: "center",
-      marginTop: 8,
-      width: "100%",
-    },
-    buttonText: { color: theme.textSecondary || "#fff", fontSize: 17, fontWeight: "600" },
-    settingsRow: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      width: "100%",
-      marginBottom: 20,
-      gap: 12,
-    },
-    settingsButton: {
-      flex: 1,
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: 6,
-      paddingVertical: 8,
-      borderRadius: 10,
-      backgroundColor: theme.cardAlt || "rgba(0,0,0,0.05)",
-      borderWidth: 1,
-      borderColor: theme.border || "#e0e0e0",
-    },
-    settingsButtonText: {
-      fontSize: 12,
-      fontWeight: "600",
-      color: theme.textSecondary || "#243d4d",
-    },
-  });

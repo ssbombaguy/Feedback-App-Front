@@ -1,5 +1,7 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import {} from "./RecoveryCodeStep.styles";
+
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
@@ -54,50 +56,10 @@ export const RecoveryCodeStep = ({ onSubmit, userEmail, theme }) => {
           )}
 
           <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-            <Text style={styles.buttonText}>
-              {t("recovery.verifyCode")}
-            </Text>
+            <Text style={styles.buttonText}>{t("recovery.verifyCode")}</Text>
           </TouchableOpacity>
         </>
       )}
     </Formik>
   );
 };
-
-const makeStyles = (theme) =>
-  StyleSheet.create({
-    title: {
-      fontSize: 30,
-      fontWeight: "700",
-      color: theme.textSecondary,
-      marginBottom: 8,
-      textAlign: "center",
-    },
-    subtitle: {
-      fontSize: 14,
-      color: theme.hint,
-      marginBottom: 24,
-      textAlign: "center",
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: theme.borderInput,
-      borderRadius: 15,
-      padding: 14,
-      marginBottom: 6,
-      fontSize: 16,
-      color: theme.text,
-      backgroundColor: theme.inputBg,
-    },
-    codeInput: { letterSpacing: 8, fontSize: 24, textAlign: "center" },
-    inputError: { borderColor: theme.error },
-    error: { color: theme.error, marginBottom: 12, fontSize: 12 },
-    button: {
-      backgroundColor: theme.accent,
-      padding: 16,
-      borderRadius: 15,
-      alignItems: "center",
-      marginTop: 16,
-    },
-    buttonText: { color: theme.textSecondary, fontSize: 17, fontWeight: "600" },
-  });

@@ -1,13 +1,13 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { Stack } from 'expo-router'
+import { View, Text } from "react-native";
+import React from "react";
+import { Stack } from "expo-router";
 
 const profileLayout = () => {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
+      <Stack.Screen name="index" />
     </Stack>
-  )
-}
+  );
+};
 
-export default profileLayout
+export default profileLayout;

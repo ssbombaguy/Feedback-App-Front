@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  StyleSheet,
   Modal,
   ActivityIndicator,
   ScrollView,
@@ -20,6 +19,7 @@ import { getErrorMessage } from "../../../utils/errorHandler";
 import { ConfirmationModal } from "../../../components/ConfirmationModal";
 import { useCurrentUserProfile } from "../../../hooks/useUser";
 import { useFeedback } from "../../../hooks/useFeedback";
+import { makeStyles } from "./index.styles";
 
 const feedback = () => {
   const { t } = useTranslation();
@@ -103,10 +103,7 @@ const feedback = () => {
           <Logo style={styles.logo} />
           <Text style={styles.errorTitle}>{errorInfo.title}</Text>
           <Text style={styles.errorMessage}>{errorInfo.message}</Text>
-          <TouchableOpacity
-            style={styles.retryButton}
-            onPress={onRefresh}
-          >
+          <TouchableOpacity style={styles.retryButton} onPress={onRefresh}>
             <Text style={styles.retryButtonText}>
               {t("common.retry") || "Retry"}
             </Text>
@@ -202,60 +199,5 @@ const feedback = () => {
     </SafeAreaView>
   );
 };
-
-const makeStyles = (theme) =>
-  StyleSheet.create({
-    container: { flex: 1, backgroundColor: theme.background },
-    scrollView: { flex: 1 },
-    scrollContent: { paddingBottom: 100 },
-    centerContainer: { flex: 1, backgroundColor: theme.background },
-    centerContent: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      paddingHorizontal: 50,
-    },
-    emptyText: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: theme.text,
-      marginBottom: 8,
-    },
-    emptySubtext: { fontSize: 14, color: theme.subtext, textAlign: "center" },
-    errorTitle: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: theme.error || "#d32f2f",
-      marginBottom: 12,
-      textAlign: "center",
-    },
-    errorMessage: {
-      fontSize: 14,
-      color: theme.subtext,
-      textAlign: "center",
-      marginBottom: 24,
-      lineHeight: 20,
-    },
-    retryButton: {
-      backgroundColor: theme.primary || "#243d4d",
-      paddingHorizontal: 24,
-      paddingVertical: 12,
-      borderRadius: 8,
-      marginTop: 16,
-    },
-    retryButtonText: {
-      color: "#fff",
-      fontSize: 16,
-      fontWeight: "600",
-      textAlign: "center",
-    },
-    logo: {
-      width: 180,
-      height: 80,
-      marginTop: 40,
-      resizeMode: "contain",
-      alignSelf: "center",
-    },
-  });
 
 export default feedback;

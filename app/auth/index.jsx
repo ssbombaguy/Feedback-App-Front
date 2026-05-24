@@ -1,11 +1,7 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { View, Text, KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
+import {} from "./index.styles";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { setLoggedIn } from "../../utils/AsyncStorage";
@@ -73,44 +69,3 @@ export default function Authentication() {
     </SafeAreaView>
   );
 }
-
-const makeStyles = (theme) =>
-  StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: theme.background },
-    container: {
-      flex: 1,
-      justifyContent: "flex-start",
-      padding: 24,
-      paddingHorizontal: 50,
-      width: phoneWidth,
-    },
-    topPart: { alignSelf: "center" },
-    logo: {
-      width: 220,
-      height: 120,
-      resizeMode: "contain",
-      alignSelf: "center",
-    },
-    smallTitle: {
-      fontSize: 20,
-      fontWeight: "600",
-      marginBottom: 24,
-      textAlign: "center",
-      color: theme.textSecondary,
-    },
-    bigTitle: {
-      fontSize: 35,
-      fontWeight: "700",
-      marginBottom: 20,
-      marginTop: 40,
-      color: theme.textSecondary,
-      textAlign: "center",
-    },
-    background: {
-      position: "absolute",
-      bottom: 0,
-      width: "100%",
-      zIndex: -50,
-      alignSelf: "center",
-    },
-  });

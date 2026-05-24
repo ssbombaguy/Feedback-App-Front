@@ -1,0 +1,72 @@
+import { StyleSheet } from "react-native";
+
+export const makeStyles = (theme) =>
+  StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: theme.overlay,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: 20,
+    },
+    modalContainer: {
+      backgroundColor: theme.modalBg,
+      borderRadius: 16,
+      paddingVertical: 24,
+      paddingHorizontal: 20,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      elevation: 8,
+      width: "100%",
+      maxWidth: 340,
+    },
+    iconContainer: {
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      backgroundColor: theme.accent,
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 16,
+    },
+    dangerIcon: { backgroundColor: theme.error },
+    title: {
+      fontSize: 18,
+      fontWeight: "700",
+      color: theme.text,
+      marginBottom: 8,
+      textAlign: "center",
+    },
+    message: {
+      fontSize: 14,
+      color: theme.subtext,
+      marginBottom: 24,
+      textAlign: "center",
+      lineHeight: 20,
+    },
+    buttonContainer: { width: "100%", gap: 12 },
+    confirmButton: {
+      backgroundColor: theme.accent,
+      paddingVertical: 14,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    dangerButton: { backgroundColor: theme.error },
+    cancelButton: {
+      backgroundColor: theme.disabled,
+      paddingVertical: 14,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    confirmButtonText: {
+      color: theme.text,
+      fontSize: 15,
+      fontWeight: "700",
+      letterSpacing: 0.5,
+    },
+    cancelButtonText: { color: theme.text, fontSize: 15, fontWeight: "600" },
+    buttonDisabled: { opacity: 0.6 },
+  });
