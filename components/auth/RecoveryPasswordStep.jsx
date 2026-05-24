@@ -1,5 +1,13 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
+import {} from "./RecoveryPasswordStep.styles";
+
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
@@ -35,9 +43,7 @@ export const RecoveryPasswordStep = ({ onSubmit, isPending, theme }) => {
         touched,
       }) => (
         <>
-          <Text style={styles.title}>
-            {t("recovery.setNewPassword")}
-          </Text>
+          <Text style={styles.title}>{t("recovery.setNewPassword")}</Text>
           <Text style={styles.subtitle}>
             {t("recovery.createPasswordInstruction")}
           </Text>
@@ -68,7 +74,9 @@ export const RecoveryPasswordStep = ({ onSubmit, isPending, theme }) => {
             onBlur={handleBlur("confirmPassword")}
             style={[
               styles.input,
-              touched.confirmPassword && errors.confirmPassword && styles.inputError,
+              touched.confirmPassword &&
+                errors.confirmPassword &&
+                styles.inputError,
             ]}
           />
 
@@ -82,7 +90,10 @@ export const RecoveryPasswordStep = ({ onSubmit, isPending, theme }) => {
             disabled={isPending}
           >
             {isPending ? (
-              <ActivityIndicator color={theme.textSecondary || "#fff"} size="small" />
+              <ActivityIndicator
+                color={theme.textSecondary || "#fff"}
+                size="small"
+              />
             ) : (
               <Text style={styles.buttonText}>
                 {t("recovery.resetPassword")}
@@ -94,41 +105,3 @@ export const RecoveryPasswordStep = ({ onSubmit, isPending, theme }) => {
     </Formik>
   );
 };
-
-const makeStyles = (theme) =>
-  StyleSheet.create({
-    title: {
-      fontSize: 30,
-      fontWeight: "700",
-      color: theme.textSecondary,
-      marginBottom: 8,
-      textAlign: "center",
-    },
-    subtitle: {
-      fontSize: 14,
-      color: theme.hint,
-      marginBottom: 24,
-      textAlign: "center",
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: theme.borderInput,
-      borderRadius: 15,
-      padding: 14,
-      marginBottom: 6,
-      fontSize: 16,
-      color: theme.text,
-      backgroundColor: theme.inputBg,
-    },
-    inputError: { borderColor: theme.error },
-    error: { color: theme.error, marginBottom: 12, fontSize: 12 },
-    button: {
-      backgroundColor: theme.accent,
-      padding: 16,
-      borderRadius: 15,
-      alignItems: "center",
-      marginTop: 16,
-    },
-    buttonDisabled: { opacity: 0.7 },
-    buttonText: { color: theme.textSecondary, fontSize: 17, fontWeight: "600" },
-  });

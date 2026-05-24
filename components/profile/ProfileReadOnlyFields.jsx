@@ -1,5 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {} from "./ProfileReadOnlyFields.styles";
+
+import { View, Text } from "react-native";
 import { useTranslation } from "react-i18next";
 
 export const ProfileReadOnlyFields = ({ userProfile, theme }) => {
@@ -25,7 +27,11 @@ export const ProfileReadOnlyFields = ({ userProfile, theme }) => {
             ]}
           >
             <Text style={styles.cardLabel}>{item.label}</Text>
-            <Text style={styles.cardValue} numberOfLines={1} ellipsizeMode="tail">
+            <Text
+              style={styles.cardValue}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {item.value}
             </Text>
           </View>
@@ -34,47 +40,3 @@ export const ProfileReadOnlyFields = ({ userProfile, theme }) => {
     </View>
   );
 };
-
-const makeStyles = (theme) =>
-  StyleSheet.create({
-    container: {
-      width: "100%",
-      marginBottom: 16,
-    },
-    sectionTitle: {
-      fontSize: 14,
-      fontWeight: "600",
-      color: theme.subtext,
-      marginBottom: 8,
-      textTransform: "uppercase",
-      letterSpacing: 0.5,
-    },
-    card: {
-      backgroundColor: theme.card,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: theme.border,
-      paddingHorizontal: 16,
-    },
-    cardRow: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      paddingVertical: 14,
-      borderBottomWidth: 1,
-      borderBottomColor: theme.border,
-    },
-    cardLabel: {
-      fontSize: 14,
-      color: theme.label || "#666",
-      fontWeight: "500",
-    },
-    cardValue: {
-      fontSize: 14,
-      color: theme.textSecondary || "#333",
-      fontWeight: "600",
-      flex: 1,
-      textAlign: "right",
-      marginLeft: 16,
-    },
-  });

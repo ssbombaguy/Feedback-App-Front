@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, TextInput } from 'react-native'
-import React from 'react'
-import PropTypes from 'prop-types'
-import { useTranslation } from 'react-i18next'
-import { useTheme } from '../../context/ThemeContext'
+import { View, Text, TextInput } from "react-native";
+import React from "react";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "../../context/ThemeContext";
 
 export const FeedbackField = ({
   name,
@@ -19,10 +19,12 @@ export const FeedbackField = ({
   multiline = true,
   numberOfLines = 4,
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const { theme } = useTheme();
+  import {} from "./FeedbackField.styles";
+
   const styles = makeStyles(theme);
-  const hasError = touched && error
+  const hasError = touched && error;
 
   return (
     <View style={styles.fieldContainer}>
@@ -34,10 +36,7 @@ export const FeedbackField = ({
       </View>
       <Text style={styles.hint}>{t(hintKey)}</Text>
       <TextInput
-        style={[
-          styles.textarea,
-          hasError && styles.inputError,
-        ]}
+        style={[styles.textarea, hasError && styles.inputError]}
         placeholder={t(placeholderKey)}
         placeholderTextColor="#999"
         multiline={multiline}
@@ -61,8 +60,8 @@ export const FeedbackField = ({
         </Text>
       )}
     </View>
-  )
-}
+  );
+};
 
 FeedbackField.propTypes = {
   name: PropTypes.string.isRequired,
@@ -78,24 +77,4 @@ FeedbackField.propTypes = {
   isRequired: PropTypes.bool,
   multiline: PropTypes.bool,
   numberOfLines: PropTypes.number,
-}
-
-const makeStyles = (theme) => StyleSheet.create({
-  fieldContainer: { marginBottom: 20 },
-  labelContainer: { flexDirection: 'row', alignItems: 'center' },
-  label: { fontSize: 14, fontWeight: '700', color: theme.text, marginBottom: 4 },
-  required: { color: theme.error },
-  hint: { fontSize: 12, fontStyle: 'italic', color: theme.hint, marginBottom: 8 },
-  textarea: {
-    borderWidth: 1,
-    borderColor: theme.borderInput,
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 14,
-    color: theme.text,
-    backgroundColor: theme.inputBg,
-    minHeight: 100,
-  },
-  inputError: { borderColor: theme.error, backgroundColor: theme.errorBg },
-  errorText: { color: theme.error, fontSize: 12, marginTop: 6, fontWeight: '600' },
-})
+};

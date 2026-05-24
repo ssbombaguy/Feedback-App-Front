@@ -36,7 +36,7 @@ function RootLayoutContent() {
         console.log("user logged in, pushToken found:", token);
         if (token) {
           const result = await notificationsAPI.saveToken(token);
-          console.log('token saved to backend:', result)
+          console.log("token saved to backend:", result);
         } else {
           console.log("no pushToken in AsyncStorage");
         }

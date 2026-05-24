@@ -1,13 +1,14 @@
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
+import {} from "./edit.styles";
+
 import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { useCurrentUserProfile } from "../../../hooks/useUser";
@@ -41,7 +42,10 @@ export default function EditProfile() {
     mutationFn: (data) => userAPI.updateProfile(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUserProfile"] });
-      showSuccessToast(t("common.success"), t("profile.updateSuccess") || "Profile updated successfully");
+      showSuccessToast(
+        t("common.success"),
+        t("profile.updateSuccess") || "Profile updated successfully",
+      );
       closeVerificationModal();
       router.back();
     },
@@ -97,9 +101,7 @@ export default function EditProfile() {
       });
     } catch (error) {
       const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Verification failed";
+        error.response?.data?.message || error.message || "Verification failed";
       throw new Error(errorMessage);
     }
   };
@@ -148,7 +150,10 @@ export default function EditProfile() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
           <Feather name="chevron-left" size={22} color={theme.textSecondary} />
           <Text style={styles.backText}>{t("edit.back")}</Text>
         </TouchableOpacity>
@@ -200,31 +205,3 @@ export default function EditProfile() {
     </SafeAreaView>
   );
 }
-
-const makeStyles = (theme) =>
-  StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: theme.background },
-    header: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingHorizontal: 20,
-      paddingVertical: 14,
-      borderBottomWidth: 1,
-      borderBottomColor: theme.borderLight,
-      backgroundColor: theme.background,
-    },
-    backButton: { flexDirection: "row", alignItems: "center", width: 70 },
-    backText: {
-      color: theme.textSecondary,
-      fontWeight: "600",
-      marginLeft: 2,
-      fontSize: 14,
-    },
-    headerTitle: {
-      fontSize: 17,
-      fontWeight: "700",
-      color: theme.textSecondary,
-    },
-    container: { padding: 20, paddingBottom: 100 },
-  });
