@@ -1,8 +1,9 @@
 import React from "react";
 import {} from "./ProfileForm.styles";
 
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
-import { TextInput } from "react-native-paper";
+import { View, Text } from "react-native";
+import { CustomInput } from "../ui/CustomInput";
+import { CustomButton } from "../ui/CustomButton";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
@@ -44,103 +45,72 @@ export const ProfileForm = ({ userProfile, theme, onSubmit, isPending }) => {
         }) => (
           <View style={styles.card}>
             <View style={styles.editRow}>
-              <Text style={styles.editLabel}>{t("profile.phone")}</Text>
-              <TextInput
-                mode="flat"
+              <CustomInput
+                label={t("profile.phone")}
+                variant="flat"
                 value={values.phoneNumber}
                 onChangeText={handleChange("phoneNumber")}
                 onBlur={handleBlur("phoneNumber")}
                 keyboardType="phone-pad"
-                style={styles.flatInput}
-                textColor={theme.text}
-                underlineColor="transparent"
-                activeUnderlineColor="transparent"
-                error={touched.phoneNumber && !!errors.phoneNumber}
+                error={touched.phoneNumber && errors.phoneNumber ? errors.phoneNumber : null}
+                inputStyle={styles.flatInput}
               />
             </View>
-            {touched.phoneNumber && errors.phoneNumber && (
-              <Text style={styles.errorText}>{errors.phoneNumber}</Text>
-            )}
 
             <View style={styles.divider} />
 
             <View style={styles.editRow}>
-              <Text style={styles.editLabel}>{t("profile.email")}</Text>
-              <TextInput
-                mode="flat"
+              <CustomInput
+                label={t("profile.email")}
+                variant="flat"
                 value={values.email}
                 onChangeText={handleChange("email")}
                 onBlur={handleBlur("email")}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                style={styles.flatInput}
-                textColor={theme.text}
-                underlineColor="transparent"
-                activeUnderlineColor="transparent"
-                error={touched.email && !!errors.email}
+                error={touched.email && errors.email ? errors.email : null}
+                inputStyle={styles.flatInput}
               />
             </View>
-            {touched.email && errors.email && (
-              <Text style={styles.errorText}>{errors.email}</Text>
-            )}
 
             <View style={styles.divider} />
 
             <View style={styles.editRow}>
-              <Text style={styles.editLabel}>LinkedIn</Text>
-              <TextInput
-                mode="flat"
+              <CustomInput
+                label="LinkedIn"
+                variant="flat"
                 value={values.linkedinUrl}
                 onChangeText={handleChange("linkedinUrl")}
                 onBlur={handleBlur("linkedinUrl")}
                 autoCapitalize="none"
                 placeholder="https://linkedin.com/in/..."
-                placeholderTextColor={theme.subtext}
-                style={styles.flatInput}
-                textColor={theme.text}
-                underlineColor="transparent"
-                activeUnderlineColor="transparent"
-                error={touched.linkedinUrl && !!errors.linkedinUrl}
+                error={touched.linkedinUrl && errors.linkedinUrl ? errors.linkedinUrl : null}
+                inputStyle={styles.flatInput}
               />
             </View>
-            {touched.linkedinUrl && errors.linkedinUrl && (
-              <Text style={styles.errorText}>{errors.linkedinUrl}</Text>
-            )}
 
             <View style={styles.divider} />
 
             <View style={styles.editRow}>
-              <Text style={styles.editLabel}>GitHub</Text>
-              <TextInput
-                mode="flat"
+              <CustomInput
+                label="GitHub"
+                variant="flat"
                 value={values.githubUrl}
                 onChangeText={handleChange("githubUrl")}
                 onBlur={handleBlur("githubUrl")}
                 autoCapitalize="none"
                 placeholder="https://github.com/..."
-                placeholderTextColor={theme.subtext}
-                style={styles.flatInput}
-                textColor={theme.text}
-                underlineColor="transparent"
-                activeUnderlineColor="transparent"
-                error={touched.githubUrl && !!errors.githubUrl}
+                error={touched.githubUrl && errors.githubUrl ? errors.githubUrl : null}
+                inputStyle={styles.flatInput}
               />
             </View>
-            {touched.githubUrl && errors.githubUrl && (
-              <Text style={styles.errorText}>{errors.githubUrl}</Text>
-            )}
 
-            <TouchableOpacity
-              style={[styles.updateButton, isPending && styles.disabled]}
+            <CustomButton
+              title={t("edit.update")}
               onPress={handleSubmit}
-              disabled={isPending}
-            >
-              {isPending ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.buttonText}>{t("edit.update")}</Text>
-              )}
-            </TouchableOpacity>
+              isPending={isPending}
+              style={styles.updateButton}
+            />
           </View>
         )}
       </Formik>

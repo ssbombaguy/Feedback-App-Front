@@ -1,8 +1,10 @@
-import { View, Text, Modal, TouchableOpacity } from "react-native";
+import { View, Text, Modal } from "react-native";
 import React from "react";
 import PropTypes from "prop-types";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useTheme } from "../context/ThemeContext";
+import { CustomButton } from "./ui/CustomButton";
+import { makeStyles } from "./ConfirmationModal.styles";
 
 export const ConfirmationModal = ({
   visible,
@@ -16,8 +18,6 @@ export const ConfirmationModal = ({
   isDangerous = false,
 }) => {
   const { theme } = useTheme();
-  import {} from "./ConfirmationModal.styles";
-
   const styles = makeStyles(theme);
 
   return (
@@ -43,25 +43,21 @@ export const ConfirmationModal = ({
           <Text style={styles.message}>{message}</Text>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[
-                styles.confirmButton,
-                isDangerous && styles.dangerButton,
-                isLoading && styles.buttonDisabled,
-              ]}
+            <CustomButton
+              variant={isDangerous ? "danger" : "primary"}
+              title={confirmText}
               onPress={onConfirm}
-              disabled={isLoading}
-            >
-              <Text style={styles.confirmButtonText}>{confirmText}</Text>
-            </TouchableOpacity>
+              isPending={isLoading}
+              style={[styles.confirmButton, isDangerous && styles.dangerButton]}
+            />
 
-            <TouchableOpacity
-              style={[styles.cancelButton, isLoading && styles.buttonDisabled]}
+            <CustomButton
+              variant="secondary"
+              title={cancelText}
               onPress={onCancel}
               disabled={isLoading}
-            >
-              <Text style={styles.cancelButtonText}>{cancelText}</Text>
-            </TouchableOpacity>
+              style={styles.cancelButton}
+            />
           </View>
         </View>
       </View>

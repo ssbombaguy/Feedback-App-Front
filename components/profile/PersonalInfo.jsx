@@ -1,8 +1,9 @@
-import { View, Text, TouchableOpacity, Linking } from "react-native";
+import { View, Text, Linking } from "react-native";
 import React from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
+import { CustomButton } from "../ui/CustomButton";
 
 const InfoRow = ({ icon, label, value, isLast = false, onPress }) => {
   const { theme } = useTheme();
@@ -37,9 +38,9 @@ const InfoRow = ({ icon, label, value, isLast = false, onPress }) => {
 
   if (onPress && value) {
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+      <CustomButton variant="custom" onPress={onPress}>
         {content}
-      </TouchableOpacity>
+      </CustomButton>
     );
   }
   return content;

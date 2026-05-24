@@ -5,10 +5,10 @@ import {
   View,
   Text,
   Modal,
-  TouchableOpacity,
   Pressable,
   ScrollView,
 } from "react-native";
+import { CustomButton } from "../ui/CustomButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export const SelectionModal = ({
@@ -33,9 +33,9 @@ export const SelectionModal = ({
         <View style={styles.modalCard} onStartShouldSetResponder={() => true}>
           <View style={styles.header}>
             <Text style={styles.title}>{title}</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <CustomButton variant="custom" onPress={onClose} style={styles.closeButton}>
               <Ionicons name="close" size={24} color={theme.text} />
-            </TouchableOpacity>
+            </CustomButton>
           </View>
 
           <ScrollView
@@ -45,7 +45,8 @@ export const SelectionModal = ({
             {options.map((option) => {
               const isSelected = option.value === selectedValue;
               return (
-                <TouchableOpacity
+                <CustomButton
+                  variant="custom"
                   key={option.value}
                   style={[
                     styles.optionRow,
@@ -71,7 +72,7 @@ export const SelectionModal = ({
                       color="#243d4d"
                     />
                   )}
-                </TouchableOpacity>
+                </CustomButton>
               );
             })}
           </ScrollView>

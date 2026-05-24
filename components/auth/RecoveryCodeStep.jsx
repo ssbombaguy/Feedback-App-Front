@@ -1,7 +1,9 @@
 import React from "react";
 import {} from "./RecoveryCodeStep.styles";
 
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
+import { CustomInput } from "../ui/CustomInput";
+import { CustomButton } from "../ui/CustomButton";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
@@ -36,28 +38,22 @@ export const RecoveryCodeStep = ({ onSubmit, userEmail, theme }) => {
             {t("recovery.codeSent", { email: userEmail })}
           </Text>
 
-          <TextInput
+          <CustomInput
             placeholder="000000"
-            placeholderTextColor={theme.subtext || "#888"}
             keyboardType="number-pad"
             maxLength={6}
             value={values.code}
             onChangeText={handleChange("code")}
             onBlur={handleBlur("code")}
-            style={[
-              styles.input,
-              styles.codeInput,
-              touched.code && errors.code && styles.inputError,
-            ]}
+            error={touched.code && errors.code ? errors.code : null}
+            inputStyle={styles.codeInput}
           />
 
-          {touched.code && errors.code && (
-            <Text style={styles.error}>{errors.code}</Text>
-          )}
-
-          <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-            <Text style={styles.buttonText}>{t("recovery.verifyCode")}</Text>
-          </TouchableOpacity>
+          <CustomButton
+            title={t("recovery.verifyCode")}
+            onPress={handleSubmit}
+            style={styles.button}
+          />
         </>
       )}
     </Formik>

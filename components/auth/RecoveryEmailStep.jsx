@@ -4,10 +4,9 @@ import {} from "./RecoveryEmailStep.styles";
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
+import { CustomInput } from "../ui/CustomInput";
+import { CustomButton } from "../ui/CustomButton";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
@@ -44,38 +43,22 @@ export const RecoveryEmailStep = ({ onSubmit, isPending, theme }) => {
             {t("recovery.resetPasswordInstruction")}
           </Text>
 
-          <TextInput
+          <CustomInput
             placeholder={t("recovery.enterEmail")}
             autoCapitalize="none"
             keyboardType="email-address"
-            placeholderTextColor={theme.subtext || "#888"}
             value={values.email}
             onChangeText={handleChange("email")}
             onBlur={handleBlur("email")}
-            style={[
-              styles.input,
-              touched.email && errors.email && styles.inputError,
-            ]}
+            error={touched.email && errors.email ? errors.email : null}
           />
 
-          {touched.email && errors.email && (
-            <Text style={styles.error}>{errors.email}</Text>
-          )}
-
-          <TouchableOpacity
+          <CustomButton
+            title={t("recovery.confirm")}
             onPress={handleSubmit}
-            style={[styles.button, isPending && styles.buttonDisabled]}
-            disabled={isPending}
-          >
-            {isPending ? (
-              <ActivityIndicator
-                color={theme.textSecondary || "#fff"}
-                size="small"
-              />
-            ) : (
-              <Text style={styles.buttonText}>{t("recovery.confirm")}</Text>
-            )}
-          </TouchableOpacity>
+            isPending={isPending}
+            style={styles.button}
+          />
         </>
       )}
     </Formik>

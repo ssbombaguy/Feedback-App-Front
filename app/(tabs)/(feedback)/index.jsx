@@ -5,8 +5,8 @@ import {
   ActivityIndicator,
   ScrollView,
   RefreshControl,
-  TouchableOpacity,
 } from "react-native";
+import { CustomButton } from "../../../components/ui/CustomButton";
 import React, { useState, useCallback } from "react";
 import CourseLister from "../../../components/feedback/CourseLister";
 import { FeedbackForm } from "../../../components/feedback/FeedbackForm";
@@ -103,11 +103,11 @@ const feedback = () => {
           <Logo style={styles.logo} />
           <Text style={styles.errorTitle}>{errorInfo.title}</Text>
           <Text style={styles.errorMessage}>{errorInfo.message}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={onRefresh}>
+          <CustomButton variant="custom" style={styles.retryButton} onPress={onRefresh}>
             <Text style={styles.retryButtonText}>
               {t("common.retry") || "Retry"}
             </Text>
-          </TouchableOpacity>
+          </CustomButton>
         </ScrollView>
       </SafeAreaView>
     );

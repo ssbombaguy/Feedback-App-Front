@@ -1,9 +1,9 @@
 import {
   View,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { CustomButton } from "../../components/ui/CustomButton";
 import React, { useState } from "react";
 import {} from "./recovery.styles";
 
@@ -89,7 +89,8 @@ export default function PasswordRecovery() {
         keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 5}
       >
         <View style={styles.container}>
-          <TouchableOpacity
+          <CustomButton
+            variant="custom"
             style={styles.backButton}
             onPress={() => {
               if (step === "email") {
@@ -103,7 +104,7 @@ export default function PasswordRecovery() {
             }}
           >
             <Ionicons name="arrow-back" size={24} color="#243d4d" />
-          </TouchableOpacity>
+          </CustomButton>
 
           <Logo style={styles.logo} />
 

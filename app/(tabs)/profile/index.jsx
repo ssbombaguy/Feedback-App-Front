@@ -3,10 +3,10 @@ import { useRouter } from "expo-router";
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
   RefreshControl,
 } from "react-native";
+import { CustomButton } from "../../../components/ui/CustomButton";
 import { logout } from "../../../utils/AsyncStorage";
 import { phoneWidth } from "../../../constants/Dimensions";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -91,7 +91,8 @@ const profile = () => {
 
               <View style={styles.settingsCard}>
                 {/* Theme row */}
-                <TouchableOpacity
+                <CustomButton
+                  variant="custom"
                   style={styles.settingsRow}
                   onPress={() => setShowThemeModal(true)}
                 >
@@ -125,12 +126,13 @@ const profile = () => {
                     size={18}
                     color={theme.subtext}
                   />
-                </TouchableOpacity>
+                </CustomButton>
 
                 <View style={styles.rowDivider} />
 
                 {/* Language row */}
-                <TouchableOpacity
+                <CustomButton
+                  variant="custom"
                   style={styles.settingsRow}
                   onPress={() => setShowLangModal(true)}
                 >
@@ -156,17 +158,18 @@ const profile = () => {
                     size={18}
                     color={theme.subtext}
                   />
-                </TouchableOpacity>
+                </CustomButton>
               </View>
 
               <View style={styles.buttonContainer}>
-                <TouchableOpacity
+                <CustomButton
+                  variant="custom"
                   style={styles.logoutButton}
                   onPress={() => setShowLogoutConfirm(true)}
                 >
                   <Ionicons name="log-out-outline" size={20} color="#243d4d" />
                   <Text style={styles.logoutText}>{t("profile.logout")}</Text>
-                </TouchableOpacity>
+                </CustomButton>
               </View>
             </View>
           ) : (
