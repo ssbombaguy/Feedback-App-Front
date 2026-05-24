@@ -1,5 +1,6 @@
 import { makeStyles } from "./LanguageSwitcher.styles";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
+import { CustomButton } from "./ui/CustomButton";
 import { useTranslation } from "react-i18next";
 import { saveLanguage } from "../i18n";
 import { useCallback } from "react";
@@ -24,7 +25,8 @@ export const LanguageSwitcher = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      <CustomButton
+        variant="custom"
         style={[styles.button, i18n.language === "en" && styles.activeButton]}
         onPress={() => changeLanguage("en")}
       >
@@ -36,9 +38,10 @@ export const LanguageSwitcher = () => {
         >
           {t("common.en")}
         </Text>
-      </TouchableOpacity>
+      </CustomButton>
 
-      <TouchableOpacity
+      <CustomButton
+        variant="custom"
         style={[styles.button, i18n.language === "ka" && styles.activeButton]}
         onPress={() => changeLanguage("ka")}
       >
@@ -50,7 +53,7 @@ export const LanguageSwitcher = () => {
         >
           {t("common.ka")}
         </Text>
-      </TouchableOpacity>
+      </CustomButton>
     </View>
   );
 };

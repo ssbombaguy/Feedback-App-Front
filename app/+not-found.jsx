@@ -1,7 +1,8 @@
 import React from "react";
 import {} from "./+not-found.styles";
 
-import { View, Text, TouchableOpacity, Image, StatusBar } from "react-native";
+import { View, Text, Image, StatusBar } from "react-native";
+import { CustomButton } from "../components/ui/CustomButton";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../assets/MziuriLogo.svg";
@@ -29,22 +30,23 @@ export default function NotFoundScreen() {
 
           <Text style={styles.message}>{t("notfound.message")}</Text>
 
-          <TouchableOpacity
-            activeOpacity={0.7}
+          <CustomButton
+            variant="custom"
             onPress={() => router.push("/(tabs)/(feedback)")}
             style={styles.button}
           >
             <Text style={styles.buttonText}>{t("notfound.goHome")}</Text>
-          </TouchableOpacity>
+          </CustomButton>
 
-          <TouchableOpacity
+          <CustomButton
+            variant="custom"
             onPress={() => router.push("")}
             style={styles.secondaryButton}
           >
             <Text style={styles.secondaryButtonText}>
               {t("notfound.reportProblem")}
             </Text>
-          </TouchableOpacity>
+          </CustomButton>
         </View>
       </View>
     </SafeAreaView>

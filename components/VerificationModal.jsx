@@ -2,15 +2,14 @@ import {
   View,
   Text,
   Modal,
-  TouchableOpacity,
-  ActivityIndicator,
   ScrollView,
 } from "react-native";
+import { CustomButton } from "./ui/CustomButton";
+import { CustomInput } from "./ui/CustomInput";
 import React, { useState, useRef, useEffect } from "react";
 import {} from "./VerificationModal.styles";
 
 import PropTypes from "prop-types";
-import { TextInput } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
 import { showErrorToast, showSuccessToast } from "../utils/toastUtils";
@@ -123,13 +122,14 @@ export const VerificationModal = ({
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.modalContainer}>
-            <TouchableOpacity
+            <CustomButton
+              variant="custom"
               style={styles.closeButton}
               onPress={handleCancel}
               disabled={isLoading || isVerifying}
             >
               <Feather name="x" size={24} color={theme.textSecondary} />
-            </TouchableOpacity>
+            </CustomButton>
 
             <View style={styles.iconContainer}>
               <Feather
@@ -157,32 +157,21 @@ export const VerificationModal = ({
                   })}
                 </Text>
 
-                <TouchableOpacity
-                  style={[
-                    styles.primaryButton,
-                    (isLoading || isVerifying) && styles.buttonDisabled,
-                  ]}
+                <CustomButton
+                  variant="primary"
+                  title={t("verification.sendCode")}
                   onPress={handleSendCode}
-                  disabled={isLoading || isVerifying}
-                >
-                  {isLoading ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.primaryButtonText}>
-                      {t("verification.sendCode")}
-                    </Text>
-                  )}
-                </TouchableOpacity>
+                  isPending={isLoading || isVerifying}
+                  style={styles.primaryButton}
+                />
 
-                <TouchableOpacity
-                  style={styles.secondaryButton}
+                <CustomButton
+                  variant="secondary"
+                  title={t("common.cancel")}
                   onPress={handleCancel}
                   disabled={isLoading}
-                >
-                  <Text style={styles.secondaryButtonText}>
-                    {t("common.cancel")}
-                  </Text>
-                </TouchableOpacity>
+                  style={styles.secondaryButton}
+                />
               </View>
             )}
 
@@ -195,8 +184,8 @@ export const VerificationModal = ({
                 </Text>
 
                 <View style={styles.codeInputContainer}>
-                  <TextInput
-                    mode="outlined"
+                  <CustomInput
+                    variant="bordered"
                     label={t("verification.verificationCode")}
                     value={code}
                     onChangeText={setCode}
@@ -204,11 +193,7 @@ export const VerificationModal = ({
                     maxLength={6}
                     placeholder="000000"
                     placeholderTextColor={theme.subtext}
-                    style={styles.codeInput}
-                    outlineColor={theme.borderLight}
-                    activeOutlineColor={theme.primary}
-                    textColor={theme.text}
-                    selectionColor={theme.primary}
+                    inputStyle={styles.codeInput}
                   />
                 </View>
 
@@ -218,52 +203,43 @@ export const VerificationModal = ({
                       {t("verification.resendIn", { seconds: timer })}
                     </Text>
                   ) : (
-                    <TouchableOpacity
+                    <CustomButton
+                      variant="custom"
                       onPress={handleResend}
                       disabled={isVerifying}
                     >
                       <Text style={styles.resendLink}>
                         {t("verification.didntReceiveCode")}
                       </Text>
-                    </TouchableOpacity>
+                    </CustomButton>
                   )}
                 </View>
 
-                <TouchableOpacity
-                  style={[
-                    styles.primaryButton,
-                    (isVerifying || code.length < 4) && styles.buttonDisabled,
-                  ]}
+                <CustomButton
+                  variant="primary"
+                  title={t("verification.verifyCode")}
                   onPress={handleVerifyCode}
-                  disabled={isVerifying || code.length < 4}
-                >
-                  {isVerifying ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.primaryButtonText}>
-                      {t("verification.verifyCode")}
-                    </Text>
-                  )}
-                </TouchableOpacity>
+                  isPending={isVerifying}
+                  disabled={code.length < 4}
+                  style={styles.primaryButton}
+                />
 
-                <TouchableOpacity
-                  style={styles.secondaryButton}
+                <CustomButton
+                  variant="secondary"
+                  title={t("verification.change", {
+                    type:
+                      verificationType === "phone"
+                        ? t("profile.phone")
+                        : t("profile.email"),
+                  })}
                   onPress={() => {
                     setCode("");
                     setStep("send");
                     setTimer(0);
                   }}
                   disabled={isVerifying}
-                >
-                  <Text style={styles.secondaryButtonText}>
-                    {t("verification.change", {
-                      type:
-                        verificationType === "phone"
-                          ? t("profile.phone")
-                          : t("profile.email"),
-                    })}
-                  </Text>
-                </TouchableOpacity>
+                  style={styles.secondaryButton}
+                />
               </View>
             )}
           </View>

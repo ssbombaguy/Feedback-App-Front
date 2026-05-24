@@ -1,9 +1,7 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
-  ActivityIndicator,
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import {} from "./FeedbackForm.styles";
@@ -20,6 +18,7 @@ import { showErrorToast } from "../../utils/toastUtils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FeedbackSwitches } from "./FeedbackSwitches";
 import { useAuth } from "../../context/AuthContext";
+import { CustomButton } from "../ui/CustomButton";
 
 const FEEDBACK_FIELDS_CONFIG = [
   {
@@ -197,12 +196,13 @@ export const FeedbackForm = ({
           <Text style={styles.title}>
             {t("feedback.feedbackFor", { courseName })}
           </Text>
-          <TouchableOpacity
+          <CustomButton
+            variant="custom"
             onPress={() => onClose()}
             style={styles.closeButton}
           >
             <Text style={styles.closeText}>✕</Text>
-          </TouchableOpacity>
+          </CustomButton>
         </View>
 
         <Formik
@@ -248,32 +248,20 @@ export const FeedbackForm = ({
                 />
 
                 <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    style={[
-                      styles.submitButton,
-                      isSubmitting && styles.submitButtonDisabled,
-                    ]}
+                  <CustomButton
+                    title={t("feedback.submitFeedback")}
                     onPress={handleFormSubmit}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <ActivityIndicator color="#2C3E50" size="small" />
-                    ) : (
-                      <Text style={styles.submitButtonText}>
-                        {t("feedback.submitFeedback")}
-                      </Text>
-                    )}
-                  </TouchableOpacity>
+                    isPending={isSubmitting}
+                    style={styles.submitButton}
+                  />
 
-                  <TouchableOpacity
-                    style={styles.clearButton}
+                  <CustomButton
+                    variant="secondary"
+                    title={t("common.cancel")}
                     onPress={() => onClose()}
                     disabled={isSubmitting}
-                  >
-                    <Text style={styles.clearButtonText}>
-                      {t("common.cancel")}
-                    </Text>
-                  </TouchableOpacity>
+                    style={styles.clearButton}
+                  />
                 </View>
 
                 <View style={styles.spacer} />

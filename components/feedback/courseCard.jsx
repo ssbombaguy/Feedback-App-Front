@@ -1,9 +1,11 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import React from "react";
 import { useFeedback } from "../../hooks/useFeedback";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
 import { showErrorToast } from "../../utils/toastUtils";
+import { CustomButton } from "../ui/CustomButton";
+import {} from "./courseCard.styles";
 
 export const CourseCard = ({
   courseName,
@@ -16,7 +18,6 @@ export const CourseCard = ({
   const { feedback } = useFeedback();
   const { t } = useTranslation();
   const { theme } = useTheme();
-  import {} from "./courseCard.styles";
 
   const styles = makeStyles(theme);
   const existingFeedback = feedback.find((f) => f.group_id === groupId);
@@ -48,7 +49,8 @@ export const CourseCard = ({
         </View>
       </View>
 
-      <TouchableOpacity
+      <CustomButton
+        variant="custom"
         style={styles.button}
         onPress={handleFeedbackButtonPress}
       >
@@ -57,7 +59,7 @@ export const CourseCard = ({
             ? t("feedback.changeFeedback")
             : t("feedback.writeFeedback")}
         </Text>
-      </TouchableOpacity>
+      </CustomButton>
     </View>
   );
 };

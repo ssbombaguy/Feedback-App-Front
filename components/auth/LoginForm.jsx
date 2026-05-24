@@ -4,14 +4,12 @@ import {} from "./LoginForm.styles";
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
+import { CustomInput } from "../ui/CustomInput";
+import { CustomButton } from "../ui/CustomButton";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
 import { showErrorToast } from "../../utils/toastUtils";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -51,56 +49,29 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
         touched,
       }) => (
         <>
-          <TextInput
+          <CustomInput
             placeholder={t("auth.email")}
-            placeholderTextColor={theme.subtext || "#888"}
-            autoCapitalize="none"
             keyboardType="email-address"
             value={values.email}
             onChangeText={handleChange("email")}
             onBlur={handleBlur("email")}
-            style={[
-              styles.input,
-              touched.email && errors.email && styles.inputError,
-            ]}
+            error={touched.email && errors.email ? t(errors.email) : null}
           />
-          {touched.email && errors.email && (
-            <Text style={styles.error}>{t(errors.email)}</Text>
-          )}
 
-          <View style={styles.passwordContainer}>
-            <TextInput
-              placeholder={t("auth.password")}
-              placeholderTextColor={theme.subtext || "#888"}
-              secureTextEntry={!showPassword}
-              value={values.password}
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              style={[
-                styles.input,
-                styles.passwordInput,
-                touched.password && errors.password && styles.inputError,
-              ]}
-            />
-            <TouchableOpacity
-              style={styles.eyeIcon}
-              onPress={() => setShowPassword((prev) => !prev)}
-            >
-              <AntDesign
-                name={showPassword ? "eye" : "eye-invisible"}
-                size={22}
-                style={styles.eye}
-              />
-            </TouchableOpacity>
-          </View>
-          {touched.password && errors.password && (
-            <Text style={styles.error}>{t(errors.password)}</Text>
-          )}
+          <CustomInput
+            placeholder={t("auth.password")}
+            secureTextEntry
+            value={values.password}
+            onChangeText={handleChange("password")}
+            onBlur={handleBlur("password")}
+            error={touched.password && errors.password ? t(errors.password) : null}
+          />
 
           <View style={styles.optionsRow}>
             <View>
               <View style={styles.rememberRow}>
-                <TouchableOpacity
+                <CustomButton
+                  variant="custom"
                   onPress={() => setRememberMe(!rememberMe)}
                   style={[
                     styles.checkbox,
@@ -108,20 +79,21 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
                   ]}
                 >
                   {rememberMe && <Text style={styles.checkmark}>✓</Text>}
-                </TouchableOpacity>
+                </CustomButton>
                 <Text style={styles.rememberText}>{t("auth.rememberMe")}</Text>
               </View>
             </View>
 
-            <TouchableOpacity onPress={() => router.push("/auth/recovery")}>
+            <CustomButton variant="custom" onPress={() => router.push("/auth/recovery")}>
               <Text style={styles.recoveryText}>
                 {t("auth.forgotPassword")}
               </Text>
-            </TouchableOpacity>
+            </CustomButton>
           </View>
 
           <View style={styles.settingsRow}>
-            <TouchableOpacity
+            <CustomButton
+              variant="custom"
               style={styles.settingsButton}
               onPress={() => saveLanguage(i18n.language === "en" ? "ka" : "en")}
             >
@@ -133,9 +105,10 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
               <Text style={styles.settingsButtonText}>
                 {i18n.language === "en" ? "KA" : "EN"}
               </Text>
-            </TouchableOpacity>
+            </CustomButton>
 
-            <TouchableOpacity
+            <CustomButton
+              variant="custom"
               style={styles.settingsButton}
               onPress={() => changeThemeMode(isDark ? "light" : "dark")}
             >
@@ -147,10 +120,11 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
               <Text style={styles.settingsButtonText}>
                 {isDark ? t("profile.lightMode") : t("profile.darkMode")}
               </Text>
-            </TouchableOpacity>
+            </CustomButton>
           </View>
 
-          <TouchableOpacity
+          <CustomButton
+            title={t("auth.signIn")}
             onPress={async () => {
               const formErrors = await validateForm();
               if (Object.keys(formErrors).length > 0) {
@@ -163,15 +137,9 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
               }
               handleFormSubmit();
             }}
-            style={styles.submitButton}
-            disabled={isPending}
-          >
-            {isPending ? (
-              <ActivityIndicator color="#fff" size="small" />
-            ) : (
-              <Text style={styles.buttonText}>{t("auth.signIn")}</Text>
-            )}
-          </TouchableOpacity>
+            isPending={isPending}
+            style={{ marginTop: 8 }}
+          />
         </>
       )}
     </Formik>

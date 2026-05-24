@@ -1,11 +1,11 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from "react-native";
+import { CustomButton } from "../../../components/ui/CustomButton";
 import React, { useState } from "react";
 import {} from "./edit.styles";
 
@@ -150,13 +150,14 @@ export default function EditProfile() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <TouchableOpacity
+        <CustomButton
+          variant="custom"
           onPress={() => router.back()}
           style={styles.backButton}
         >
           <Feather name="chevron-left" size={22} color={theme.textSecondary} />
           <Text style={styles.backText}>{t("edit.back")}</Text>
-        </TouchableOpacity>
+        </CustomButton>
         <Text style={styles.headerTitle}>{t("edit.editProfile")}</Text>
         <View style={{ width: 70 }} />
       </View>

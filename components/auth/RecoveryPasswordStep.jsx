@@ -4,10 +4,9 @@ import {} from "./RecoveryPasswordStep.styles";
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
+import { CustomInput } from "../ui/CustomInput";
+import { CustomButton } from "../ui/CustomButton";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
@@ -48,58 +47,30 @@ export const RecoveryPasswordStep = ({ onSubmit, isPending, theme }) => {
             {t("recovery.createPasswordInstruction")}
           </Text>
 
-          <TextInput
+          <CustomInput
             placeholder="New Password"
-            placeholderTextColor={theme.subtext || "#888"}
             secureTextEntry
             value={values.password}
             onChangeText={handleChange("password")}
             onBlur={handleBlur("password")}
-            style={[
-              styles.input,
-              touched.password && errors.password && styles.inputError,
-            ]}
+            error={touched.password && errors.password ? errors.password : null}
           />
 
-          {touched.password && errors.password && (
-            <Text style={styles.error}>{errors.password}</Text>
-          )}
-
-          <TextInput
+          <CustomInput
             placeholder="Confirm Password"
-            placeholderTextColor={theme.subtext || "#888"}
             secureTextEntry
             value={values.confirmPassword}
             onChangeText={handleChange("confirmPassword")}
             onBlur={handleBlur("confirmPassword")}
-            style={[
-              styles.input,
-              touched.confirmPassword &&
-                errors.confirmPassword &&
-                styles.inputError,
-            ]}
+            error={touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : null}
           />
 
-          {touched.confirmPassword && errors.confirmPassword && (
-            <Text style={styles.error}>{errors.confirmPassword}</Text>
-          )}
-
-          <TouchableOpacity
+          <CustomButton
+            title={t("recovery.resetPassword")}
             onPress={handleSubmit}
-            style={[styles.button, isPending && styles.buttonDisabled]}
-            disabled={isPending}
-          >
-            {isPending ? (
-              <ActivityIndicator
-                color={theme.textSecondary || "#fff"}
-                size="small"
-              />
-            ) : (
-              <Text style={styles.buttonText}>
-                {t("recovery.resetPassword")}
-              </Text>
-            )}
-          </TouchableOpacity>
+            isPending={isPending}
+            style={styles.button}
+          />
         </>
       )}
     </Formik>

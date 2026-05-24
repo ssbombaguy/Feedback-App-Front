@@ -4,10 +4,10 @@ import {} from "./ProfileAvatar.styles";
 import {
   View,
   Text,
-  TouchableOpacity,
   Image,
   ActivityIndicator,
 } from "react-native";
+import { CustomButton } from "../ui/CustomButton";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -55,10 +55,10 @@ export const ProfileAvatar = ({ userProfile, theme }) => {
     : null;
 
   return (
-    <TouchableOpacity
+    <CustomButton
+      variant="custom"
       onPress={handlePickPhoto}
       style={styles.avatarContainer}
-      activeOpacity={0.8}
     >
       <View style={styles.avatarWrapper}>
         {photoMutation.isPending ? (
@@ -86,6 +86,6 @@ export const ProfileAvatar = ({ userProfile, theme }) => {
         {userProfile?.firstName} {userProfile?.lastName}
       </Text>
       <Text style={styles.avatarEmail}>{userProfile?.email}</Text>
-    </TouchableOpacity>
+    </CustomButton>
   );
 };
