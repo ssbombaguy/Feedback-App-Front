@@ -1,5 +1,4 @@
 import { makeStyles } from "./index.styles";
-import { useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -7,30 +6,23 @@ import {
   RefreshControl,
 } from "react-native";
 import { CustomButton } from "../../../components/ui/CustomButton";
-import { logout } from "../../../utils/AsyncStorage";
 import { phoneWidth } from "../../../constants/Dimensions";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n, { saveLanguage } from "../../../i18n/index";
-import { ConfirmationModal } from "../../../components/ConfirmationModal";
+import { ConfirmationModal } from "../../../components/ui/ConfirmationModal";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PersonalInfo } from "../../../components/profile/PersonalInfo";
 import { CoursesSection } from "../../../components/profile/CourseSection";
 import { ProfileHeader } from "../../../components/profile/ProfileHeader";
 import Logo from "../../../assets/MziuriLogo.svg";
 import { useTheme } from "../../../context/ThemeContext";
-import { showErrorToast } from "../../../utils/toastUtils";
 import { useCurrentUserProfile } from "../../../hooks/useUser";
 import { SelectionModal } from "../../../components/profile/SelectionModal";
 
-const profile = () => {
-  const router = useRouter();
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [showThemeModal, setShowThemeModal] = useState(false);
-  const [showLangModal, setShowLangModal] = useState(false);
+import { useProfileMenuLogic } from "../../../hooks/useProfileMenuLogic";
 
+const profile = () => {
   const { t } = useTranslation();
   const { theme, themeMode, changeThemeMode } = useTheme();
   const styles = makeStyles(theme);
@@ -38,19 +30,10 @@ const profile = () => {
   const { userProfile, isLoading, refetch } = useCurrentUserProfile();
   const refreshing = isLoading;
 
-  const handleLogoutConfirm = async () => {
-    setIsLoggingOut(true);
-    try {
-      await logout();
-      router.replace("/auth");
-    } catch (error) {
-      console.error("Logout error:", error);
-      showErrorToast(t("common.error"), error.message);
-    } finally {
-      setIsLoggingOut(false);
-      setShowLogoutConfirm(false);
-    }
-  };
+  const { state, setters, handlers } = useProfileMenuLogic();
+  const { showLogoutConfirm, isLoggingOut, showThemeModal, showLangModal } = state;
+  const { setShowLogoutConfirm, setShowThemeModal, setShowLangModal } = setters;
+  const { handleLogoutConfirm } = handlers;
 
   const themeOptions = [
     { value: "light", label: t("profile.lightMode") },

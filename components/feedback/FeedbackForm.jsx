@@ -3,21 +3,18 @@ import {
   Text,
   ScrollView,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React from "react";
 import {} from "./FeedbackForm.styles";
 
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useFeedback } from "../../hooks/useFeedback";
 import { useTranslation } from "react-i18next";
 import { FeedbackField } from "./FeedbackField";
-import { ConfirmationModal } from "../ConfirmationModal";
+import { ConfirmationModal } from "../ui/ConfirmationModal";
 import { useTheme } from "../../context/ThemeContext";
-import { showErrorToast } from "../../utils/toastUtils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FeedbackSwitches } from "./FeedbackSwitches";
-import { useAuth } from "../../context/AuthContext";
 import { CustomButton } from "../ui/CustomButton";
 
 const FEEDBACK_FIELDS_CONFIG = [
@@ -63,131 +60,47 @@ const createFeedbackValidationSchema = (t) => {
   return Yup.object().shape(shape);
 };
 
+import { useFeedbackFormLogic } from "../../hooks/useFeedbackFormLogic";
+
 export const FeedbackForm = ({
   courseName,
   groupId,
   existingFeedback,
   onClose,
 }) => {
-  const [showAnonymousConflictModal, setShowAnonymousConflictModal] =
-    useState(false);
-  const [showTeacherConflictModal, setShowTeacherConflictModal] =
-    useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [pendingValues, setPendingValues] = useState(null);
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-  const [showAnonymousConfirm, setShowAnonymousConfirm] = useState(false);
-  const { user } = useAuth();
-  const { submitFeedback, updateFeedback, isSubmitting, refetch } =
-    useFeedback();
 
-  const getInitialValues = () => ({
-    wants_to_return_as_teacher:
-      existingFeedback?.wants_to_return_as_teacher || false,
-    teacher_evaluation_form: existingFeedback?.teacher_evaluation_form || "",
-    course_evaluation_form: existingFeedback?.course_evaluation_form || "",
-    career_impact: existingFeedback?.career_impact || "",
-    subject_wishes: existingFeedback?.subject_wishes || "",
-    ideal_learning_environment:
-      existingFeedback?.ideal_learning_environment || "",
-    is_anonymous: existingFeedback?.is_anonymous || false,
-  });
-
-  const handleReturnAsTeacherToggle = (value, setFieldValue, currentValues) => {
-    if (value && currentValues.is_anonymous) {
-      setShowTeacherConflictModal(true);
-      return;
-    }
-    setFieldValue("wants_to_return_as_teacher", value);
-  };
-
-  const handleAnonymousToggle = (value, setFieldValue, currentValues) => {
-    if (value && currentValues.wants_to_return_as_teacher) {
-      setShowAnonymousConflictModal(true);
-      return;
-    }
-    setFieldValue("is_anonymous", value);
-    if (value) {
-      setShowAnonymousConfirm(true);
-    }
-  };
-
-  const buildFeedbackData = useCallback(
-    (values) => ({
-      group_id: groupId,
-      teacher_evaluation_form: values.teacher_evaluation_form,
-      course_evaluation_form: values.course_evaluation_form,
-      career_impact: values.career_impact,
-      subject_wishes: values.subject_wishes,
-      ideal_learning_environment: values.ideal_learning_environment,
-      wants_to_return_as_teacher: values.wants_to_return_as_teacher,
-      is_anonymous: existingFeedback?.id ? false : values.is_anonymous,
-    }),
-    [groupId, existingFeedback],
-  );
-
-  const handleSubmit = useCallback(
-    async (values) => {
-      if (!user) {
-        showErrorToast(t("common.error"), t("feedback.userNotFound"));
-        return;
-      }
-
-      setPendingValues(values);
-      setShowConfirmation(true);
-    },
-    [user, t],
-  );
-
-  const handleConfirmSubmit = useCallback(async () => {
-    if (!pendingValues || !user) return;
-
-    setShowConfirmation(false);
-    const feedbackData = buildFeedbackData(pendingValues);
-
-    if (existingFeedback?.id) {
-      updateFeedback(
-        { feedbackId: existingFeedback.id, feedbackData },
-        {
-          onSuccess: async () => {
-            await refetch();
-            onClose(true);
-          },
-          onError: (error) => {
-            console.log(
-              "feedback error:",
-              JSON.stringify(error?.response?.data, null, 2),
-            );
-            showErrorToast(t("common.error"), t("feedback.error"));
-          },
-        },
-      );
-    } else {
-      submitFeedback(feedbackData, {
-        onSuccess: async () => {
-          await refetch();
-          onClose(true);
-        },
-        onError: () => {
-          showErrorToast(t("common.error"), t("feedback.error"));
-        },
-      });
-    }
-
-    setPendingValues(null);
-  }, [
-    pendingValues,
-    user,
+  const { state, setters, handlers } = useFeedbackFormLogic(
+    groupId,
     existingFeedback,
-    buildFeedbackData,
-    submitFeedback,
-    updateFeedback,
-    onClose,
-    t,
-    refetch,
-  ]);
+    onClose
+  );
+
+  const {
+    showAnonymousConflictModal,
+    showTeacherConflictModal,
+    showConfirmation,
+    showAnonymousConfirm,
+    isSubmitting,
+  } = state;
+
+  const {
+    setShowAnonymousConflictModal,
+    setShowTeacherConflictModal,
+    setShowConfirmation,
+    setShowAnonymousConfirm,
+    setPendingValues,
+  } = setters;
+
+  const {
+    getInitialValues,
+    handleReturnAsTeacherToggle,
+    handleAnonymousToggle,
+    handleSubmit,
+    handleConfirmSubmit,
+  } = handlers;
 
   return (
     <SafeAreaView style={styles.safeArea}>

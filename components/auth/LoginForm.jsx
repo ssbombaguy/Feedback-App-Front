@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {} from "./LoginForm.styles";
 
 import {
@@ -11,10 +11,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import { router } from "expo-router";
-import { showErrorToast } from "../../utils/toastUtils";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTheme } from "../../context/ThemeContext";
-import { saveLanguage } from "../../i18n";
 
 const AuthSchema = Yup.object().shape({
   email: Yup.string().required("auth.emailRequired").email("auth.invalidEmail"),
@@ -26,18 +23,22 @@ const AuthSchema = Yup.object().shape({
     .matches(/[^A-Za-z0-9]/, "auth.passwordMustContainSymbol"),
 });
 
+import { useLoginFormLogic } from "../../hooks/useLoginFormLogic";
+
 export const LoginForm = ({ onSubmit, isPending, theme }) => {
-  const { t, i18n } = useTranslation();
-  const [rememberMe, setRememberMe] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const { isDark, changeThemeMode } = useTheme();
+  const { t } = useTranslation();
   const styles = makeStyles(theme);
+
+  const { state, setters, handlers } = useLoginFormLogic(onSubmit);
+  const { rememberMe, showPassword, isDark, currentLanguage } = state;
+  const { setRememberMe, setShowPassword } = setters;
+  const { handleLanguageToggle, handleThemeToggle, handleValidationErrors, submitWithRememberMe } = handlers;
 
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
       validationSchema={AuthSchema}
-      onSubmit={(values) => onSubmit({ ...values, rememberMe })}
+      onSubmit={submitWithRememberMe}
     >
       {({
         handleChange,
@@ -95,7 +96,7 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
             <CustomButton
               variant="custom"
               style={styles.settingsButton}
-              onPress={() => saveLanguage(i18n.language === "en" ? "ka" : "en")}
+              onPress={handleLanguageToggle}
             >
               <Ionicons
                 name="globe-outline"
@@ -103,14 +104,14 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
                 color={theme.textSecondary || "#243d4d"}
               />
               <Text style={styles.settingsButtonText}>
-                {i18n.language === "en" ? "KA" : "EN"}
+                {currentLanguage === "en" ? "KA" : "EN"}
               </Text>
             </CustomButton>
 
             <CustomButton
               variant="custom"
               style={styles.settingsButton}
-              onPress={() => changeThemeMode(isDark ? "light" : "dark")}
+              onPress={handleThemeToggle}
             >
               <Ionicons
                 name={isDark ? "sunny-outline" : "moon-outline"}
@@ -125,18 +126,7 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
 
           <CustomButton
             title={t("auth.signIn")}
-            onPress={async () => {
-              const formErrors = await validateForm();
-              if (Object.keys(formErrors).length > 0) {
-                showErrorToast(
-                  t("auth.validationError") || "Validation Error",
-                  t("auth.fillAllFields") ||
-                    "Please fill in all fields correctly",
-                );
-                return;
-              }
-              handleFormSubmit();
-            }}
+            onPress={() => handleValidationErrors(validateForm, handleFormSubmit)}
             isPending={isPending}
             style={{ marginTop: 8 }}
           />

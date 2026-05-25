@@ -4,10 +4,10 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
 import { CustomButton } from "../ui/CustomButton";
+import { makeStyles } from "./PersonalInfo.styles";
 
 const InfoRow = ({ icon, label, value, isLast = false, onPress }) => {
   const { theme } = useTheme();
-  import {} from "./PersonalInfo.styles";
 
   const styles = makeStyles(theme);
 

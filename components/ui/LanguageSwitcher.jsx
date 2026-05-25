@@ -1,10 +1,10 @@
 import { makeStyles } from "./LanguageSwitcher.styles";
 import { View, Text } from "react-native";
-import { CustomButton } from "./ui/CustomButton";
+import { CustomButton } from "./CustomButton";
 import { useTranslation } from "react-i18next";
-import { saveLanguage } from "../i18n";
+import { saveLanguage } from "../../i18n";
 import { useCallback } from "react";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 export const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation();

@@ -7,80 +7,54 @@ import {
   RefreshControl,
 } from "react-native";
 import { CustomButton } from "../../../components/ui/CustomButton";
-import React, { useState, useCallback } from "react";
+import React from "react";
 import CourseLister from "../../../components/feedback/CourseLister";
 import { FeedbackForm } from "../../../components/feedback/FeedbackForm";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../../assets/MziuriLogo.svg";
 import { useTheme } from "../../../context/ThemeContext";
-import { showSuccessToast } from "../../../utils/toastUtils";
 import { getErrorMessage } from "../../../utils/errorHandler";
-import { ConfirmationModal } from "../../../components/ConfirmationModal";
-import { useCurrentUserProfile } from "../../../hooks/useUser";
-import { useFeedback } from "../../../hooks/useFeedback";
+import { ConfirmationModal } from "../../../components/ui/ConfirmationModal";
 import { makeStyles } from "./index.styles";
+
+import { useFeedbackListLogic } from "../../../hooks/useFeedbackListLogic";
 
 const feedback = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
 
-  const [refreshing, setRefreshing] = useState(false);
-  const [selectedFeedback, setSelectedFeedback] = useState(null);
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
-  const [selectedCourseName, setSelectedCourseName] = useState(null);
-  const [selectedGroupId, setSelectedGroupId] = useState(null);
-  const [showChangeConfirm, setShowChangeConfirm] = useState(false);
-  const [pendingFeedbackPress, setPendingFeedbackPress] = useState(null);
+  const { state, setters, handlers } = useFeedbackListLogic();
+  
+  const {
+    refreshing,
+    selectedFeedback,
+    showFeedbackForm,
+    selectedCourseName,
+    selectedGroupId,
+    showChangeConfirm,
+    pendingFeedbackPress,
+    isLoading,
+    isError,
+    rawError,
+    courses,
+  } = state;
 
   const {
-    userProfile,
-    isLoading: isProfileLoading,
-    isError: isProfileError,
-    error: profileError,
-    refetch: refetchProfile,
-  } = useCurrentUserProfile();
+    setShowChangeConfirm,
+    setSelectedCourseName,
+    setSelectedGroupId,
+    setSelectedFeedback,
+    setShowFeedbackForm,
+    setPendingFeedbackPress,
+  } = setters;
 
   const {
-    feedback: userFeedback,
-    isLoading: isFeedbackLoading,
-    isError: isFeedbackError,
-    error: feedbackError,
-    refetch: refetchFeedback,
-  } = useFeedback();
-
-  const isLoading = isProfileLoading || isFeedbackLoading;
-  const isError = isProfileError || isFeedbackError;
-  const rawError = profileError || feedbackError;
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await Promise.all([refetchProfile(), refetchFeedback()]);
-    setRefreshing(false);
-  }, [refetchProfile, refetchFeedback]);
-
-  const handleFeedbackPress = (courseName, groupId, existingFeedback) => {
-    if (existingFeedback) {
-      setPendingFeedbackPress({ courseName, groupId, existingFeedback });
-      setShowChangeConfirm(true);
-    } else {
-      setSelectedCourseName(courseName);
-      setSelectedGroupId(groupId);
-      setSelectedFeedback(null);
-      setShowFeedbackForm(true);
-    }
-  };
-
-  const handleCloseFeedbackForm = (success = false) => {
-    setShowFeedbackForm(false);
-    setSelectedCourseName(null);
-    setSelectedGroupId(null);
-    setSelectedFeedback(null);
-    if (success === true) {
-      showSuccessToast(t("common.success"), t("feedback.thankYou"));
-    }
-  };
+    onRefresh,
+    handleFeedbackPress,
+    handleCloseFeedbackForm,
+  } = handlers;
 
   if (isLoading && !refreshing) {
     return (
@@ -112,28 +86,6 @@ const feedback = () => {
       </SafeAreaView>
     );
   }
-
-  const fbMap = {};
-  if (Array.isArray(userFeedback)) {
-    userFeedback.forEach((fb) => {
-      fbMap[fb.group_id] = fb;
-    });
-  }
-
-  const courses = (userProfile?.all_enrolled_groups || [])
-    .filter((enrollment) => enrollment.course_id != null)
-    .map((enrollment) => {
-      const course = enrollment.course;
-      const groupId = course?.groups?.[0]?.id;
-      return {
-        courseName: course?.course_name || "Unknown",
-        focusArea: course?.focus_area || "",
-        teacher: course?.groups?.[0]?.teachers?.[0]?.fullName || "",
-        isActive: enrollment.is_active,
-        groupId,
-        feedback: fbMap[groupId] || null,
-      };
-    });
 
   if (courses.length === 0) {
     return (

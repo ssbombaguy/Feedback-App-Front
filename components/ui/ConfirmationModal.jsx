@@ -2,8 +2,8 @@ import { View, Text, Modal } from "react-native";
 import React from "react";
 import PropTypes from "prop-types";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useTheme } from "../context/ThemeContext";
-import { CustomButton } from "./ui/CustomButton";
+import { useTheme } from "../../context/ThemeContext";
+import { CustomButton } from "./CustomButton";
 import { makeStyles } from "./ConfirmationModal.styles";
 
 export const ConfirmationModal = ({

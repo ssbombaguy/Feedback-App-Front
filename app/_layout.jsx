@@ -9,7 +9,7 @@ import i18n, { getStoredLanguage } from "../i18n/index";
 import { PaperProvider } from "react-native-paper";
 import { ThemeProvider } from "../context/ThemeContext";
 import Toast from "react-native-toast-message";
-import { CustomToast } from "../components/CustomToast";
+import { CustomToast } from "../components/ui/CustomToast";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotifications } from "../utils/notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";

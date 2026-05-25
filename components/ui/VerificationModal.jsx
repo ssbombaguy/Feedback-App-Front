@@ -4,16 +4,17 @@ import {
   Modal,
   ScrollView,
 } from "react-native";
-import { CustomButton } from "./ui/CustomButton";
-import { CustomInput } from "./ui/CustomInput";
-import React, { useState, useRef, useEffect } from "react";
+import { CustomButton } from "./CustomButton";
+import { CustomInput } from "./CustomInput";
+import React from "react";
 import {} from "./VerificationModal.styles";
 
 import PropTypes from "prop-types";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "../context/ThemeContext";
-import { showErrorToast, showSuccessToast } from "../utils/toastUtils";
+import { useTheme } from "../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
+
+import { useVerificationLogic } from "../../hooks/useVerificationLogic";
 
 export const VerificationModal = ({
   visible,
@@ -30,84 +31,20 @@ export const VerificationModal = ({
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-  const [code, setCode] = useState("");
-  const [step, setStep] = useState("send");
-  const [timer, setTimer] = useState(0);
-  const [isVerifying, setIsVerifying] = useState(false);
-  const timerIntervalRef = useRef(null);
 
-  useEffect(() => {
-    if (timer > 0) {
-      timerIntervalRef.current = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
-    } else {
-      clearInterval(timerIntervalRef.current);
-    }
-    return () => clearInterval(timerIntervalRef.current);
-  }, [timer]);
+  const { state, setters, handlers } = useVerificationLogic({
+    visible,
+    verificationType,
+    contact,
+    onSendCode,
+    onVerifyCode,
+    onSuccess,
+    onCancel,
+  });
 
-  useEffect(() => {
-    if (!visible) {
-      setCode("");
-      setStep("send");
-      setTimer(0);
-      setIsVerifying(false);
-    }
-  }, [visible]);
-
-  const handleSendCode = async () => {
-    try {
-      await onSendCode(contact);
-      setStep("verify");
-      setTimer(60);
-      showSuccessToast(
-        t("common.success"),
-        t("verification.codeSent", { type: verificationType }),
-      );
-    } catch (error) {
-      showErrorToast(
-        t("common.error"),
-        error.message || t("verification.failedToSend"),
-      );
-    }
-  };
-
-  const handleVerifyCode = async () => {
-    if (code.length < 4) {
-      showErrorToast(t("common.error"), t("verification.invalidCode"));
-      return;
-    }
-
-    setIsVerifying(true);
-    try {
-      await onVerifyCode(contact, code);
-      showSuccessToast(
-        t("common.success"),
-        t("verification.verified", { type: verificationType }),
-      );
-      onSuccess();
-    } catch (error) {
-      showErrorToast(
-        t("verification.verificationFailed"),
-        error.message || t("verification.invalidCode"),
-      );
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
-  const handleResend = async () => {
-    setCode("");
-    await handleSendCode();
-  };
-
-  const handleCancel = () => {
-    setCode("");
-    setStep("send");
-    setTimer(0);
-    onCancel();
-  };
+  const { code, step, timer, isVerifying } = state;
+  const { setCode, setStep, setTimer } = setters;
+  const { handleSendCode, handleVerifyCode, handleResend, handleCancel } = handlers;
 
   return (
     <Modal
