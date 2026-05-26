@@ -9,7 +9,6 @@ export const useLoginFormLogic = (onSubmit) => {
   const { isDark, changeThemeMode } = useTheme();
 
   const [rememberMe, setRememberMe] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleLanguageToggle = () => {
     saveLanguage(i18n.language === "en" ? "ka" : "en");
@@ -34,13 +33,11 @@ export const useLoginFormLogic = (onSubmit) => {
   return {
     state: {
       rememberMe,
-      showPassword,
       isDark,
       currentLanguage: i18n.language,
     },
     setters: {
       setRememberMe,
-      setShowPassword,
     },
     handlers: {
       handleLanguageToggle,

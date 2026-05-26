@@ -30,8 +30,8 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
   const styles = makeStyles(theme);
 
   const { state, setters, handlers } = useLoginFormLogic(onSubmit);
-  const { rememberMe, showPassword, isDark, currentLanguage } = state;
-  const { setRememberMe, setShowPassword } = setters;
+  const { rememberMe, isDark, currentLanguage } = state;
+  const { setRememberMe } = setters;
   const { handleLanguageToggle, handleThemeToggle, handleValidationErrors, submitWithRememberMe } = handlers;
 
   return (
