@@ -1,5 +1,5 @@
 import React from "react";
-import {} from "./RecoveryCodeStep.styles";
+import {makeStyles} from "./RecoveryCodeStep.styles";
 
 import { View, Text } from "react-native";
 import { CustomInput } from "../ui/CustomInput";

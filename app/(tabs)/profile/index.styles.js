@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { phoneWidth } from "../../../constants/Dimensions";
 
 export const makeStyles = (theme) =>
   StyleSheet.create({

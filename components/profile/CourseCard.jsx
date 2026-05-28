@@ -4,11 +4,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
+import { makeStyles } from "./CourseCard.styles";
 
 export const ProfileCourseCard = ({ course, isActive = false }) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  import {} from "./CourseCard.styles";
+
 
   const styles = makeStyles(theme);
   return (

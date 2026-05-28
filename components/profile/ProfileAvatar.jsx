@@ -1,5 +1,5 @@
 import React from "react";
-import {} from "./ProfileAvatar.styles";
+import {makeStyles} from "./ProfileAvatar.styles";
 
 import {
   View,
@@ -67,9 +67,6 @@ export const ProfileAvatar = ({ userProfile, theme }) => {
           <Image
             source={{ uri: photoUri }}
             style={styles.avatarImage}
-            onError={(e) =>
-              console.log("Image load error:", e.nativeEvent.error)
-            }
           />
         ) : (
           <FontAwesome

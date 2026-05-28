@@ -6,7 +6,7 @@ import {
   RefreshControl,
 } from "react-native";
 import { CustomButton } from "../../../components/ui/CustomButton";
-import { phoneWidth } from "../../../constants/Dimensions";
+
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTranslation } from "react-i18next";
 import i18n, { saveLanguage } from "../../../i18n/index";
@@ -17,7 +17,7 @@ import { CoursesSection } from "../../../components/profile/CourseSection";
 import { ProfileHeader } from "../../../components/profile/ProfileHeader";
 import Logo from "../../../assets/MziuriLogo.svg";
 import { useTheme } from "../../../context/ThemeContext";
-import { useCurrentUserProfile } from "../../../hooks/useUser";
+import { useUser } from "../../../hooks/useUser";
 import { SelectionModal } from "../../../components/profile/SelectionModal";
 
 import { useProfileMenuLogic } from "../../../hooks/useProfileMenuLogic";
@@ -27,7 +27,7 @@ const profile = () => {
   const { theme, themeMode, changeThemeMode } = useTheme();
   const styles = makeStyles(theme);
 
-  const { userProfile, isLoading, refetch } = useCurrentUserProfile();
+  const { userProfile, isLoading, refetch } = useUser();
   const refreshing = isLoading;
 
   const { state, setters, handlers } = useProfileMenuLogic();

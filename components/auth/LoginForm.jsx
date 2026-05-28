@@ -1,6 +1,5 @@
 import React from "react";
-import {} from "./LoginForm.styles";
-
+import {makeStyles} from "./LoginForm.styles";
 import {
   View,
   Text,
@@ -12,6 +11,7 @@ import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+
 
 const AuthSchema = Yup.object().shape({
   email: Yup.string().required("auth.emailRequired").email("auth.invalidEmail"),

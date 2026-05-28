@@ -19,7 +19,6 @@ export const useProfileMenuLogic = () => {
       await logout();
       router.replace("/auth");
     } catch (error) {
-      console.error("Logout error:", error);
       showErrorToast(t("common.error"), error.message);
     } finally {
       setIsLoggingOut(false);

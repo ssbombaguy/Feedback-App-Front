@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { userAPI } from '../api/apiClient'
 import { useAuth } from '../context/AuthContext'
 
-export const useCurrentUserProfile = () => {
+export const useUser = () => {
   const { user } = useAuth()
 
   const query = useQuery({

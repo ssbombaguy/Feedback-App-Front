@@ -5,7 +5,7 @@ import {
 } from "react-native";
 import { CustomButton } from "../../components/ui/CustomButton";
 import React from "react";
-import {} from "./recovery.styles";
+import {makeStyles} from "./recovery.styles";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -47,7 +47,7 @@ export default function PasswordRecovery() {
           {step === "email" && (
             <RecoveryEmailStep
               onSubmit={handleEmailSubmit}
-              isPending={forgotPasswordMutation.isPending}
+              isPending={isForgotPending}
               theme={theme}
             />
           )}
@@ -63,7 +63,7 @@ export default function PasswordRecovery() {
           {step === "password" && (
             <RecoveryPasswordStep
               onSubmit={handlePasswordSubmit}
-              isPending={resetPasswordMutation.isPending}
+              isPending={isResetPending}
               theme={theme}
             />
           )}

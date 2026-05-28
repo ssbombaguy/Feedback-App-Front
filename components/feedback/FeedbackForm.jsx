@@ -4,7 +4,7 @@ import {
   ScrollView,
 } from "react-native";
 import React from "react";
-import {} from "./FeedbackForm.styles";
+import {makeStyles} from "./FeedbackForm.styles";
 
 import PropTypes from "prop-types";
 import { Formik } from "formik";
@@ -259,4 +259,9 @@ export const FeedbackForm = ({
       </ScrollView>
     </SafeAreaView>
   );
+};
+
+FeedbackForm.propTypes = {
+  courseName: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
 };

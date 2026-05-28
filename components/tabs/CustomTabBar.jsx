@@ -1,5 +1,5 @@
 import React from "react";
-import {} from "./CustomTabBar.styles";
+import {makeStyles} from "./CustomTabBar.styles";
 
 import { View } from "react-native";
 import TabButton from "./TabButton";

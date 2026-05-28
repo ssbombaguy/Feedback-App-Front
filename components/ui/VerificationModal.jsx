@@ -7,7 +7,7 @@ import {
 import { CustomButton } from "./CustomButton";
 import { CustomInput } from "./CustomInput";
 import React from "react";
-import {} from "./VerificationModal.styles";
+import {makeStyles} from "./VerificationModal.styles";
 
 import PropTypes from "prop-types";
 import { Feather } from "@expo/vector-icons";

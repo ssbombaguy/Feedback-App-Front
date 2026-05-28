@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import {} from "./CustomToast.styles";
+import {makeStyles} from "./CustomToast.styles";
 
 import { useTheme } from "../../context/ThemeContext";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";

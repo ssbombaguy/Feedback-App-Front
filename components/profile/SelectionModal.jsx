@@ -1,5 +1,5 @@
 import React from "react";
-import {} from "./SelectionModal.styles";
+import {makeStyles} from "./SelectionModal.styles";
 
 import {
   View,

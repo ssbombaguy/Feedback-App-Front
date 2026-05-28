@@ -1,11 +1,9 @@
 import { View, Text } from "react-native";
-import React from "react";
 import { useFeedback } from "../../hooks/useFeedback";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
-import { showErrorToast } from "../../utils/toastUtils";
 import { CustomButton } from "../ui/CustomButton";
-import {} from "./courseCard.styles";
+import { makeStyles } from "./CourseCard.styles";
 
 export const CourseCard = ({
   courseName,

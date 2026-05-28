@@ -1,6 +1,6 @@
 import { View, Text, Image, Pressable } from "react-native";
 import React from "react";
-import {} from "./ProfileHeader.styles";
+import {makeStyles} from "./ProfileHeader.styles";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";

@@ -6,12 +6,11 @@ import {
   ScrollView,
 } from "react-native";
 import { CustomButton } from "../../../components/ui/CustomButton";
-import React from "react";
-import {} from "./edit.styles";
+import {makeStyles} from "./edit.styles"
 
 import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
-import { useCurrentUserProfile } from "../../../hooks/useUser";
+import { useUser } from "../../../hooks/useUser";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../context/ThemeContext";
@@ -27,7 +26,7 @@ export default function EditProfile() {
   const router = useRouter();
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-  const { userProfile } = useCurrentUserProfile();
+  const { userProfile } = useUser();
 
   const { state, handlers } = useEditProfileLogic(userProfile);
 
@@ -70,7 +69,7 @@ export default function EditProfile() {
             userProfile={userProfile}
             theme={theme}
             onSubmit={handleFormSubmit}
-            isPending={updateMutation.isPending}
+            isPending={isPending}
           />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -93,7 +92,7 @@ export default function EditProfile() {
         onVerifyCode={handleVerifyCode}
         onSuccess={closeVerificationModal}
         onCancel={closeVerificationModal}
-        isLoading={updateMutation.isPending}
+        isLoading={isPending}
       />
     </SafeAreaView>
   );

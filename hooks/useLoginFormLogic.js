@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "../../context/ThemeContext";
-import { saveLanguage } from "../../i18n";
-import { showErrorToast } from "../../utils/toastUtils";
+import { useTheme } from "../context/ThemeContext";
+import { saveLanguage } from "../i18n";
+import { showErrorToast } from "../utils/toastUtils";
 
 export const useLoginFormLogic = (onSubmit) => {
   const { t, i18n } = useTranslation();

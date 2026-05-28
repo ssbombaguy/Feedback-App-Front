@@ -1,15 +1,15 @@
 import { View, Text, KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
-import {} from "./index.styles";
+import { makeStyles } from "./index.styles";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { setLoggedIn } from "../../utils/AsyncStorage";
-import { phoneWidth } from "../../constants/Dimensions";
+
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import Logo from "../../assets/MziuriLogo.svg";
-import YellowBg from "../../assets/yellowBg";
+import YellowBg from "../../assets/yellowBg.svg";
 import { useTheme } from "../../context/ThemeContext";
 import { useAuth } from "../../context/AuthContext";
 import { showErrorToast } from "../../utils/toastUtils";

@@ -1,8 +1,7 @@
 import React from "react";
-import {} from "./RecoveryEmailStep.styles";
+import {makeStyles} from "./RecoveryEmailStep.styles";
 
 import {
-  View,
   Text,
 } from "react-native";
 import { CustomInput } from "../ui/CustomInput";

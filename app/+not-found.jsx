@@ -1,5 +1,5 @@
 import React from "react";
-import {} from "./+not-found.styles";
+import {makeStyles} from "./+not-found.styles";
 
 import { View, Text, Image, StatusBar } from "react-native";
 import { CustomButton } from "../components/ui/CustomButton";
@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../assets/MziuriLogo.svg";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
+
 
 export default function NotFoundScreen() {
   const router = useRouter();

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { showSuccessToast } from "../utils/toastUtils";
-import { useCurrentUserProfile } from "./useUser";
+import { useUser } from "./useUser";
 import { useFeedback } from "./useFeedback";
 
 export const useFeedbackListLogic = () => {
@@ -21,7 +21,7 @@ export const useFeedbackListLogic = () => {
     isError: isProfileError,
     error: profileError,
     refetch: refetchProfile,
-  } = useCurrentUserProfile();
+  } = useUser();
 
   const {
     feedback: userFeedback,

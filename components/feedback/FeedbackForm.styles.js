@@ -48,7 +48,3 @@ export const makeStyles = (theme) =>
     spacer: { height: 40 },
   });
 
-FeedbackForm.propTypes = {
-  courseName: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-};

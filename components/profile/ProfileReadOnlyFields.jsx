@@ -1,5 +1,5 @@
 import React from "react";
-import {} from "./ProfileReadOnlyFields.styles";
+import {makeStyles} from "./ProfileReadOnlyFields.styles";
 
 import { View, Text } from "react-native";
 import { useTranslation } from "react-i18next";

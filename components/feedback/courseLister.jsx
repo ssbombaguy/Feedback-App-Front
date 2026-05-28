@@ -1,9 +1,8 @@
 import { View, Text } from "react-native";
-import React from "react";
 import { CourseCard } from "./CourseCard";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
-import { makeStyles } from "./courseLister.styles";
+import { makeStyles } from "./CourseLister.styles";
 
 const CourseLister = ({ data, onFeedbackPress }) => {
   const { t } = useTranslation();

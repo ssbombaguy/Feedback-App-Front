@@ -1,8 +1,7 @@
 import React from "react";
-import {} from "./RecoveryPasswordStep.styles";
+import {makeStyles} from "./RecoveryPasswordStep.styles";
 
 import {
-  View,
   Text,
 } from "react-native";
 import { CustomInput } from "../ui/CustomInput";

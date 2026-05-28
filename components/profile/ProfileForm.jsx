@@ -1,5 +1,5 @@
 import React from "react";
-import {} from "./ProfileForm.styles";
+import {makeStyles} from "./ProfileForm.styles";
 
 import { View, Text } from "react-native";
 import { CustomInput } from "../ui/CustomInput";

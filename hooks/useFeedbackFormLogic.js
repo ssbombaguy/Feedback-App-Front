@@ -84,11 +84,7 @@ export const useFeedbackFormLogic = (groupId, existingFeedback, onClose) => {
             await refetch();
             onClose(true);
           },
-          onError: (error) => {
-            console.log(
-              "feedback error:",
-              JSON.stringify(error?.response?.data, null, 2),
-            );
+          onError: () => {
             showErrorToast(t("common.error"), t("feedback.error"));
           },
         },
