@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { userAPI, verificationAPI } from "../api/apiClient";
+import { userAPI } from "../api/user";
+import { verificationAPI } from "../api/verification";
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
 import { useRouter } from "expo-router";
 

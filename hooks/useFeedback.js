@@ -1,4 +1,4 @@
-import { feedbackAPI } from '../api/apiClient'
+import { feedbackAPI } from '../api/feedback'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../context/AuthContext'
 

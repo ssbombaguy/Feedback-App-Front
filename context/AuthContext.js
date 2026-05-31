@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { getUser, logout as logoutStorage, getToken } from '../utils/AsyncStorage'
-import { authAPI } from '../api/apiClient'
+import { authAPI } from '../api/auth'
 
 const AuthContext = createContext()
 
