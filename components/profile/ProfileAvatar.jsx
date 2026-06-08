@@ -13,7 +13,7 @@ import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { userAPI } from "../../api/apiClient";
+import { userAPI } from "../../api/user";
 import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
 
 export const ProfileAvatar = ({ userProfile, theme }) => {

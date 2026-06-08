@@ -11,11 +11,15 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import { FeedbackField } from "./FeedbackField";
-import { ConfirmationModal } from "../ui/ConfirmationModal";
 import { useTheme } from "../../context/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FeedbackSwitches } from "./FeedbackSwitches";
 import { CustomButton } from "../ui/CustomButton";
+
+import { SubmitConfirmationModal } from "./SubmitConfirmationModal";
+import { AnonymousConfirmModal } from "./AnonymousConfirmModal";
+import { AnonymousConflictModal } from "./AnonymousConflictModal";
+import { TeacherConflictModal } from "./TeacherConflictModal";
 
 const FEEDBACK_FIELDS_CONFIG = [
   {
@@ -180,16 +184,8 @@ export const FeedbackForm = ({
                 <View style={styles.spacer} />
               </View>
 
-              <ConfirmationModal
+              <AnonymousConfirmModal
                 visible={showAnonymousConfirm}
-                title={t("feedback.submitAnonymously?")}
-                message={
-                  <Text style={{ textAlign: "center", fontSize: 16 }}>
-                    {t("feedback.submitAnonymouslyMessage")}
-                  </Text>
-                }
-                confirmText={t("feedback.yesSubmitAnonymously")}
-                cancelText={t("feedback.noSubmitAnonymously")}
                 onConfirm={() => {
                   setFieldValue("is_anonymous", true);
                   setShowAnonymousConfirm(false);
@@ -200,15 +196,8 @@ export const FeedbackForm = ({
                 }}
               />
 
-              <ConfirmationModal
+              <AnonymousConflictModal
                 visible={showAnonymousConflictModal}
-                title={t("feedback.conflict") || "Conflict"}
-                message={
-                  t("feedback.anonymousConflictMessage") ||
-                  "An anonymous submission cannot request returning as a teacher. Toggling this will automatically turn off the 'Return as Teacher' option. Do you want to proceed?"
-                }
-                confirmText={t("common.yes") || "Yes"}
-                cancelText={t("common.cancel") || "Cancel"}
                 onConfirm={() => {
                   setFieldValue("is_anonymous", true);
                   setFieldValue("wants_to_return_as_teacher", false);
@@ -220,15 +209,8 @@ export const FeedbackForm = ({
                 }}
               />
 
-              <ConfirmationModal
+              <TeacherConflictModal
                 visible={showTeacherConflictModal}
-                title={t("feedback.conflict") || "Conflict"}
-                message={
-                  t("feedback.teacherConflictMessage") ||
-                  "You cannot request to 'Return as Teacher' while submitting anonymously. Would you like to turn off anonymity?"
-                }
-                confirmText={t("common.yes") || "Yes"}
-                cancelText={t("common.cancel") || "Cancel"}
                 onConfirm={() => {
                   setFieldValue("wants_to_return_as_teacher", true);
                   setFieldValue("is_anonymous", false);
@@ -243,12 +225,8 @@ export const FeedbackForm = ({
           )}
         </Formik>
 
-        <ConfirmationModal
+        <SubmitConfirmationModal
           visible={showConfirmation}
-          title={t("feedback.confirmSubmit")}
-          message={t("feedback.confirmSubmitMessage")}
-          confirmText={t("feedback.yesSubmit")}
-          cancelText={t("common.cancel")}
           onConfirm={handleConfirmSubmit}
           onCancel={() => {
             setShowConfirmation(false);

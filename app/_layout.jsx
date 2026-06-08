@@ -13,7 +13,7 @@ import { CustomToast } from "../components/ui/CustomToast";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotifications } from "../utils/notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { notificationsAPI } from "../api/apiClient";
+import { notificationsAPI } from "../api/notifications";
 
 function RootLayoutContent() {
   const { user, isLoading } = useAuth();
