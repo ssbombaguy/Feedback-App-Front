@@ -1,10 +1,10 @@
 import { View, KeyboardAvoidingView, Platform } from "react-native";
-import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GreyBg from "../../assets/greyBg.svg";
 import { RecoveryEmailStep } from "../../components/auth/RecoveryEmailStep";
 import { RecoveryCodeStep } from "../../components/auth/RecoveryCodeStep";
 import { RecoveryPasswordStep } from "../../components/auth/RecoveryPasswordStep";
+import { RecoverySuccessStep } from "../../components/auth/RecoverySuccessStep";
 import { RecoveryHeader } from "../../components/auth/RecoveryHeader";
 import { RecoveryContainer } from "../../components/auth/RecoveryContainer";
 
@@ -29,6 +29,13 @@ export default function PasswordRecovery() {
                   <RecoveryEmailStep
                     onSubmit={handleEmailSubmit}
                     isPending={isForgotPending}
+                    theme={theme}
+                  />
+                )}
+
+                {step === "success" && (
+                  <RecoverySuccessStep
+                    onBackToLogin={handleBack}
                     theme={theme}
                   />
                 )}

@@ -24,9 +24,21 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+let onUnauthorizedHandler = null;
+
+export const setUnauthorizedHandler = (handler) => {
+  onUnauthorizedHandler = handler;
+};
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
+    if (error.response?.status === 401) {
+      if (onUnauthorizedHandler) {
+        await onUnauthorizedHandler();
+      }
+    }
+    
     if (error.response?.status !== 404) {
       console.error("API Error:", error.response?.status, error.config?.url);
     }

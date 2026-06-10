@@ -64,7 +64,8 @@
     "changeFeedback": "Change Feedback",
     "changeFeedbackMessage": "You have already submitted feedback for this course. Do you want to change it?",
     "anonymousConflictMessage": "An anonymous submission cannot request returning as a teacher. Toggling this will automatically turn off the 'Return as Teacher' option. Do you want to proceed?",
-    "teacherConflictMessage": "You cannot request to 'Return as Teacher' while submitting anonymously. Would you like to turn off anonymity?"
+    "teacherConflictMessage": "You cannot request to 'Return as Teacher' while submitting anonymously. Would you like to turn off anonymity?",
+    "conflict":"Warning"
   },
   "profile": {
     "title": "Profile",
@@ -151,7 +152,9 @@
     "passwordResetSuccess": "Your password has been reset successfully!",
     "setNewPassword": "Set New Password",
     "createPasswordInstruction": "Create a strong password for your account",
-    "resetPassword": "Reset Password"
+    "resetPassword": "Reset Password",
+    "linkSent": "A password reset link was sent to your email. Please check it.",
+    "backToLogin": "Back to Log In"
   },
   "verification": {
     "verificationSentTo": "Verification sent to:",

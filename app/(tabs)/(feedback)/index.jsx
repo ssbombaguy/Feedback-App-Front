@@ -1,5 +1,5 @@
 import { ScrollView, RefreshControl } from "react-native";
-import CourseLister from "../../../components/feedback/CourseLister";
+import CourseLister from "../../../components/feedback/courseLister";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../../assets/MziuriLogo.svg";
 import { FeedbackFormModal } from "../../../components/feedback/FeedbackFormModal";

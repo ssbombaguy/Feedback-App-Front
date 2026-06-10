@@ -46,7 +46,8 @@ export const FeedbackField = ({
         testID={`feedback-field-${name}`}
         accessibilityLabel={t(labelKey)}
         accessibilityHint={t(hintKey)}
-        inputStyle={[styles.textarea, multiline && { minHeight: 100, textAlignVertical: "top" }]}
+        style={styles.textareaContainer}
+        inputStyle={styles.textInput}
       />
       <Text style={styles.hint}>{t(hintKey)}</Text>
     </View>

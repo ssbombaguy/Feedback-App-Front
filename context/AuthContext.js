@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { getUser, logout as logoutStorage, getToken } from '../utils/AsyncStorage'
 import { authAPI } from '../api/auth'
+import { setUnauthorizedHandler } from '../api/apiClient'
 
 const AuthContext = createContext()
 
@@ -8,6 +9,15 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setUnauthorizedHandler(async () => {
+      setUser(null)
+      setToken(null)
+      await logoutStorage()
+    })
+    return () => setUnauthorizedHandler(null)
+  }, [])
 
   useEffect(() => {
     const bootstrapAsync = async () => {
