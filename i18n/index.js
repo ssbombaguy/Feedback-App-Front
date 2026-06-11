@@ -2,8 +2,6 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import * as Localization from "expo-localization";
-
 import ka from "../locales/ka/ka.json";
 import en from "../locales/en/en.json";
 
@@ -15,7 +13,7 @@ export const getStoredLanguage = async () => {
 
     if (savedLanguage) return savedLanguage;
 
-    return "ka"; 
+    return "ka";
   } catch (error) {
     console.error("Error getting language:", error);
     return "ka";

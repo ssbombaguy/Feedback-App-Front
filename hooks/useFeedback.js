@@ -1,41 +1,41 @@
-import { feedbackAPI } from '../api/feedback'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useAuth } from '../context/AuthContext'
+import { feedbackAPI } from "../api/feedback";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../context/AuthContext";
 
 export const useFeedback = () => {
-  const { user } = useAuth()
-  const queryClient = useQueryClient()
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const fetchUserFeedback = async () => {
-    const response = await feedbackAPI.getUserFeedback() 
-    return Array.isArray(response) ? response : response ? [response] : []
-  }
+    const response = await feedbackAPI.getUserFeedback();
+    return Array.isArray(response) ? response : response ? [response] : [];
+  };
 
   const query = useQuery({
-    queryKey: ['userFeedback'],
+    queryKey: ["userFeedback"],
     queryFn: fetchUserFeedback,
     enabled: !!user,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
-  })
+  });
 
   const submitMutation = useMutation({
     mutationFn: async (feedbackData) => {
-      return await feedbackAPI.submit(feedbackData)
+      return await feedbackAPI.submit(feedbackData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userFeedback'] })
+      queryClient.invalidateQueries({ queryKey: ["userFeedback"] });
     },
-  })
+  });
 
   const updateMutation = useMutation({
     mutationFn: async ({ feedbackId, feedbackData }) => {
-      return await feedbackAPI.update(feedbackId, feedbackData)
+      return await feedbackAPI.update(feedbackId, feedbackData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userFeedback'] })
+      queryClient.invalidateQueries({ queryKey: ["userFeedback"] });
     },
-  })
+  });
 
   return {
     feedback: query.data || [],
@@ -43,13 +43,13 @@ export const useFeedback = () => {
     isError: query.isError,
     error: query.error,
     submitFeedback: (feedbackData, options) => {
-      return submitMutation.mutate(feedbackData, options)
+      return submitMutation.mutate(feedbackData, options);
     },
     updateFeedback: (data, options) => {
-      return updateMutation.mutate(data, options)
+      return updateMutation.mutate(data, options);
     },
     isSubmitting: submitMutation.isPending || updateMutation.isPending,
     submitError: submitMutation.error || updateMutation.error,
     refetch: query.refetch,
-  }
-}
+  };
+};

@@ -1,15 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { authAPI } from "../api/auth";
-
-export const setLoggedIn = async (user) => {
-  await AsyncStorage.setItem("user", JSON.stringify(user));
-};
 
 export const logout = async () => {
   await AsyncStorage.removeItem("isLoggedIn");
   await AsyncStorage.removeItem("user");
   await AsyncStorage.removeItem("authToken");
-  await authAPI.logout();
 };
 
 export const getUser = async () => {

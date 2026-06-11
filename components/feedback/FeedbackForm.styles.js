@@ -47,4 +47,3 @@ export const makeStyles = (theme) =>
     clearButtonText: { color: theme.text, fontSize: 15, fontWeight: "600" },
     spacer: { height: 40 },
   });
-

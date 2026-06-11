@@ -18,9 +18,7 @@ export const DisplaySettings = ({
     <>
       {/* Display Settings Section */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
-          {t("profile.displaySettings")}
-        </Text>
+        <Text style={styles.sectionTitle}>{t("profile.displaySettings")}</Text>
       </View>
 
       <View style={styles.settingsCard}>
@@ -55,11 +53,7 @@ export const DisplaySettings = ({
               </Text>
             </View>
           </View>
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color={theme.subtext}
-          />
+          <Ionicons name="chevron-forward" size={18} color={theme.subtext} />
         </CustomButton>
 
         <View style={styles.rowDivider} />
@@ -72,26 +66,16 @@ export const DisplaySettings = ({
         >
           <View style={styles.settingsRowLeft}>
             <View style={styles.iconContainer}>
-              <Ionicons
-                name="globe-outline"
-                size={22}
-                color="#059669"
-              />
+              <Ionicons name="globe-outline" size={22} color="#059669" />
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.rowTitle}>
-                {t("profile.language")}
-              </Text>
+              <Text style={styles.rowTitle}>{t("profile.language")}</Text>
               <Text style={styles.rowSubtitle}>
                 {i18n.language === "ka" ? "ქართული" : "English"}
               </Text>
             </View>
           </View>
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color={theme.subtext}
-          />
+          <Ionicons name="chevron-forward" size={18} color={theme.subtext} />
         </CustomButton>
       </View>
     </>

@@ -19,6 +19,7 @@ export const makeStyles = (theme) =>
       alignSelf: "center",
     },
     emptyText: { fontSize: 16, color: theme.label, marginTop: 40 },
+    profileContent: { alignItems: "flex-start", width: "100%", marginTop: 30 },
     buttonContainer: { width: "100%", marginTop: 12 },
     logoutButton: {
       backgroundColor: theme.accent,

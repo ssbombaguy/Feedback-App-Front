@@ -1,14 +1,13 @@
 import React from "react";
-import {makeStyles} from "./+not-found.styles";
+import { makeStyles } from "./+not-found.styles";
 
-import { View, Text, Image, StatusBar } from "react-native";
+import { View, Text, Image, StatusBar, Linking } from "react-native";
 import { CustomButton } from "../components/ui/CustomButton";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../assets/MziuriLogo.svg";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
-
 
 export default function NotFoundScreen() {
   const router = useRouter();
@@ -41,7 +40,7 @@ export default function NotFoundScreen() {
 
           <CustomButton
             variant="custom"
-            onPress={() => router.push("")}
+            onPress={() => Linking.openURL("mailto:support@example.com")}
             style={styles.secondaryButton}
           >
             <Text style={styles.secondaryButtonText}>

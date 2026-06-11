@@ -42,8 +42,10 @@ export const CustomInput = ({
 
   return (
     <View style={styles.wrapper}>
-      {label && <Text style={[styles.label, isFlat && styles.labelFlat]}>{label}</Text>}
-      
+      {label && (
+        <Text style={[styles.label, isFlat && styles.labelFlat]}>{label}</Text>
+      )}
+
       <View style={containerStyles}>
         <TextInput
           value={value}
@@ -57,7 +59,7 @@ export const CustomInput = ({
           style={textInputStyles}
           {...props}
         />
-        
+
         {isPassword && (
           <TouchableOpacity
             style={styles.eyeIcon}
@@ -72,7 +74,7 @@ export const CustomInput = ({
           </TouchableOpacity>
         )}
       </View>
-      
+
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );

@@ -10,12 +10,12 @@
     "loginFailed": "შესვლა ვერ მოხერხდა",
     "welcomeBack": "კეთილი იყოს თქვენი დაბრუნება",
     "rememberMe": "დამიმახსოვრე",
-    "passwordMin8":"პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს ",
-    "passwordMustContainCapital":"პაროლი უნდა შეიცავდეს მინიმუმ ერთ დიდ ასოს ",
-    "passwordMustContainSymbol":"პაროლი უნდა შეიცავდეს მინიმუმ ერთ სიმბოლოს",
+    "passwordMin8": "პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს ",
+    "passwordMustContainCapital": "პაროლი უნდა შეიცავდეს მინიმუმ ერთ დიდ ასოს ",
+    "passwordMustContainSymbol": "პაროლი უნდა შეიცავდეს მინიმუმ ერთ სიმბოლოს",
     "passwordMustContainNumber": "პაროლი უნდა შეიცავდეს მინიმუმ ერთ ციფრს",
-    "confirmPassword":"Confirm password is required",
-    "matchPassword":"პაროლები უნდა ემთხვეოდეს ერთმანეთს"
+    "confirmPassword": "Confirm password is required",
+    "matchPassword": "პაროლები უნდა ემთხვეოდეს ერთმანეთს"
   },
   "feedback": {
     "title": "თქვენი კურსები",
@@ -65,7 +65,7 @@
     "changeFeedbackMessage": "თქვენ უკვე გაგზავნილი გაქვთ შეფასება ამ კურსზე. გსურთ მისი შეცვლა?",
     "anonymousConflictMessage": "ანონიმურად გაგზავნისას ვერ მოითხოვთ მასწავლებლად დაბრუნებას. ამის ჩართვა ავტომატურად გამორთავს 'მასწავლებლად დაბრუნების' ოფციას. გსურთ გაგრძელება?",
     "teacherConflictMessage": "ვერ მოითხოვთ მასწავლებლად დაბრუნებას ანონიმურად გაგზავნისას. გსურთ ანონიმურობის გამორთვა?",
-    "conflict":"გაფრთხილება"
+    "conflict": "გაფრთხილება"
   },
   "profile": {
     "title": "პროფილი",
@@ -83,7 +83,7 @@
     "confirmLogout": "დააკვირვდით?",
     "confirmLogoutMessage": "დარწმუნებული ხართ, რომ გსურთ გასვლა?",
     "yesLogout": "დიახ, გასვლა",
-    "active":"აქტიური",
+    "active": "აქტიური",
     "email": "ელ-ფოსტა",
     "school": "სკოლა",
     "linkedin": "LinkedIn",
@@ -108,7 +108,7 @@
     "selectTheme": "აირჩიეთ თემა",
     "selectLanguage": "აირჩიეთ ენა"
   },
-  "edit":{
+  "edit": {
     "back": "უკან",
     "editProfile": "პროფილის რედაქტირება",
     "changePicture": "შეცვალე ფოტო",
@@ -119,7 +119,7 @@
     "firstNameRequired": "სახელი აუცილებელია",
     "lastNameRequired": "გვარი აუცილებელია",
     "min2": "უნდა შეიცავდეს სულ ცოტა 2 ასოს"
-   },
+  },
   "course": {
     "focusArea": "ფოკუსის სფერო",
     "teacher": "მასწავლებელი",

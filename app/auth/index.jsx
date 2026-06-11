@@ -9,28 +9,26 @@ import { LoginContainer } from "../../components/auth/LoginContainer";
 export default function Authentication() {
   return (
     <LoginContainer>
-      {({ theme, styles, loginMutation, handleLogin }) => {
-        return (
-          <SafeAreaView style={styles.safeArea}>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
-              keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 5}
-            >
-              <View style={styles.container}>
-                <LoginHeader styles={styles} />
+      {({ theme, styles, loginMutation, handleLogin }) => (
+        <SafeAreaView style={styles.safeArea}>
+          <KeyboardAvoidingView
+            style={styles.keyboardAvoid}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 5}
+          >
+            <View style={styles.container}>
+              <LoginHeader styles={styles} />
 
-                <LoginForm
-                  onSubmit={handleLogin}
-                  isPending={loginMutation.isPending}
-                  theme={theme}
-                />
-              </View>
-            </KeyboardAvoidingView>
-            <YellowBg style={styles.background} />
-          </SafeAreaView>
-        );
-      }}
+              <LoginForm
+                onSubmit={handleLogin}
+                isPending={loginMutation.isPending}
+                theme={theme}
+              />
+            </View>
+          </KeyboardAvoidingView>
+          <YellowBg style={styles.background} />
+        </SafeAreaView>
+      )}
     </LoginContainer>
   );
 }

@@ -20,7 +20,7 @@ export const LanguageSwitcher = () => {
         console.error("Error changing language:", error);
       }
     },
-    [i18n],
+    [i18n]
   );
 
   return (

@@ -13,11 +13,7 @@ export const RecoverySuccessStep = ({ onBackToLogin, theme }) => {
   return (
     <>
       <View style={{ alignSelf: "center", marginTop: 80, marginBottom: 20 }}>
-        <Ionicons 
-          name="checkmark-circle-outline" 
-          size={80} 
-          color="#059669" 
-        />
+        <Ionicons name="checkmark-circle-outline" size={80} color="#059669" />
       </View>
       <Text style={styles.title}>{t("common.success")}</Text>
       <Text style={styles.subtitle}>{t("recovery.linkSent")}</Text>

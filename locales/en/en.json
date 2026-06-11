@@ -10,12 +10,12 @@
     "loginFailed": "Login Failed",
     "welcomeBack": "Welcome Back",
     "rememberMe": "Remember me",
-    "passwordMin8":"Password must be at least 8 characters long ",
-    "passwordMustContainCapital":"Password must contain at least one capital letter",
+    "passwordMin8": "Password must be at least 8 characters long ",
+    "passwordMustContainCapital": "Password must contain at least one capital letter",
     "passwordMustContainNumber": "Password must contain at least one number",
-    "passwordMustContainSymbol":"Password must contain at least one symbol",
-    "confirmPassword":"Confirm password is required",
-    "matchPassword":"Passwords must match"
+    "passwordMustContainSymbol": "Password must contain at least one symbol",
+    "confirmPassword": "Confirm password is required",
+    "matchPassword": "Passwords must match"
   },
   "feedback": {
     "title": "Your Courses",
@@ -65,7 +65,7 @@
     "changeFeedbackMessage": "You have already submitted feedback for this course. Do you want to change it?",
     "anonymousConflictMessage": "An anonymous submission cannot request returning as a teacher. Toggling this will automatically turn off the 'Return as Teacher' option. Do you want to proceed?",
     "teacherConflictMessage": "You cannot request to 'Return as Teacher' while submitting anonymously. Would you like to turn off anonymity?",
-    "conflict":"Warning"
+    "conflict": "Warning"
   },
   "profile": {
     "title": "Profile",
@@ -83,7 +83,7 @@
     "confirmLogout": "Are You Sure?",
     "confirmLogoutMessage": "Are you sure you want to log out?",
     "yesLogout": "Yes, Log Out",
-    "active":"Active",
+    "active": "Active",
     "email": "Email",
     "school": "School",
     "linkedin": "LinkedIn",
@@ -108,17 +108,17 @@
     "selectTheme": "Select Theme",
     "selectLanguage": "Select Language"
   },
-  "edit":{
-   "back": "Back",
-   "editProfile": "Edit Profile",
-   "changePicture": "Change Picture",
-   "update": "Update",
-   "isUpdating": "Updating...",
-   "firstName": "First Name",
-   "lastName": "Last Name",
-   "firstNameRequired": "First name is required",
-   "lastNameRequired": "Last name is required",
-   "min2": "Must be at least 2 characters"
+  "edit": {
+    "back": "Back",
+    "editProfile": "Edit Profile",
+    "changePicture": "Change Picture",
+    "update": "Update",
+    "isUpdating": "Updating...",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "min2": "Must be at least 2 characters"
   },
   "course": {
     "focusArea": "Focus Area",

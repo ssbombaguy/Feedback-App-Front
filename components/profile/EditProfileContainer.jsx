@@ -9,7 +9,6 @@ export const EditProfileContainer = ({ children }) => {
   const { theme } = useTheme();
   const styles = makeStyles(theme);
   const { userProfile } = useUser();
-
   const { state, handlers } = useEditProfileLogic(userProfile);
 
   return children({

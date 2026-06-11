@@ -13,12 +13,17 @@ export default function PasswordRecovery() {
     <RecoveryContainer>
       {({ theme, styles, state, handlers }) => {
         const { step, userEmail, isForgotPending, isResetPending } = state;
-        const { handleEmailSubmit, handleCodeSubmit, handlePasswordSubmit, handleBack } = handlers;
+        const {
+          handleEmailSubmit,
+          handleCodeSubmit,
+          handlePasswordSubmit,
+          handleBack,
+        } = handlers;
 
         return (
           <SafeAreaView style={styles.safeArea}>
             <KeyboardAvoidingView
-              style={{ flex: 1 }}
+              style={styles.keyboardAvoid}
               behavior={Platform.OS === "ios" ? "padding" : "height"}
               keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 5}
             >

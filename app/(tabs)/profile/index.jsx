@@ -32,8 +32,14 @@ const profile = () => {
         themeOptions,
         langOptions,
       }) => {
-        const { showLogoutConfirm, isLoggingOut, showThemeModal, showLangModal } = state;
-        const { setShowLogoutConfirm, setShowThemeModal, setShowLangModal } = setters;
+        const {
+          showLogoutConfirm,
+          isLoggingOut,
+          showThemeModal,
+          showLangModal,
+        } = state;
+        const { setShowLogoutConfirm, setShowThemeModal, setShowLangModal } =
+          setters;
         const { handleLogoutConfirm } = handlers;
 
         return (
@@ -48,12 +54,12 @@ const profile = () => {
                 <Logo style={styles.logo} />
 
                 {userProfile ? (
-                  <View
-                    style={{ alignItems: "flex-start", width: "100%", marginTop: 30 }}
-                  >
+                  <View style={styles.profileContent}>
                     <ProfileHeader user={userProfile} />
                     <PersonalInfo user={userProfile} />
-                    <CoursesSection courses={userProfile.all_enrolled_groups} />
+                    <CoursesSection
+                      courses={userProfile.all_enrolled_groups}
+                    />
 
                     <DisplaySettings
                       theme={theme}
@@ -70,7 +76,9 @@ const profile = () => {
                   </View>
                 ) : (
                   <View style={styles.container}>
-                    <Text style={styles.emptyText}>{t("profile.loading")}</Text>
+                    <Text style={styles.emptyText}>
+                      {t("profile.loading")}
+                    </Text>
                   </View>
                 )}
               </View>

@@ -1,5 +1,5 @@
-import React from "react";
-import {makeStyles} from "./ProfileForm.styles";
+import React, { useMemo } from "react";
+import { makeStyles } from "./ProfileForm.styles";
 
 import { View, Text } from "react-native";
 import { CustomInput } from "../ui/CustomInput";
@@ -12,14 +12,18 @@ export const ProfileForm = ({ userProfile, theme, onSubmit, isPending }) => {
   const { t } = useTranslation();
   const styles = makeStyles(theme);
 
-  const validationSchema = Yup.object().shape({
-    phoneNumber: Yup.string().required(t("profile.phoneRequired")),
-    email: Yup.string()
-      .email(t("profile.invalidEmail"))
-      .required(t("profile.emailRequired")),
-    linkedinUrl: Yup.string().url(t("profile.invalidUrl")).nullable(),
-    githubUrl: Yup.string().url(t("profile.invalidUrl")).nullable(),
-  });
+  const validationSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        phoneNumber: Yup.string().required(t("profile.phoneRequired")),
+        email: Yup.string()
+          .email(t("profile.invalidEmail"))
+          .required(t("profile.emailRequired")),
+        linkedinUrl: Yup.string().url(t("profile.invalidUrl")).nullable(),
+        githubUrl: Yup.string().url(t("profile.invalidUrl")).nullable(),
+      }),
+    [t]
+  );
 
   return (
     <View style={styles.container}>
@@ -52,7 +56,11 @@ export const ProfileForm = ({ userProfile, theme, onSubmit, isPending }) => {
                 onChangeText={handleChange("phoneNumber")}
                 onBlur={handleBlur("phoneNumber")}
                 keyboardType="phone-pad"
-                error={touched.phoneNumber && errors.phoneNumber ? errors.phoneNumber : null}
+                error={
+                  touched.phoneNumber && errors.phoneNumber
+                    ? errors.phoneNumber
+                    : null
+                }
                 inputStyle={styles.flatInput}
               />
             </View>
@@ -84,7 +92,11 @@ export const ProfileForm = ({ userProfile, theme, onSubmit, isPending }) => {
                 onBlur={handleBlur("linkedinUrl")}
                 autoCapitalize="none"
                 placeholder="https://linkedin.com/in/..."
-                error={touched.linkedinUrl && errors.linkedinUrl ? errors.linkedinUrl : null}
+                error={
+                  touched.linkedinUrl && errors.linkedinUrl
+                    ? errors.linkedinUrl
+                    : null
+                }
                 inputStyle={styles.flatInput}
               />
             </View>
@@ -100,7 +112,11 @@ export const ProfileForm = ({ userProfile, theme, onSubmit, isPending }) => {
                 onBlur={handleBlur("githubUrl")}
                 autoCapitalize="none"
                 placeholder="https://github.com/..."
-                error={touched.githubUrl && errors.githubUrl ? errors.githubUrl : null}
+                error={
+                  touched.githubUrl && errors.githubUrl
+                    ? errors.githubUrl
+                    : null
+                }
                 inputStyle={styles.flatInput}
               />
             </View>

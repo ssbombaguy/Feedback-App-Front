@@ -1,5 +1,5 @@
 import React from "react";
-import {makeStyles} from "./FeedbackSwitches.styles";
+import { makeStyles } from "./FeedbackSwitches.styles";
 
 import { View, Text, Switch } from "react-native";
 import { useTranslation } from "react-i18next";

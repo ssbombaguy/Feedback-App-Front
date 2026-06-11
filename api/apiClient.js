@@ -38,7 +38,7 @@ axiosInstance.interceptors.response.use(
         await onUnauthorizedHandler();
       }
     }
-    
+
     if (error.response?.status !== 404) {
       console.error("API Error:", error.response?.status, error.config?.url);
     }

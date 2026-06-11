@@ -30,11 +30,8 @@ const feedback = () => {
           setPendingFeedbackPress,
         } = setters;
 
-        const {
-          onRefresh,
-          handleFeedbackPress,
-          handleCloseFeedbackForm,
-        } = handlers;
+        const { onRefresh, handleFeedbackPress, handleCloseFeedbackForm } =
+          handlers;
 
         return (
           <SafeAreaView style={styles.container}>
@@ -46,7 +43,10 @@ const feedback = () => {
               }
             >
               <Logo style={styles.logo} />
-              <CourseLister data={courses} onFeedbackPress={handleFeedbackPress} />
+              <CourseLister
+                data={courses}
+                onFeedbackPress={handleFeedbackPress}
+              />
             </ScrollView>
 
             <FeedbackFormModal
@@ -59,13 +59,20 @@ const feedback = () => {
 
             <ChangeFeedbackConfirmationModal
               visible={showChangeConfirm}
-              pendingFeedbackPress={pendingFeedbackPress}
-              setShowChangeConfirm={setShowChangeConfirm}
-              setSelectedCourseName={setSelectedCourseName}
-              setSelectedGroupId={setSelectedGroupId}
-              setSelectedFeedback={setSelectedFeedback}
-              setShowFeedbackForm={setShowFeedbackForm}
-              setPendingFeedbackPress={setPendingFeedbackPress}
+              onConfirm={() => {
+                setShowChangeConfirm(false);
+                if (pendingFeedbackPress) {
+                  setSelectedCourseName(pendingFeedbackPress.courseName);
+                  setSelectedGroupId(pendingFeedbackPress.groupId);
+                  setSelectedFeedback(pendingFeedbackPress.existingFeedback);
+                }
+                setShowFeedbackForm(true);
+                setPendingFeedbackPress(null);
+              }}
+              onCancel={() => {
+                setShowChangeConfirm(false);
+                setPendingFeedbackPress(null);
+              }}
             />
           </SafeAreaView>
         );

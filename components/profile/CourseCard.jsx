@@ -10,7 +10,6 @@ export const ProfileCourseCard = ({ course, isActive = false }) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
 
-
   const styles = makeStyles(theme);
   return (
     <View style={[styles.courseCard, isActive && styles.activeCourseCard]}>

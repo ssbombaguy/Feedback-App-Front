@@ -5,31 +5,10 @@ import { ConfirmationModal } from "../ui/ConfirmationModal";
 
 export const ChangeFeedbackConfirmationModal = ({
   visible,
-  pendingFeedbackPress,
-  setShowChangeConfirm,
-  setSelectedCourseName,
-  setSelectedGroupId,
-  setSelectedFeedback,
-  setShowFeedbackForm,
-  setPendingFeedbackPress,
+  onConfirm,
+  onCancel,
 }) => {
   const { t } = useTranslation();
-
-  const handleConfirm = () => {
-    setShowChangeConfirm(false);
-    if (pendingFeedbackPress) {
-      setSelectedCourseName(pendingFeedbackPress.courseName);
-      setSelectedGroupId(pendingFeedbackPress.groupId);
-      setSelectedFeedback(pendingFeedbackPress.existingFeedback);
-    }
-    setShowFeedbackForm(true);
-    setPendingFeedbackPress(null);
-  };
-
-  const handleCancel = () => {
-    setShowChangeConfirm(false);
-    setPendingFeedbackPress(null);
-  };
 
   return (
     <ConfirmationModal
@@ -38,19 +17,14 @@ export const ChangeFeedbackConfirmationModal = ({
       message={t("feedback.changeFeedbackMessage")}
       confirmText={t("common.yes")}
       cancelText={t("common.cancel")}
-      onConfirm={handleConfirm}
-      onCancel={handleCancel}
+      onConfirm={onConfirm}
+      onCancel={onCancel}
     />
   );
 };
 
 ChangeFeedbackConfirmationModal.propTypes = {
   visible: PropTypes.bool.isRequired,
-  pendingFeedbackPress: PropTypes.object,
-  setShowChangeConfirm: PropTypes.func.isRequired,
-  setSelectedCourseName: PropTypes.func.isRequired,
-  setSelectedGroupId: PropTypes.func.isRequired,
-  setSelectedFeedback: PropTypes.func.isRequired,
-  setShowFeedbackForm: PropTypes.func.isRequired,
-  setPendingFeedbackPress: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };

@@ -33,12 +33,12 @@ function RootLayoutContent() {
     const sendToken = async () => {
       try {
         const token = await AsyncStorage.getItem("pushToken");
-        console.log("user logged in, pushToken found:", token);
+        if (__DEV__) console.log("user logged in, pushToken found:", token);
         if (token) {
           const result = await notificationsAPI.saveToken(token);
-          console.log("token saved to backend:", result);
+          if (__DEV__) console.log("token saved to backend:", result);
         } else {
-          console.log("no pushToken in AsyncStorage");
+          if (__DEV__) console.log("no pushToken in AsyncStorage");
         }
       } catch (error) {
         console.error("Failed to save push token:", error);
@@ -74,12 +74,12 @@ export default function RootLayout() {
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        console.log("🔔 Notification received:", notification);
+        if (__DEV__) console.log("🔔 Notification received:", notification);
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("👆 Notification tapped:", response);
+        if (__DEV__) console.log("👆 Notification tapped:", response);
       });
 
     return () => {

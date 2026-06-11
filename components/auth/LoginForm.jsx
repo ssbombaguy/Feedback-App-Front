@@ -1,9 +1,6 @@
 import React from "react";
-import {makeStyles} from "./LoginForm.styles";
-import {
-  View,
-  Text,
-} from "react-native";
+import { makeStyles } from "./LoginForm.styles";
+import { View, Text } from "react-native";
 import { CustomInput } from "../ui/CustomInput";
 import { CustomButton } from "../ui/CustomButton";
 import { Formik } from "formik";
@@ -11,7 +8,6 @@ import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-
 
 const AuthSchema = Yup.object().shape({
   email: Yup.string().required("auth.emailRequired").email("auth.invalidEmail"),
@@ -32,7 +28,12 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
   const { state, setters, handlers } = useLoginFormLogic(onSubmit);
   const { rememberMe, isDark, currentLanguage } = state;
   const { setRememberMe } = setters;
-  const { handleLanguageToggle, handleThemeToggle, handleValidationErrors, submitWithRememberMe } = handlers;
+  const {
+    handleLanguageToggle,
+    handleThemeToggle,
+    handleValidationErrors,
+    submitWithRememberMe,
+  } = handlers;
 
   return (
     <Formik
@@ -65,7 +66,9 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
             value={values.password}
             onChangeText={handleChange("password")}
             onBlur={handleBlur("password")}
-            error={touched.password && errors.password ? t(errors.password) : null}
+            error={
+              touched.password && errors.password ? t(errors.password) : null
+            }
           />
 
           <View style={styles.optionsRow}>
@@ -85,7 +88,10 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
               </View>
             </View>
 
-            <CustomButton variant="custom" onPress={() => router.push("/auth/recovery")}>
+            <CustomButton
+              variant="custom"
+              onPress={() => router.push("/auth/recovery")}
+            >
               <Text style={styles.recoveryText}>
                 {t("auth.forgotPassword")}
               </Text>
@@ -126,9 +132,11 @@ export const LoginForm = ({ onSubmit, isPending, theme }) => {
 
           <CustomButton
             title={t("auth.signIn")}
-            onPress={() => handleValidationErrors(validateForm, handleFormSubmit)}
+            onPress={() =>
+              handleValidationErrors(validateForm, handleFormSubmit)
+            }
             isPending={isPending}
-            style={{ marginTop: 8 }}
+            style={styles.signInButton}
           />
         </>
       )}

@@ -65,6 +65,9 @@ export const makeStyles = (theme) =>
       marginTop: 8,
       width: "100%",
     },
+    signInButton: {
+      marginTop: 8,
+    },
     buttonText: {
       color: theme.textSecondary || "#fff",
       fontSize: 17,

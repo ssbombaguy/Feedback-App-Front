@@ -1,9 +1,7 @@
 import React from "react";
-import {makeStyles} from "./RecoveryPasswordStep.styles";
+import { makeStyles } from "./RecoveryPasswordStep.styles";
 
-import {
-  Text,
-} from "react-native";
+import { Text } from "react-native";
 import { CustomInput } from "../ui/CustomInput";
 import { CustomButton } from "../ui/CustomButton";
 import { Formik } from "formik";
@@ -61,7 +59,11 @@ export const RecoveryPasswordStep = ({ onSubmit, isPending, theme }) => {
             value={values.confirmPassword}
             onChangeText={handleChange("confirmPassword")}
             onBlur={handleBlur("confirmPassword")}
-            error={touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : null}
+            error={
+              touched.confirmPassword && errors.confirmPassword
+                ? errors.confirmPassword
+                : null
+            }
           />
 
           <CustomButton

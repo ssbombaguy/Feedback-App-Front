@@ -11,11 +11,7 @@ export const FeedbackFormModal = ({
   onClose,
 }) => {
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
       <FeedbackForm
         courseName={courseName}
         groupId={groupId}

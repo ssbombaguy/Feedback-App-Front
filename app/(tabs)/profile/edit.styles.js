@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 export const makeStyles = (theme) =>
   StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: theme.background },
+    keyboardAvoid: { flex: 1 },
     header: {
       flexDirection: "row",
       alignItems: "center",

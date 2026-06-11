@@ -24,7 +24,7 @@ export default function EditProfile() {
             <EditProfileHeader theme={theme} styles={styles} />
 
             <KeyboardAvoidingView
-              style={{ flex: 1 }}
+              style={styles.keyboardAvoid}
               behavior={Platform.OS === "ios" ? "padding" : "height"}
               keyboardVerticalOffset={5}
             >
@@ -34,7 +34,10 @@ export default function EditProfile() {
                 keyboardShouldPersistTaps="handled"
               >
                 <ProfileAvatar userProfile={userProfile} theme={theme} />
-                <ProfileReadOnlyFields userProfile={userProfile} theme={theme} />
+                <ProfileReadOnlyFields
+                  userProfile={userProfile}
+                  theme={theme}
+                />
                 <ProfileForm
                   userProfile={userProfile}
                   theme={theme}

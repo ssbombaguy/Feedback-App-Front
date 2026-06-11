@@ -4,6 +4,7 @@ import { phoneWidth } from "../../constants/Dimensions";
 export const makeStyles = (theme) =>
   StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: theme.background },
+    keyboardAvoid: { flex: 1 },
     container: {
       flex: 1,
       justifyContent: "center",
