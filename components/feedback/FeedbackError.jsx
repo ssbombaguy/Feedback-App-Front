@@ -22,7 +22,11 @@ export const FeedbackError = ({ styles, refreshing, onRefresh, rawError }) => {
         <Logo style={styles.logo} />
         <Text style={styles.errorTitle}>{errorInfo.title}</Text>
         <Text style={styles.errorMessage}>{errorInfo.message}</Text>
-        <CustomButton variant="custom" style={styles.retryButton} onPress={onRefresh}>
+        <CustomButton
+          variant="custom"
+          style={styles.retryButton}
+          onPress={onRefresh}
+        >
           <Text style={styles.retryButtonText}>
             {t("common.retry") || "Retry"}
           </Text>

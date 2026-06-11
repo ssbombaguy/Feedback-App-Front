@@ -1,18 +1,18 @@
-
-
 export const getErrorMessage = (error) => {
   if (!error.response) {
     if (error.code === "ECONNABORTED") {
       return {
         title: "Timeout Error",
-        message: "The request took too long. Please check your connection and try again.",
+        message:
+          "The request took too long. Please check your connection and try again.",
         code: "TIMEOUT",
       };
     }
     if (error.message === "Network Error") {
       return {
         title: "Network Error",
-        message: "Unable to connect to the server. Please check your internet connection.",
+        message:
+          "Unable to connect to the server. Please check your internet connection.",
         code: "NETWORK_ERROR",
       };
     }
@@ -49,7 +49,8 @@ export const getErrorMessage = (error) => {
     case 503:
       return {
         title: "Service Unavailable",
-        message: "The server is temporarily unavailable. Please try again later.",
+        message:
+          "The server is temporarily unavailable. Please try again later.",
         code: "SERVICE_UNAVAILABLE",
       };
     default:
@@ -65,16 +66,13 @@ export const getErrorMessage = (error) => {
   }
 };
 
-
 export const isUnauthorizedError = (error) => {
   return error.response?.status === 401;
 };
 
-
 export const isNetworkError = (error) => {
   return !error.response || error.code === "ECONNABORTED";
 };
-
 
 export const isServerError = (error) => {
   const status = error.response?.status;

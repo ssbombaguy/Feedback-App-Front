@@ -11,13 +11,13 @@ export const userAPI = {
   },
   uploadPhoto: async (imageUri) => {
     const formData = new FormData();
-    formData.append('photo', {
+    formData.append("photo", {
       uri: imageUri,
-      type: 'image/jpeg',
-      name: 'photo.jpg',
+      type: "image/jpeg",
+      name: "photo.jpg",
     });
-    const response = await axiosInstance.post('/user/profile/photo', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    const response = await axiosInstance.post("/user/profile/photo", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
   },

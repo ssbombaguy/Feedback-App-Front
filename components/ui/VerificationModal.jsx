@@ -1,13 +1,8 @@
-import {
-  View,
-  Text,
-  Modal,
-  ScrollView,
-} from "react-native";
+import { View, Text, Modal, ScrollView } from "react-native";
 import { CustomButton } from "./CustomButton";
 import { CustomInput } from "./CustomInput";
 import React from "react";
-import {makeStyles} from "./VerificationModal.styles";
+import { makeStyles } from "./VerificationModal.styles";
 
 import PropTypes from "prop-types";
 import { Feather } from "@expo/vector-icons";
@@ -44,7 +39,8 @@ export const VerificationModal = ({
 
   const { code, step, timer, isVerifying } = state;
   const { setCode, setStep, setTimer } = setters;
-  const { handleSendCode, handleVerifyCode, handleResend, handleCancel } = handlers;
+  const { handleSendCode, handleVerifyCode, handleResend, handleCancel } =
+    handlers;
 
   return (
     <Modal

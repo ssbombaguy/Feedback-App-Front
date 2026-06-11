@@ -1,10 +1,6 @@
-import {
-  View,
-  Text,
-  ScrollView,
-} from "react-native";
-import React from "react";
-import {makeStyles} from "./FeedbackForm.styles";
+import { View, Text, ScrollView } from "react-native";
+import React, { useMemo } from "react";
+import { makeStyles } from "./FeedbackForm.styles";
 
 import PropTypes from "prop-types";
 import { Formik } from "formik";
@@ -15,6 +11,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FeedbackSwitches } from "./FeedbackSwitches";
 import { CustomButton } from "../ui/CustomButton";
+import { useFeedbackFormLogic } from "../../hooks/useFeedbackFormLogic";
 
 import { SubmitConfirmationModal } from "./SubmitConfirmationModal";
 import { AnonymousConfirmModal } from "./AnonymousConfirmModal";
@@ -64,8 +61,6 @@ const createFeedbackValidationSchema = (t) => {
   return Yup.object().shape(shape);
 };
 
-import { useFeedbackFormLogic } from "../../hooks/useFeedbackFormLogic";
-
 export const FeedbackForm = ({
   courseName,
   groupId,
@@ -106,6 +101,8 @@ export const FeedbackForm = ({
     handleConfirmSubmit,
   } = handlers;
 
+  const feedbackSchema = useMemo(() => createFeedbackValidationSchema(t), [t]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView>
@@ -125,7 +122,7 @@ export const FeedbackForm = ({
         <Formik
           initialValues={getInitialValues()}
           enableReinitialize
-          validationSchema={createFeedbackValidationSchema(t)}
+          validationSchema={feedbackSchema}
           onSubmit={handleSubmit}
         >
           {({

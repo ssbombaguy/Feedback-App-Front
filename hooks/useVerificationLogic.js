@@ -45,12 +45,12 @@ export const useVerificationLogic = ({
       setTimer(60);
       showSuccessToast(
         t("common.success"),
-        t("verification.codeSent", { type: verificationType }),
+        t("verification.codeSent", { type: verificationType })
       );
     } catch (error) {
       showErrorToast(
         t("common.error"),
-        error.message || t("verification.failedToSend"),
+        error.message || t("verification.failedToSend")
       );
     }
   };
@@ -66,13 +66,13 @@ export const useVerificationLogic = ({
       await onVerifyCode(contact, code);
       showSuccessToast(
         t("common.success"),
-        t("verification.verified", { type: verificationType }),
+        t("verification.verified", { type: verificationType })
       );
       onSuccess();
     } catch (error) {
       showErrorToast(
         t("verification.verificationFailed"),
-        error.message || t("verification.invalidCode"),
+        error.message || t("verification.invalidCode")
       );
     } finally {
       setIsVerifying(false);

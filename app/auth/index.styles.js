@@ -4,12 +4,14 @@ import { phoneWidth } from "../../constants/Dimensions";
 export const makeStyles = (theme) =>
   StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: theme.background },
+    keyboardAvoid: { flex: 1 },
     container: {
       flex: 1,
-      justifyContent: "flex-start",
+      justifyContent: "center",
       padding: 24,
       paddingHorizontal: 50,
       width: phoneWidth,
+      paddingBottom: 80,
     },
     topPart: { alignSelf: "center" },
     logo: {
@@ -21,7 +23,7 @@ export const makeStyles = (theme) =>
     smallTitle: {
       fontSize: 20,
       fontWeight: "600",
-      marginBottom: 24,
+      marginBottom: 48,
       textAlign: "center",
       color: theme.textSecondary,
     },

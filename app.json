@@ -17,9 +17,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.feedbackfront",
       "infoPlist": {
-        "UIBackgroundModes": [
-          "remote-notification"
-        ]
+        "UIBackgroundModes": ["remote-notification"]
       }
     },
     "android": {
@@ -30,11 +28,7 @@
       "edgeToEdgeEnabled": true,
       "package": "com.anonymous.FeedbackFront",
       "googleServicesFile": "./google-services.json",
-      "permissions": [
-        "NOTIFICATIONS",
-        "RECEIVE_BOOT_COMPLETED",
-        "VIBRATE"
-      ],
+      "permissions": ["NOTIFICATIONS", "RECEIVE_BOOT_COMPLETED", "VIBRATE"],
       "usesCleartextTraffic": true
     },
     "web": {
@@ -49,8 +43,9 @@
         {
           "icon": "./assets/icon.png"
         }
-      ] ,
-      [ "expo-image-picker",
+      ],
+      [
+        "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends.",
           "colors": {
@@ -62,7 +57,7 @@
             }
           }
         }
-      ]  
+      ]
     ],
     "extra": {
       "eas": {

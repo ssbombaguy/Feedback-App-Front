@@ -6,7 +6,10 @@ export const feedbackAPI = {
     return response.data;
   },
   update: async (feedbackId, feedbackData) => {
-    const response = await axiosInstance.put(`/feedbacks/${feedbackId}`, feedbackData);
+    const response = await axiosInstance.put(
+      `/feedbacks/${feedbackId}`,
+      feedbackData
+    );
     return response.data;
   },
   getUserFeedback: async () => {

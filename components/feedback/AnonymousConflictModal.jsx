@@ -3,11 +3,7 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { ConfirmationModal } from "../ui/ConfirmationModal";
 
-export const AnonymousConflictModal = ({
-  visible,
-  onConfirm,
-  onCancel,
-}) => {
+export const AnonymousConflictModal = ({ visible, onConfirm, onCancel }) => {
   const { t } = useTranslation();
 
   return (

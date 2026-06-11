@@ -23,7 +23,7 @@ export const useLoginFormLogic = (onSubmit) => {
     if (Object.keys(formErrors).length > 0) {
       showErrorToast(
         t("auth.validationError") || "Validation Error",
-        t("auth.fillAllFields") || "Please fill in all fields correctly",
+        t("auth.fillAllFields") || "Please fill in all fields correctly"
       );
       return;
     }

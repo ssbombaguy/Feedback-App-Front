@@ -17,15 +17,24 @@ export const makeStyles = (theme) =>
       color: theme.hint,
       marginBottom: 8,
     },
-    textarea: {
+    textareaContainer: {
       borderWidth: 1,
       borderColor: theme.borderInput,
       borderRadius: 8,
-      padding: 12,
+      paddingHorizontal: 12,
+      paddingVertical: 12,
+      backgroundColor: theme.inputBg,
+      minHeight: 120,
+    },
+    textInput: {
+      borderWidth: 0,
+      backgroundColor: "transparent",
+      paddingVertical: 0,
+      paddingHorizontal: 0,
       fontSize: 14,
       color: theme.text,
-      backgroundColor: theme.inputBg,
-      minHeight: 100,
+      textAlignVertical: "top",
+      height: "100%",
     },
     inputError: { borderColor: theme.error, backgroundColor: theme.errorBg },
     errorText: {

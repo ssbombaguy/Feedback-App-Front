@@ -1,9 +1,7 @@
 import React from "react";
-import {makeStyles} from "./RecoveryEmailStep.styles";
+import { makeStyles } from "./RecoveryEmailStep.styles";
 
-import {
-  Text,
-} from "react-native";
+import { Text } from "react-native";
 import { CustomInput } from "../ui/CustomInput";
 import { CustomButton } from "../ui/CustomButton";
 import { Formik } from "formik";

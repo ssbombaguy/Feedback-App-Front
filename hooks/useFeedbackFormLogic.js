@@ -7,21 +7,26 @@ import { showErrorToast } from "../utils/toastUtils";
 export const useFeedbackFormLogic = (groupId, existingFeedback, onClose) => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { submitFeedback, updateFeedback, isSubmitting, refetch } = useFeedback();
+  const { submitFeedback, updateFeedback, isSubmitting, refetch } =
+    useFeedback();
 
-  const [showAnonymousConflictModal, setShowAnonymousConflictModal] = useState(false);
-  const [showTeacherConflictModal, setShowTeacherConflictModal] = useState(false);
+  const [showAnonymousConflictModal, setShowAnonymousConflictModal] =
+    useState(false);
+  const [showTeacherConflictModal, setShowTeacherConflictModal] =
+    useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pendingValues, setPendingValues] = useState(null);
   const [showAnonymousConfirm, setShowAnonymousConfirm] = useState(false);
 
   const getInitialValues = () => ({
-    wants_to_return_as_teacher: existingFeedback?.wants_to_return_as_teacher || false,
+    wants_to_return_as_teacher:
+      existingFeedback?.wants_to_return_as_teacher || false,
     teacher_evaluation_form: existingFeedback?.teacher_evaluation_form || "",
     course_evaluation_form: existingFeedback?.course_evaluation_form || "",
     career_impact: existingFeedback?.career_impact || "",
     subject_wishes: existingFeedback?.subject_wishes || "",
-    ideal_learning_environment: existingFeedback?.ideal_learning_environment || "",
+    ideal_learning_environment:
+      existingFeedback?.ideal_learning_environment || "",
     is_anonymous: existingFeedback?.is_anonymous || false,
   });
 
@@ -55,7 +60,7 @@ export const useFeedbackFormLogic = (groupId, existingFeedback, onClose) => {
       wants_to_return_as_teacher: values.wants_to_return_as_teacher,
       is_anonymous: existingFeedback?.id ? false : values.is_anonymous,
     }),
-    [groupId, existingFeedback],
+    [groupId, existingFeedback]
   );
 
   const handleSubmit = useCallback(
@@ -67,7 +72,7 @@ export const useFeedbackFormLogic = (groupId, existingFeedback, onClose) => {
       setPendingValues(values);
       setShowConfirmation(true);
     },
-    [user, t],
+    [user, t]
   );
 
   const handleConfirmSubmit = useCallback(async () => {
@@ -87,7 +92,7 @@ export const useFeedbackFormLogic = (groupId, existingFeedback, onClose) => {
           onError: () => {
             showErrorToast(t("common.error"), t("feedback.error"));
           },
-        },
+        }
       );
     } else {
       submitFeedback(feedbackData, {

@@ -12,14 +12,8 @@ export const FeedbackContainer = ({ children }) => {
   const styles = makeStyles(theme);
 
   const { state, setters, handlers } = useFeedbackListLogic();
-  
-  const {
-    refreshing,
-    isLoading,
-    isError,
-    rawError,
-    courses,
-  } = state;
+
+  const { refreshing, isLoading, isError, rawError, courses } = state;
 
   const { onRefresh } = handlers;
 

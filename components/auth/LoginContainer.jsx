@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { router } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { setLoggedIn } from "../../utils/AsyncStorage";
+import { setUser } from "../../utils/AsyncStorage";
 import { useTheme } from "../../context/ThemeContext";
 import { useAuth } from "../../context/AuthContext";
 import { showErrorToast } from "../../utils/toastUtils";
@@ -20,7 +20,7 @@ export const LoginContainer = ({ children }) => {
       login(values.email, values.password, values.rememberMe),
     onSuccess: async (response) => {
       if (response?.user) {
-        await setLoggedIn(response.user);
+        await setUser(response.user);
         router.replace("/(tabs)/(feedback)");
       }
     },

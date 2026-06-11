@@ -24,10 +24,13 @@ export const verificationAPI = {
   },
 
   verifyEmailCode: async (email, emailCode) => {
-    const response = await axiosInstance.post("/verification/email/check-code", {
-      email,
-      email_code: emailCode,
-    });
+    const response = await axiosInstance.post(
+      "/verification/email/check-code",
+      {
+        email,
+        email_code: emailCode,
+      }
+    );
     return response.data;
   },
 };

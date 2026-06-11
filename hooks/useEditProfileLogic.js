@@ -24,7 +24,7 @@ export const useEditProfileLogic = (userProfile) => {
       queryClient.invalidateQueries({ queryKey: ["currentUserProfile"] });
       showSuccessToast(
         t("common.success"),
-        t("profile.updateSuccess") || "Profile updated successfully",
+        t("profile.updateSuccess") || "Profile updated successfully"
       );
       closeVerificationModal();
       router.back();

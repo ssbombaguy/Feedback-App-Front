@@ -16,8 +16,8 @@ export const usePasswordRecoveryLogic = () => {
   const forgotPasswordMutation = useMutation({
     mutationFn: (email) => authAPI.forgotPassword(email),
     onSuccess: () => {
-      showSuccessToast(t("common.success"), t("recovery.codeSent"));
-      setStep("code");
+      showSuccessToast(t("common.success"), t("recovery.linkSent"));
+      setStep("success");
     },
     onError: (error) => {
       const message =
@@ -65,7 +65,7 @@ export const usePasswordRecoveryLogic = () => {
   };
 
   const handleBack = () => {
-    if (step === "email") {
+    if (step === "email" || step === "success") {
       router.back();
     } else if (step === "code") {
       setStep("email");

@@ -1,12 +1,7 @@
 import React from "react";
-import {makeStyles} from "./ProfileAvatar.styles";
+import { makeStyles } from "./ProfileAvatar.styles";
 
-import {
-  View,
-  Text,
-  Image,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, Image, ActivityIndicator } from "react-native";
 import { CustomButton } from "../ui/CustomButton";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Feather } from "@expo/vector-icons";
@@ -27,13 +22,13 @@ export const ProfileAvatar = ({ userProfile, theme }) => {
       queryClient.invalidateQueries({ queryKey: ["currentUserProfile"] });
       showSuccessToast(
         t("common.success"),
-        t("profile.photoUpdated") || "Photo updated successfully",
+        t("profile.photoUpdated") || "Photo updated successfully"
       );
     },
     onError: () => {
       showErrorToast(
         t("common.error"),
-        t("profile.photoError") || "Failed to update photo",
+        t("profile.photoError") || "Failed to update photo"
       );
     },
   });
@@ -64,10 +59,7 @@ export const ProfileAvatar = ({ userProfile, theme }) => {
         {photoMutation.isPending ? (
           <ActivityIndicator size="large" color={theme.textSecondary} />
         ) : photoUri ? (
-          <Image
-            source={{ uri: photoUri }}
-            style={styles.avatarImage}
-          />
+          <Image source={{ uri: photoUri }} style={styles.avatarImage} />
         ) : (
           <FontAwesome
             name="user-circle-o"

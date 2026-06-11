@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { logout } from "../utils/AsyncStorage";
+import { useAuth } from "../context/AuthContext";
 import { showErrorToast } from "../utils/toastUtils";
 
 export const useProfileMenuLogic = () => {
   const router = useRouter();
   const { t } = useTranslation();
+  const { logout } = useAuth();
 
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);

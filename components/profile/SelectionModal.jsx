@@ -1,13 +1,7 @@
 import React from "react";
-import {makeStyles} from "./SelectionModal.styles";
+import { makeStyles } from "./SelectionModal.styles";
 
-import {
-  View,
-  Text,
-  Modal,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { View, Text, Modal, Pressable, ScrollView } from "react-native";
 import { CustomButton } from "../ui/CustomButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -33,7 +27,11 @@ export const SelectionModal = ({
         <View style={styles.modalCard} onStartShouldSetResponder={() => true}>
           <View style={styles.header}>
             <Text style={styles.title}>{title}</Text>
-            <CustomButton variant="custom" onPress={onClose} style={styles.closeButton}>
+            <CustomButton
+              variant="custom"
+              onPress={onClose}
+              style={styles.closeButton}
+            >
               <Ionicons name="close" size={24} color={theme.text} />
             </CustomButton>
           </View>
