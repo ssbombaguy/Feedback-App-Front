@@ -37,7 +37,7 @@ export const makeStyles = (theme) =>
       marginTop: 8,
       marginBottom: 20,
     },
-    rememberRow: { flexDirection: "row", alignItems: "center" },
+    rememberRow: { flexDirection: "row", alignItems: "center", flexShrink: 1 },
     checkbox: {
       width: 20,
       height: 20,
@@ -50,11 +50,12 @@ export const makeStyles = (theme) =>
     },
     checkboxChecked: { backgroundColor: theme.accent || "#243d4d" },
     checkmark: { color: "#fff", fontSize: 12, fontWeight: "bold" },
-    rememberText: { color: theme.textSecondary || "#666", fontSize: 14 },
+    rememberText: { color: theme.textSecondary || "#666", fontSize: 13, flexShrink: 1 },
     recoveryText: {
       color: theme.accent || "#243d4d",
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: "600",
+      flexShrink: 1,
     },
     languageContainer: { marginBottom: 20, alignSelf: "center" },
     submitButton: {

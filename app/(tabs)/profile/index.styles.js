@@ -36,7 +36,7 @@ export const makeStyles = (theme) =>
       elevation: 3,
       marginBottom: 50,
     },
-    logoutText: { fontSize: 16, color: theme.textSecondary, fontWeight: "700" },
+    logoutText: { fontSize: 16, color: "#243d4d", fontWeight: "700" },
     sectionHeader: {
       width: "100%",
       marginTop: 24,
