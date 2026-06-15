@@ -15,7 +15,9 @@
     "passwordMustContainSymbol": "პაროლი უნდა შეიცავდეს მინიმუმ ერთ სიმბოლოს",
     "passwordMustContainNumber": "პაროლი უნდა შეიცავდეს მინიმუმ ერთ ციფრს",
     "confirmPassword": "Confirm password is required",
-    "matchPassword": "პაროლები უნდა ემთხვეოდეს ერთმანეთს"
+    "matchPassword": "პაროლები უნდა ემთხვეოდეს ერთმანეთს",
+    "validationError": "შეცდომა",
+    "fillAllFields": "გთხოვთ შეავსოთ ყველა ველი სწორად"
   },
   "feedback": {
     "title": "თქვენი კურსები",
@@ -106,7 +108,10 @@
     "darkMode": "ბნელი რეჟიმი",
     "lightMode": "ნათელი რეჟიმი",
     "selectTheme": "აირჩიეთ თემა",
-    "selectLanguage": "აირჩიეთ ენა"
+    "selectLanguage": "აირჩიეთ ენა",
+    "invalidEmail": "გთხოვთ შეიყვანოთ სწორი ელ-ფოსტა",
+    "photoUpdated": "ფოტო წარმატებით განახლდა",
+    "photoError": "ფოტოს განახლება ჩავარდა"
   },
   "edit": {
     "back": "უკან",
@@ -137,7 +142,9 @@
     "en": "EN",
     "ka": "ქა",
     "yes": "დიახ",
-    "no": "არა"
+    "no": "არა",
+    "retry": "ხელახლა ცდა",
+    "somethingWentWrong": "რაღაც შეცდომაა"
   },
   "recovery": {
     "forgotPassword": "დაგავიწყდა პაროლი?",

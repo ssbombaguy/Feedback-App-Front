@@ -15,7 +15,9 @@
     "passwordMustContainNumber": "Password must contain at least one number",
     "passwordMustContainSymbol": "Password must contain at least one symbol",
     "confirmPassword": "Confirm password is required",
-    "matchPassword": "Passwords must match"
+    "matchPassword": "Passwords must match",
+    "validationError": "Validation Error",
+    "fillAllFields": "Please fill in all fields correctly"
   },
   "feedback": {
     "title": "Your Courses",
@@ -106,7 +108,10 @@
     "darkMode": "Dark Mode",
     "lightMode": "Light Mode",
     "selectTheme": "Select Theme",
-    "selectLanguage": "Select Language"
+    "selectLanguage": "Select Language",
+    "invalidEmail": "Please enter a valid email address",
+    "photoUpdated": "Photo updated successfully",
+    "photoError": "Failed to update photo"
   },
   "edit": {
     "back": "Back",
@@ -137,7 +142,9 @@
     "en": "EN",
     "ka": "KA",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "retry": "Retry",
+    "somethingWentWrong": "Something went wrong"
   },
   "recovery": {
     "forgotPassword": "Forgot Password?",

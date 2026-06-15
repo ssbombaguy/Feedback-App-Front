@@ -39,7 +39,7 @@ export const usePasswordRecoveryLogic = () => {
       const message =
         error.response?.data?.message ||
         error.message ||
-        "Something went wrong";
+        t("common.somethingWentWrong");
       showErrorToast(t("common.error"), message);
     },
   });

@@ -52,7 +52,7 @@ export const darkTheme = {
 
   // Text
   text: "#E8EAF0",
-  textSecondary: "#B0BEC5",
+  textSecondary: "#243d4d",
   subtext: "#78909C",
   label: "#607D8B",
   hint: "#546E7A",
