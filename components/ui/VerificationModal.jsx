@@ -46,7 +46,7 @@ export const VerificationModal = ({
     <Modal
       visible={visible}
       transparent
-      animationType="fade"
+      animationType="slide"
       onRequestClose={handleCancel}
     >
       <View style={styles.overlay}>

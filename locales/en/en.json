@@ -164,6 +164,10 @@
     "backToLogin": "Back to Log In"
   },
   "verification": {
+    "verifyEmailTitle": "Verify Your Email",
+    "verifyPhoneTitle": "Verify Your Phone Number",
+    "verifyEmailMessage": "We'll send a verification code to your email to confirm the change.",
+    "verifyPhoneMessage": "We'll send a verification code to your phone number to confirm the change.",
     "verificationSentTo": "Verification sent to:",
     "sendCodeDescription": "We'll send you a verification code to confirm your {{type}}.",
     "sendCode": "Send Code",

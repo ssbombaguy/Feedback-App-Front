@@ -4,6 +4,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
 import { CustomButton } from "../ui/CustomButton";
+import { CollapsibleSection } from "../ui/CollapsibleSection";
 import { makeStyles } from "./PersonalInfo.styles";
 
 const InfoRow = ({ icon, label, value, isLast = false, onPress }) => {
@@ -52,8 +53,10 @@ export const PersonalInfo = ({ user }) => {
   const styles = makeStyles(theme);
 
   return (
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{t("profile.personalInfo")}</Text>
+    <CollapsibleSection
+      title={t("profile.personalInfo")}
+      containerStyle={styles.section}
+    >
 
       <InfoRow
         icon="email-outline"
@@ -90,6 +93,6 @@ export const PersonalInfo = ({ user }) => {
         onPress={() => user?.githubUrl && Linking.openURL(user.githubUrl)}
         isLast
       />
-    </View>
+    </CollapsibleSection>
   );
 };

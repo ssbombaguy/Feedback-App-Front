@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { VerificationModal } from "../ui/VerificationModal";
+import { useTranslation } from "react-i18next";
 
 export const ProfileVerificationModal = ({
   verificationModal,
@@ -9,18 +10,20 @@ export const ProfileVerificationModal = ({
   closeVerificationModal,
   isPending,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <VerificationModal
       visible={verificationModal.visible}
       title={
         verificationModal.type === "phone"
-          ? "Verify Your Phone Number"
-          : "Verify Your Email"
+          ? t("verification.verifyPhoneTitle")
+          : t("verification.verifyEmailTitle")
       }
       message={
         verificationModal.type === "phone"
-          ? "We'll send a verification code to your phone number to confirm the change."
-          : "We'll send a verification code to your email to confirm the change."
+          ? t("verification.verifyPhoneMessage")
+          : t("verification.verifyEmailMessage")
       }
       verificationType={verificationModal.type}
       contact={verificationModal.contact}

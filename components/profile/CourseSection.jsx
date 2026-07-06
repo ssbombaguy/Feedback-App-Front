@@ -3,6 +3,7 @@ import { View, Text, ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
 import { ProfileCourseCard } from "./CourseCard";
 import { useTheme } from "../../context/ThemeContext";
+import { CollapsibleSection } from "../ui/CollapsibleSection";
 export const CoursesSection = ({ courses }) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -13,10 +14,10 @@ export const CoursesSection = ({ courses }) => {
   return (
     <>
       {passed.length > 0 && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            {t("profile.completedCourses")} ({passed.length})
-          </Text>
+        <CollapsibleSection
+          title={`${t("profile.completedCourses")} (${passed.length})`}
+          containerStyle={styles.section}
+        >
           <ScrollView
             style={{ maxHeight: 350 }}
             nestedScrollEnabled={true}
@@ -30,7 +31,7 @@ export const CoursesSection = ({ courses }) => {
               />
             ))}
           </ScrollView>
-        </View>
+        </CollapsibleSection>
       )}
     </>
   );

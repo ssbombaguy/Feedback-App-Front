@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import PropTypes from "prop-types";
 import { CustomButton } from "../ui/CustomButton";
+import { CollapsibleSection } from "../ui/CollapsibleSection";
 
 export const DisplaySettings = ({
   theme,
@@ -15,12 +16,7 @@ export const DisplaySettings = ({
   const { t, i18n } = useTranslation();
 
   return (
-    <>
-      {/* Display Settings Section */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>{t("profile.displaySettings")}</Text>
-      </View>
-
+    <CollapsibleSection title={t("profile.displaySettings")}>
       <View style={styles.settingsCard}>
         {/* Theme row */}
         <CustomButton
@@ -78,7 +74,7 @@ export const DisplaySettings = ({
           <Ionicons name="chevron-forward" size={18} color={theme.subtext} />
         </CustomButton>
       </View>
-    </>
+    </CollapsibleSection>
   );
 };
 
